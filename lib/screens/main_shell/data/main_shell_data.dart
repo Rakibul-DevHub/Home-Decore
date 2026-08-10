@@ -1,7 +1,7 @@
 abstract final class MainShellData {
   static const tabLabels = [
     'Home',
-    'Search',
+    'Shop',
     'Create something',
     'Messages',
     'Profile',

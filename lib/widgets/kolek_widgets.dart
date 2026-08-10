@@ -52,6 +52,22 @@ class KolekLogo extends StatelessWidget {
   }
 }
 
+/// Top-center wordmark from `assets/icons/text_logo.svg`.
+class KolekTextLogo extends StatelessWidget {
+  const KolekTextLogo({super.key, this.height = 20});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      'assets/icons/text_logo.svg',
+      height: height,
+      fit: BoxFit.contain,
+    );
+  }
+}
+
 class KolekButton extends StatelessWidget {
   const KolekButton({
     required this.label,

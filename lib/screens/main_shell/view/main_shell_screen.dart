@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../../home/view/home_screen.dart';
-import '../../search/view/search_screen.dart';
+import '../../shop/view/shop_screen.dart';
 import '../cubit/main_shell_cubit.dart';
 import '../data/main_shell_data.dart';
 
 class MainShellScreen extends StatelessWidget {
   const MainShellScreen({super.key});
+
+  void _onNavSelected(BuildContext context, int index) {
+    if (index == 2) {
+      Navigator.of(context).pushNamed(AppRoute.create);
+      return;
+    }
+    context.read<MainShellCubit>().switchTab(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +32,7 @@ class MainShellScreen extends StatelessWidget {
             index: selectedIndex,
             children: [
               const HomeScreen(),
-              const SearchScreen(),
+              const ShopScreen(),
               _PlaceholderScreen(title: MainShellData.tabLabels[2]),
               _PlaceholderScreen(title: MainShellData.tabLabels[3]),
               _PlaceholderScreen(title: MainShellData.tabLabels[4]),
@@ -31,7 +40,7 @@ class MainShellScreen extends StatelessWidget {
           ),
           bottomNavigationBar: KolekBottomNav(
             selectedIndex: selectedIndex,
-            onSelected: context.read<MainShellCubit>().switchTab,
+            onSelected: (index) => _onNavSelected(context, index),
           ),
         );
       },

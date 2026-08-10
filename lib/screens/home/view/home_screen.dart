@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../routes/app_route.dart';
+import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../cubit/home_cubit.dart';
@@ -62,32 +65,26 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       centerTitle: true,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () async {
+          final result = await Navigator.of(context).pushNamed(AppRoute.search);
+          if (result == AppRoute.shop && context.mounted) {
+            context.read<MainShellCubit>().switchTab(1);
+          }
+        },
         icon: SvgPicture.asset(
           'assets/icons/search.svg',
           width: 22,
           height: 22,
         ),
       ),
-      title: Text(
-        'kolek',
-        style: KolekText.mono(
-          size: 24,
-          weight: FontWeight.w500,
-          color: KolekColors.blue600,
-        ),
-      ),
+      title: const KolekTextLogo(height: 22),
       actions: [
         IconButton(
           onPressed: () {},
-          icon: Badge(
-            smallSize: 7,
-            backgroundColor: KolekColors.blue600,
-            child: Icon(
-              Icons.notifications_none_rounded,
-              size: 24,
-              color: KolekColors.neutral900,
-            ),
+          icon: SvgPicture.asset(
+            'assets/icons/notification_active.svg',
+            width: 24,
+            height: 24,
           ),
         ),
         const SizedBox(width: 2),
@@ -115,39 +112,51 @@ class _FeedCard extends StatelessWidget {
 
   Future<void> _openMenu(BuildContext context) async {
     final button = context.findRenderObject() as RenderBox?;
+    final overlayState = Overlay.of(context);
     final overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox?;
+        overlayState.context.findRenderObject() as RenderBox?;
     if (button == null || overlay == null) return;
 
     final offset = button.localToGlobal(Offset.zero, ancestor: overlay);
-    final selected = await showGeneralDialog<HomeMenuAction>(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Post menu',
-      barrierColor: Colors.black.withValues(alpha: 0.08),
-      transitionDuration: const Duration(milliseconds: 180),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return const SizedBox.shrink();
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        );
+    final completer = Completer<HomeMenuAction?>();
+    late OverlayEntry entry;
+
+    void close([HomeMenuAction? action]) {
+      if (!completer.isCompleted) {
+        completer.complete(action);
+      }
+      entry.remove();
+    }
+
+    entry = OverlayEntry(
+      builder: (context) {
         return Stack(
           children: [
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: close,
+                child: const ColoredBox(color: Colors.transparent),
+              ),
+            ),
             Positioned(
               top: offset.dy + button.size.height - 4,
               right: overlay.size.width - offset.dx - button.size.width + 4,
-              child: FadeTransition(
-                opacity: curved,
-                child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.94, end: 1).animate(curved),
-                  alignment: Alignment.topRight,
-                  child: _LiquidGlassMenu(
-                    onSelected: (action) => Navigator.of(context).pop(action),
-                  ),
-                ),
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0, end: 1),
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.scale(
+                      scale: 0.94 + (0.06 * value),
+                      alignment: Alignment.topRight,
+                      child: child,
+                    ),
+                  );
+                },
+                child: _LiquidGlassMenu(onSelected: close),
               ),
             ),
           ],
@@ -155,6 +164,8 @@ class _FeedCard extends StatelessWidget {
       },
     );
 
+    overlayState.insert(entry);
+    final selected = await completer.future;
     if (selected == HomeMenuAction.savePost) onSaved();
   }
 
@@ -340,42 +351,51 @@ class _LiquidGlassMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(4),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-        child: Container(
-          width: 168,
+        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+        child: DecoratedBox(
           decoration: BoxDecoration(
-            color: const Color(0x99A8A8A8),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(4),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.85),
+              color: Colors.white.withValues(alpha: 0.75),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.14),
-                blurRadius: 20,
+                color: Colors.black.withValues(alpha: 0.10),
+                blurRadius: 24,
                 offset: const Offset(0, 10),
               ),
             ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var i = 0; i < HomeData.menuItems.length; i++) ...[
-                if (i > 0)
-                  Divider(
-                    height: 1,
-                    thickness: 0.8,
-                    color: Colors.white.withValues(alpha: 0.55),
-                  ),
-                _LiquidGlassMenuItem(
-                  item: HomeData.menuItems[i],
-                  onTap: () => onSelected(HomeData.menuItems[i].action),
-                ),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.white.withValues(alpha: 0.42),
+                Colors.white.withValues(alpha: 0.18),
               ],
-            ],
+            ),
+          ),
+          child: SizedBox(
+            width: 168,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < HomeData.menuItems.length; i++) ...[
+                  if (i > 0)
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: Colors.white.withValues(alpha: 0.55),
+                    ),
+                  _LiquidGlassMenuItem(
+                    item: HomeData.menuItems[i],
+                    onTap: () => onSelected(HomeData.menuItems[i].action),
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),

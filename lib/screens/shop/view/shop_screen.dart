@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_route.dart';
+import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
-import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../cubit/shop_cubit.dart';
 import '../data/shop_data.dart';
@@ -14,19 +15,33 @@ class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KolekColors.neutral50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: KolekColors.neutral50,
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back, size: 20),
+        leadingWidth: 96,
+        leading: Row(
+          children: [
+            const SizedBox(width: 8),
+            const KolekLogo(size: 28),
+            IconButton(
+              onPressed: () async {
+                final result =
+                    await Navigator.of(context).pushNamed(AppRoute.search);
+                if (result == AppRoute.shop && context.mounted) {
+                  context.read<MainShellCubit>().switchTab(1);
+                }
+              },
+              icon: SvgPicture.asset(
+                'assets/icons/search.svg',
+                width: 20,
+                height: 20,
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
-        title: Text(
-          'kolek',
-          style: KolekText.mono(size: 22, color: KolekColors.blue600),
-        ),
+        title: const KolekTextLogo(),
         actions: [
           BlocSelector<ShopCubit, ShopState, int>(
             selector: (state) => state.cartCount,
@@ -34,8 +49,25 @@ class ShopScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pushNamed(AppRoute.cart),
               icon: Badge(
                 label: Text('$cartCount'),
-                child: const Icon(Icons.shopping_bag_outlined),
+                backgroundColor: KolekColors.blue600,
+                child: SvgPicture.asset(
+                  'assets/icons/cart.svg',
+                  width: 22,
+                  height: 22,
+                  colorFilter: const ColorFilter.mode(
+                    KolekColors.neutral900,
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              'assets/icons/notification_active.svg',
+              width: 22,
+              height: 22,
             ),
           ),
         ],
@@ -71,9 +103,7 @@ class ShopScreen extends StatelessWidget {
                     children: [
                       TextButton.icon(
                         onPressed: () async {
-                          await Navigator.of(
-                            context,
-                          ).pushNamed(AppRoute.filter);
+                          await Navigator.of(context).pushNamed(AppRoute.filter);
                           if (context.mounted) {
                             context.read<ShopCubit>().markFilterApplied();
                           }
@@ -164,16 +194,6 @@ class ShopScreen extends StatelessWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 22)),
         ],
-      ),
-      bottomNavigationBar: KolekBottomNav(
-        selectedIndex: 1,
-        onSelected: (index) {
-          if (index != 1) {
-            Navigator.of(
-              context,
-            ).pushNamedAndRemoveUntil(AppRoute.mainShell, (_) => false);
-          }
-        },
       ),
     );
   }

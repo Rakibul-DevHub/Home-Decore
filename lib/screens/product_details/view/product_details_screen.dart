@@ -22,10 +22,7 @@ class ProductDetailsScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, size: 20),
         ),
         centerTitle: true,
-        title: Text(
-          'kolek',
-          style: KolekText.mono(size: 22, color: KolekColors.blue600),
-        ),
+        title: const KolekTextLogo(),
         actions: [
           BlocSelector<ProductDetailsCubit, ProductDetailsState, int>(
             selector: (state) => state.cartCount,

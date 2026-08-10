@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
@@ -10,23 +11,31 @@ import '../data/search_data.dart';
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
+  void _goToShop(BuildContext context) {
+    Navigator.of(context).pop(AppRoute.shop);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KolekColors.neutral50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: KolekColors.neutral50,
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
-        leading: const Icon(Icons.arrow_back, size: 21),
-        centerTitle: true,
-        title: Text(
-          'kolek',
-          style: KolekText.mono(size: 22, color: KolekColors.blue600),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back, size: 21),
         ),
+        centerTitle: true,
+        title: const KolekTextLogo(),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.notifications_none),
+            icon: SvgPicture.asset(
+              'assets/icons/notification.svg',
+              width: 22,
+              height: 22,
+            ),
           ),
         ],
       ),
@@ -38,12 +47,17 @@ class SearchScreen extends StatelessWidget {
             onChanged: context.read<SearchCubit>().queryChanged,
             onSubmitted: (value) {
               context.read<SearchCubit>().submit(value);
-              Navigator.of(context).pushNamed(AppRoute.shop);
+              _goToShop(context);
             },
             decoration: InputDecoration(
               hintText: 'Search',
               hintStyle: KolekText.sans(size: 14),
-              prefixIcon: const Icon(Icons.search, size: 21),
+              prefixIcon: SvgPicture.asset(
+                'assets/icons/search.svg',
+                width: 20,
+                height: 20,
+                fit: BoxFit.scaleDown,
+              ),
               filled: true,
               fillColor: KolekColors.neutral200,
               border: InputBorder.none,
@@ -92,7 +106,7 @@ class SearchScreen extends StatelessWidget {
               key: ValueKey('popular-$item'),
               onTap: () {
                 context.read<SearchCubit>().submit(item);
-                Navigator.of(context).pushNamed(AppRoute.shop);
+                _goToShop(context);
               },
               child: Container(
                 height: 57,

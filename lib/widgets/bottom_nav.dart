@@ -15,7 +15,7 @@ class NavItem {
   final String iconFilled;
 }
 
-class KolekBottomNav extends StatelessWidget {
+class KolekBottomNav extends StatefulWidget {
   const KolekBottomNav({
     required this.selectedIndex,
     required this.onSelected,
@@ -56,6 +56,68 @@ class KolekBottomNav extends StatelessWidget {
   ];
 
   @override
+  State<KolekBottomNav> createState() => _KolekBottomNavState();
+}
+
+class _KolekBottomNavState extends State<KolekBottomNav>
+    with SingleTickerProviderStateMixin {
+  static const _slotHeight = 12.0;
+  static const _barHeight = 3.0;
+  static const _duration = Duration(milliseconds: 320);
+
+  late final AnimationController _controller;
+  late final Animation<double> _progress;
+
+  /// Tab that is becoming selected.
+  late int _currentIndex;
+
+  /// Tab that is giving up the underline.
+  late int _previousIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.selectedIndex;
+    _previousIndex = widget.selectedIndex;
+    _controller = AnimationController(vsync: this, duration: _duration);
+    _progress = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOutCubic,
+    );
+    // Settled: underline already under the current tab.
+    _controller.value = 1;
+  }
+
+  @override
+  void didUpdateWidget(covariant KolekBottomNav oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedIndex == widget.selectedIndex) return;
+
+    _previousIndex = oldWidget.selectedIndex;
+    _currentIndex = widget.selectedIndex;
+    // One shared timeline: previous goes down while current comes up.
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  /// Shared progress `t` (0 → 1):
+  /// - previous: dy = t * slot   (visible → hidden downward)
+  /// - current:  dy = (1-t)*slot (hidden → visible upward)
+  /// - others:   fully hidden
+  double _dyFor(int index, double t) {
+    if (index == _currentIndex) return (1 - t) * _slotHeight;
+    if (index == _previousIndex && _previousIndex != _currentIndex) {
+      return t * _slotHeight;
+    }
+    return _slotHeight;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
@@ -66,20 +128,30 @@ class KolekBottomNav extends StatelessWidget {
           decoration: const BoxDecoration(
             border: Border(top: BorderSide(color: KolekColors.neutral200)),
           ),
-          child: Row(
-            children: List.generate(items.length, (index) {
-              return Expanded(
-                child: _buildNavItem(index, items[index]),
+          child: AnimatedBuilder(
+            animation: _progress,
+            builder: (context, _) {
+              final t = _progress.value;
+              return Row(
+                children: List.generate(KolekBottomNav.items.length, (index) {
+                  return Expanded(
+                    child: _buildNavItem(
+                      index,
+                      KolekBottomNav.items[index],
+                      _dyFor(index, t),
+                    ),
+                  );
+                }),
               );
-            }),
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, NavItem item) {
-    final isSelected = selectedIndex == index;
+  Widget _buildNavItem(int index, NavItem item, double underlineDy) {
+    final isSelected = widget.selectedIndex == index;
 
     return Semantics(
       button: true,
@@ -87,7 +159,7 @@ class KolekBottomNav extends StatelessWidget {
       label: item.label,
       child: InkWell(
         key: ValueKey('bottom-nav-$index'),
-        onTap: () => onSelected(index),
+        onTap: () => widget.onSelected(index),
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         child: Column(
@@ -109,59 +181,26 @@ class KolekBottomNav extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 12,
+              height: _slotHeight,
               width: double.infinity,
-              child: _UnderlineIndicator(
-                key: ValueKey('underline-$index'),
-                visible: isSelected,
+              child: ClipRect(
+                child: Transform.translate(
+                  offset: Offset(0, underlineDy),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      width: 22,
+                      height: _barHeight,
+                      decoration: BoxDecoration(
+                        color: KolekBottomNav.indicatorColor,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Per-tab bar: selected rises from bottom; deselected drops downward.
-class _UnderlineIndicator extends StatelessWidget {
-  const _UnderlineIndicator({required this.visible, super.key});
-
-  final bool visible;
-
-  static const _slotHeight = 12.0;
-  static const _barHeight = 3.0;
-  static const _duration = Duration(milliseconds: 320);
-
-  @override
-  Widget build(BuildContext context) {
-    // Travel the full slot (not the 3px bar), so the motion is clearly vertical.
-    final hiddenOffset = _slotHeight;
-
-    return ClipRect(
-      child: TweenAnimationBuilder<double>(
-        tween: Tween<double>(
-          begin: hiddenOffset,
-          end: visible ? 0 : hiddenOffset,
-        ),
-        duration: _duration,
-        curve: visible ? Curves.easeOutCubic : Curves.easeInCubic,
-        builder: (context, dy, child) {
-          return Transform.translate(
-            offset: Offset(0, dy),
-            child: child,
-          );
-        },
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            width: 22,
-            height: _barHeight,
-            decoration: BoxDecoration(
-              color: KolekBottomNav.indicatorColor,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
         ),
       ),
     );

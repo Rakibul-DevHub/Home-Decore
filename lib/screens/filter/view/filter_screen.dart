@@ -12,9 +12,9 @@ class FilterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KolekColors.neutral50,
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: KolekColors.neutral50,
+        backgroundColor: Colors.white,
         scrolledUnderElevation: 0,
         leadingWidth: 80,
         leading: TextButton(
@@ -44,42 +44,84 @@ class FilterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 22),
             _FilterRow(FilterData.sections.first),
-            Padding(
-              padding: const EdgeInsets.only(top: 14),
-              child: Row(
-                children: [
-                  Text('Price Range', style: KolekText.sans(size: 12)),
-                  const Spacer(),
-                  const Icon(Icons.remove, size: 18),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  '\$${FilterData.initialLowerPrice.toInt()}',
-                  style: KolekText.mono(size: 10),
-                ),
-                const Spacer(),
-                Text(
-                  '\$${FilterData.maxPrice.toInt()}+',
-                  style: KolekText.mono(size: 10),
-                ),
-              ],
-            ),
             BlocBuilder<FilterCubit, FilterState>(
-              builder: (context, state) => RangeSlider(
-                values: RangeValues(state.lowerPrice, state.upperPrice),
-                min: FilterData.minPrice,
-                max: FilterData.maxPrice,
-                activeColor: KolekColors.neutral900,
-                inactiveColor: KolekColors.neutral300,
-                onChanged: (value) => context.read<FilterCubit>().priceChanged(
-                  value.start,
-                  value.end,
-                ),
-              ),
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: context.read<FilterCubit>().togglePriceExpanded,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 14, bottom: 8),
+                        child: Row(
+                          children: [
+                            Text('Price Range', style: KolekText.sans(size: 12)),
+                            const Spacer(),
+                            Icon(
+                              state.priceExpanded ? Icons.remove : Icons.add,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (state.priceExpanded) ...[
+                      Row(
+                        children: [
+                          Text(
+                            state.lowerLabel,
+                            style: KolekText.mono(
+                              size: 10,
+                              color: KolekColors.neutral600,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            state.upperLabel,
+                            style: KolekText.mono(
+                              size: 10,
+                              color: KolekColors.neutral600,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          trackHeight: 2.5,
+                          activeTrackColor: KolekColors.neutral900,
+                          inactiveTrackColor: KolekColors.neutral300,
+                          thumbColor: KolekColors.neutral200,
+                          overlayColor: Colors.transparent,
+                          overlayShape: SliderComponentShape.noOverlay,
+                          rangeThumbShape: const _OutlinedRangeSliderThumb(
+                            radius: 8,
+                            fillColor: KolekColors.neutral200,
+                            borderColor: KolekColors.neutral900,
+                          ),
+                          rangeTrackShape:
+                              const RoundedRectRangeSliderTrackShape(),
+                          showValueIndicator: ShowValueIndicator.never,
+                        ),
+                        child: RangeSlider(
+                          values: RangeValues(
+                            state.lowerPrice,
+                            state.upperPrice,
+                          ),
+                          min: FilterData.minPrice,
+                          max: FilterData.maxPrice,
+                          divisions: 100,
+                          onChanged: (value) {
+                            context.read<FilterCubit>().priceChanged(
+                              value.start,
+                              value.end,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ],
+                );
+              },
             ),
             ...FilterData.sections.skip(1).map(_FilterRow.new),
           ],
@@ -87,7 +129,8 @@ class FilterScreen extends StatelessWidget {
       ),
       bottomSheet: SafeArea(
         top: false,
-        child: Padding(
+        child: Container(
+          color: Colors.white,
           padding: const EdgeInsets.all(18),
           child: SizedBox(
             width: double.infinity,
@@ -139,6 +182,50 @@ class _FilterRow extends StatelessWidget {
           const Icon(Icons.add, size: 19),
         ],
       ),
+    );
+  }
+}
+
+/// Light-gray thumb with black outline; no press overlay.
+class _OutlinedRangeSliderThumb extends RangeSliderThumbShape {
+  const _OutlinedRangeSliderThumb({
+    required this.radius,
+    required this.fillColor,
+    required this.borderColor,
+  });
+
+  final double radius;
+  final Color fillColor;
+  final Color borderColor;
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(radius);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    bool? isDiscrete,
+    bool? isEnabled,
+    bool? isOnTop,
+    TextDirection? textDirection,
+    required SliderThemeData sliderTheme,
+    Thumb? thumb,
+    bool? isPressed,
+  }) {
+    final canvas = context.canvas;
+    canvas.drawCircle(center, radius, Paint()..color = fillColor);
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()
+        ..color = borderColor
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2,
     );
   }
 }
