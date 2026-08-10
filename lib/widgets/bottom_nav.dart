@@ -95,7 +95,10 @@ class KolekBottomNav extends StatelessWidget {
             Expanded(
               child: Center(
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 180),
+                  duration: const Duration(milliseconds: 160),
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
                   child: SvgPicture.asset(
                     isSelected ? item.iconFilled : item.iconOutline,
                     key: ValueKey('${item.label}-$isSelected'),
@@ -107,28 +110,58 @@ class KolekBottomNav extends StatelessWidget {
             ),
             SizedBox(
               height: 12,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: AnimatedSlide(
-                  duration: const Duration(milliseconds: 260),
-                  curve: Curves.easeOutCubic,
-                  offset: isSelected ? Offset.zero : const Offset(0, 1.4),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 180),
-                    opacity: isSelected ? 1 : 0,
-                    child: Container(
-                      width: 22,
-                      height: 3,
-                      decoration: BoxDecoration(
-                        color: indicatorColor,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                ),
+              width: double.infinity,
+              child: _UnderlineIndicator(
+                key: ValueKey('underline-$index'),
+                visible: isSelected,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Per-tab bar: selected rises from bottom; deselected drops downward.
+class _UnderlineIndicator extends StatelessWidget {
+  const _UnderlineIndicator({required this.visible, super.key});
+
+  final bool visible;
+
+  static const _slotHeight = 12.0;
+  static const _barHeight = 3.0;
+  static const _duration = Duration(milliseconds: 320);
+
+  @override
+  Widget build(BuildContext context) {
+    // Travel the full slot (not the 3px bar), so the motion is clearly vertical.
+    final hiddenOffset = _slotHeight;
+
+    return ClipRect(
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(
+          begin: hiddenOffset,
+          end: visible ? 0 : hiddenOffset,
+        ),
+        duration: _duration,
+        curve: visible ? Curves.easeOutCubic : Curves.easeInCubic,
+        builder: (context, dy, child) {
+          return Transform.translate(
+            offset: Offset(0, dy),
+            child: child,
+          );
+        },
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 22,
+            height: _barHeight,
+            decoration: BoxDecoration(
+              color: KolekBottomNav.indicatorColor,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
         ),
       ),
     );
