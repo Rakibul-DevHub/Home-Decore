@@ -32,6 +32,7 @@ import '../screens/messages/cubit/messages_cubit.dart';
 import '../screens/messages/data/messages_data.dart';
 import '../screens/product_details/cubit/product_details_cubit.dart';
 import '../screens/product_details/view/product_details_screen.dart';
+import '../screens/profile/cubit/profile_cubit.dart';
 import '../screens/search/cubit/search_cubit.dart';
 import '../screens/search/view/search_screen.dart';
 import '../screens/shop/cubit/shop_cubit.dart';
@@ -102,6 +103,7 @@ abstract final class AppRoutes {
         BlocProvider(create: (_) => HomeCubit()),
         BlocProvider(create: (_) => ShopCubit()),
         BlocProvider(create: (_) => MessagesCubit()),
+        BlocProvider(create: (_) => ProfileCubit()),
       ],
       child: const MainShellScreen(),
     ),

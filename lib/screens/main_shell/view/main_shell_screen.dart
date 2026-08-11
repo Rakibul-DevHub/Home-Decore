@@ -7,6 +7,7 @@ import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../../home/view/home_screen.dart';
 import '../../messages/view/messages_screen.dart';
+import '../../profile/view/profile_screen.dart';
 import '../../shop/view/shop_screen.dart';
 import '../cubit/main_shell_cubit.dart';
 import '../data/main_shell_data.dart';
@@ -36,7 +37,7 @@ class MainShellScreen extends StatelessWidget {
               const ShopScreen(),
               _PlaceholderScreen(title: MainShellData.tabLabels[2]),
               const MessagesScreen(),
-              _PlaceholderScreen(title: MainShellData.tabLabels[4]),
+              const ProfileScreen(),
             ],
           ),
           bottomNavigationBar: KolekBottomNav(

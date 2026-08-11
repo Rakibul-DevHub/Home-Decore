@@ -71,7 +71,7 @@ class KolekApp extends StatelessWidget {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.mainShell,
       routes: AppRoutes.routes,
       onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
     );
