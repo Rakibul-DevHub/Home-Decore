@@ -82,6 +82,68 @@ class _ProfileAppBar extends StatelessWidget {
   }
 }
 
+// class _ProfileHeader extends StatelessWidget {
+//   const _ProfileHeader();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.fromLTRB(18, 8, 18, 0),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 ClipOval(
+//                   child: Image.asset(
+//                     ProfileData.avatarAsset,
+//                     width: 56,
+//                     height: 56,
+//                     fit: BoxFit.cover,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 14),
+//                 Text(
+//                   ProfileData.name,
+//                   style: KolekText.sans(
+//                     size: 28,
+//                     weight: FontWeight.w700,
+//                     height: 1.05,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 8),
+//                 Text(
+//                   ProfileData.roleLine1,
+//                   style: KolekText.mono(
+//                     size: 10,
+//                     color: KolekColors.neutral500,
+//                     letterSpacing: 0.4,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 2),
+//                 Text(
+//                   ProfileData.roleLine2,
+//                   style: KolekText.mono(
+//                     size: 10,
+//                     color: KolekColors.neutral500,
+//                     letterSpacing: 0.4,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           const SizedBox(width: 12),
+//           const _StatsColumn(),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader();
 
@@ -135,12 +197,68 @@ class _ProfileHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const _StatsColumn(),
+          // ✅ Push stats down so "16.1K / Followers" aligns with the name top
+          const Padding(
+            padding: EdgeInsets.only(top: 70), // 56 (avatar) + 14 (gap)
+            child: _StatsColumn(),
+          ),
         ],
       ),
     );
   }
 }
+
+
+// class _StatsColumn extends StatelessWidget {
+//   const _StatsColumn();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: 88,
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.end,
+//         children: [
+//           _StatItem(value: ProfileData.followers, label: 'Followers'),
+//           const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
+//           _StatItem(value: ProfileData.following, label: 'Following'),
+//           const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
+//           _StatItem(value: ProfileData.works, label: 'Works'),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+// class _StatItem extends StatelessWidget {
+//   const _StatItem({required this.value, required this.label});
+//
+//   final String value;
+//   final String label;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.end,
+//       children: [
+//         Text(
+//           value,
+//           style: KolekText.sans(size: 16, weight: FontWeight.w700),
+//         ),
+//         const SizedBox(height: 2),
+//         Text(
+//           label,
+//           style: KolekText.sans(
+//             size: 11,
+//             weight: FontWeight.w400,
+//             color: KolekColors.neutral500,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class _StatsColumn extends StatelessWidget {
   const _StatsColumn();
@@ -150,7 +268,7 @@ class _StatsColumn extends StatelessWidget {
     return SizedBox(
       width: 88,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start, // ✅ was .end
         children: [
           _StatItem(value: ProfileData.followers, label: 'Followers'),
           const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
@@ -172,7 +290,7 @@ class _StatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start, // ✅ was .end
       children: [
         Text(
           value,
@@ -191,6 +309,9 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
+
+
+
 
 class _ProfileActions extends StatelessWidget {
   const _ProfileActions();
