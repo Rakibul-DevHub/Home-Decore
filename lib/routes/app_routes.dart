@@ -24,8 +24,12 @@ import '../screens/create_post/view/new_post_media_screen.dart';
 import '../screens/filter/cubit/filter_cubit.dart';
 import '../screens/filter/view/filter_screen.dart';
 import '../screens/home/cubit/home_cubit.dart';
+import '../screens/inbox/cubit/inbox_cubit.dart';
+import '../screens/inbox/view/inbox_screen.dart';
 import '../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../screens/main_shell/view/main_shell_screen.dart';
+import '../screens/messages/cubit/messages_cubit.dart';
+import '../screens/messages/data/messages_data.dart';
 import '../screens/product_details/cubit/product_details_cubit.dart';
 import '../screens/product_details/view/product_details_screen.dart';
 import '../screens/search/cubit/search_cubit.dart';
@@ -54,6 +58,7 @@ abstract final class AppRoutes {
   static const create = '/create';
   static const newPost = '/new-post';
   static const newPostDetails = '/new-post-details';
+  static const inbox = '/inbox';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -96,9 +101,20 @@ abstract final class AppRoutes {
         BlocProvider(create: (_) => MainShellCubit()),
         BlocProvider(create: (_) => HomeCubit()),
         BlocProvider(create: (_) => ShopCubit()),
+        BlocProvider(create: (_) => MessagesCubit()),
       ],
       child: const MainShellScreen(),
     ),
+    inbox: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      final thread = args is MessageThread
+          ? args
+          : MessagesData.threads.first;
+      return BlocProvider(
+        create: (_) => InboxCubit(thread: thread),
+        child: const InboxScreen(),
+      );
+    },
     search: (_) => BlocProvider(
       create: (_) => SearchCubit(),
       child: const SearchScreen(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
@@ -29,8 +30,17 @@ class ProductDetailsScreen extends StatelessWidget {
             builder: (context, cartCount) => IconButton(
               onPressed: () => Navigator.of(context).pushNamed(AppRoute.cart),
               icon: Badge(
+                backgroundColor: KolekColors.blue600,
                 label: Text('$cartCount'),
-                child: const Icon(Icons.shopping_bag_outlined),
+                child: SvgPicture.asset(
+                  'assets/icons/cart.svg',
+                  width: 24,
+                  height: 24,
+                  colorFilter: const ColorFilter.mode(
+                    Colors.black, // Change color as needed
+                    BlendMode.srcIn,
+                  ),
+                ),
               ),
             ),
           ),
@@ -99,10 +109,25 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  '\$${ProductDetailsData.product.price}',
-                  style: KolekText.sans(size: 22, color: KolekColors.blue600),
+                Column(
+                  children: [
+                    Text(
+                      '\$${ProductDetailsData.product.price}',
+                      style: KolekText.sans(
+                        size: 22,
+                        color: KolekColors.blue600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      width: 50, // Adjust to match text width
+                      height: 1.5,
+                      color: KolekColors.neutral950,
+                    ),
+                  ],
                 ),
+
+
                 const SizedBox(height: 12),
                 Text(
                   ProductDetailsData.product.description,
@@ -112,16 +137,36 @@ class ProductDetailsScreen extends StatelessWidget {
                 OutlinedButton.icon(
                   onPressed: () {},
                   style: OutlinedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                   ),
-                  icon: const CircleAvatar(
-                    radius: 10,
-                    backgroundColor: KolekColors.neutral300,
-                    child: Text('R'),
-                  ),
-                  label: Text(
-                    'By ${ProductDetailsData.product.seller}  →',
-                    style: KolekText.mono(size: 10),
+                  label: Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'By ',
+                          style: KolekText.mono(
+                            size: 14,
+                            color: KolekColors.neutral950,
+                          ), // Black color for "By "
+                        ),
+                        TextSpan(
+                          text: ProductDetailsData.product.seller,
+                          style: KolekText.mono(
+                            size: 14,
+                            color: KolekColors.blue600,
+                          ), // Blue color for seller name
+                        ),
+                        TextSpan(
+                          text: '  →',
+                          style: KolekText.mono(
+                            size: 14,
+                            color: KolekColors.neutral950,
+                          ), // Black color for "  →"
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -170,7 +215,8 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'Buy Now  —  \$${ProductDetailsData.product.price}',
-                      style: KolekText.sans(size: 11, color: Colors.white),
+                      style: KolekText.sans(size: 11,
+                          color: Colors.white,),
                     ),
                   ),
                 ),

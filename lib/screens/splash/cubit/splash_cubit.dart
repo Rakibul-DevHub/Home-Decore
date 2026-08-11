@@ -1,25 +1,55 @@
-import 'dart:async';
-
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SplashCubit extends Cubit<bool> {
-  SplashCubit({required this.duration}) : super(false);
+enum SplashStatus { idle, running, ready }
 
-  final Duration duration;
-  Timer? _timer;
+final class SplashState extends Equatable {
+  const SplashState({this.status = SplashStatus.idle});
 
-  void start() {
-    _timer?.cancel();
-    _timer = Timer(duration, () {
-      if (!isClosed) {
-        emit(true);
-      }
-    });
+  final SplashStatus status;
+
+  bool get isReady => status == SplashStatus.ready;
+
+  SplashState copyWith({SplashStatus? status}) {
+    return SplashState(status: status ?? this.status);
   }
 
   @override
-  Future<void> close() {
-    _timer?.cancel();
-    return super.close();
+  List<Object?> get props => [status];
+}
+
+/// Holds the splash on screen for [duration], then signals navigation.
+///
+/// Optional [bootstrap] work runs in parallel with the minimum display time
+/// so cold start feels intentional without blocking longer than needed.
+class SplashCubit extends Cubit<SplashState> {
+  SplashCubit({
+    required this.duration,
+    this._bootstrap,
+  }) : super(const SplashState());
+
+  final Duration duration;
+  final Future<void> Function()? _bootstrap;
+
+  bool _started = false;
+
+  Future<void> start() async {
+    if (_started || isClosed) return;
+    _started = true;
+    emit(state.copyWith(status: SplashStatus.running));
+
+    final bootstrap = _bootstrap;
+    try {
+      await Future.wait<void>([
+        Future<void>.delayed(duration),
+        if (bootstrap != null) bootstrap(),
+      ]);
+    } catch (_) {
+      // Still leave splash so the user is never stuck on a failed bootstrap.
+    }
+
+    if (!isClosed) {
+      emit(state.copyWith(status: SplashStatus.ready));
+    }
   }
 }

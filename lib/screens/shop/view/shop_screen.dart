@@ -23,25 +23,40 @@ class ShopScreen extends StatelessWidget {
         leading: Row(
           children: [
             const SizedBox(width: 8),
-            const KolekLogo(size: 28),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgPicture.asset(
+                'assets/icons/semi_circel_logo.svg',
+                width: 24,
+                height: 24,
+              ),
+            ),
+
             IconButton(
               onPressed: () async {
-                final result =
-                    await Navigator.of(context).pushNamed(AppRoute.search);
+                final result = await Navigator.of(
+                  context,
+                ).pushNamed(AppRoute.search);
                 if (result == AppRoute.shop && context.mounted) {
                   context.read<MainShellCubit>().switchTab(1);
                 }
               },
               icon: SvgPicture.asset(
                 'assets/icons/search.svg',
-                width: 20,
-                height: 20,
+                width: 24,
+                height: 24,
               ),
             ),
           ],
         ),
         centerTitle: true,
-        title: const KolekTextLogo(),
+        title: SvgPicture.asset(
+          'assets/icons/text_logo.svg',
+          width: 78,
+          height: 24,
+          fit: BoxFit.contain,
+        ),
+
         actions: [
           BlocSelector<ShopCubit, ShopState, int>(
             selector: (state) => state.cartCount,
@@ -52,8 +67,8 @@ class ShopScreen extends StatelessWidget {
                 backgroundColor: KolekColors.blue600,
                 child: SvgPicture.asset(
                   'assets/icons/cart.svg',
-                  width: 22,
-                  height: 22,
+                  width: 24,
+                  height: 24,
                   colorFilter: const ColorFilter.mode(
                     KolekColors.neutral900,
                     BlendMode.srcIn,
@@ -66,8 +81,8 @@ class ShopScreen extends StatelessWidget {
             onPressed: () {},
             icon: SvgPicture.asset(
               'assets/icons/notification_active.svg',
-              width: 22,
-              height: 22,
+              width: 24,
+              height: 24,
             ),
           ),
         ],
@@ -101,16 +116,29 @@ class ShopScreen extends StatelessWidget {
                   const Divider(),
                   Row(
                     children: [
-                      TextButton.icon(
+                      TextButton(
                         onPressed: () async {
                           await Navigator.of(context).pushNamed(AppRoute.filter);
                           if (context.mounted) {
                             context.read<ShopCubit>().markFilterApplied();
                           }
                         },
-                        icon: const Icon(Icons.tune, size: 17),
-                        label: Text('Filter', style: KolekText.mono(size: 11)),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.only(top: 8), // Remove default padding
+                          minimumSize: const Size(0, 0), // Remove minimum size constraint
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap, // Reduce tap target size
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Filter', style: KolekText.mono(size: 11)),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.tune, size: 17),
+                          ],
+                        ),
                       ),
+
+
                       const Spacer(),
                       BlocSelector<ShopCubit, ShopState, String>(
                         selector: (state) => state.sortLabel,
