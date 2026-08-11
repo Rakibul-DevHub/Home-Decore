@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
@@ -17,6 +18,7 @@ class ProfileScreen extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             const SliverToBoxAdapter(child: _ProfileAppBar()),
+            const SliverToBoxAdapter(child: _FadedDivider()),
             const SliverToBoxAdapter(child: _ProfileHeader()),
             const SliverToBoxAdapter(child: _ProfileActions()),
             const SliverToBoxAdapter(child: SizedBox(height: 18)),
@@ -44,6 +46,63 @@ class ProfileScreen extends StatelessWidget {
             const SliverToBoxAdapter(child: SizedBox(height: 24)),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _FadedDivider extends StatelessWidget {
+  const _FadedDivider();
+
+  static const double _fadeWidth = 80.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 1,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ColoredBox(color: KolekColors.neutral200),
+          ),
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: _fadeWidth,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.white,
+                    Colors.white.withValues(alpha: 0.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: _fadeWidth,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.0),
+                    Colors.white,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -81,68 +140,6 @@ class _ProfileAppBar extends StatelessWidget {
     );
   }
 }
-
-// class _ProfileHeader extends StatelessWidget {
-//   const _ProfileHeader();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.fromLTRB(18, 8, 18, 0),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 ClipOval(
-//                   child: Image.asset(
-//                     ProfileData.avatarAsset,
-//                     width: 56,
-//                     height: 56,
-//                     fit: BoxFit.cover,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 14),
-//                 Text(
-//                   ProfileData.name,
-//                   style: KolekText.sans(
-//                     size: 28,
-//                     weight: FontWeight.w700,
-//                     height: 1.05,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 8),
-//                 Text(
-//                   ProfileData.roleLine1,
-//                   style: KolekText.mono(
-//                     size: 10,
-//                     color: KolekColors.neutral500,
-//                     letterSpacing: 0.4,
-//                   ),
-//                 ),
-//                 const SizedBox(height: 2),
-//                 Text(
-//                   ProfileData.roleLine2,
-//                   style: KolekText.mono(
-//                     size: 10,
-//                     color: KolekColors.neutral500,
-//                     letterSpacing: 0.4,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           const SizedBox(width: 12),
-//           const _StatsColumn(),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
 
 class _ProfileHeader extends StatelessWidget {
   const _ProfileHeader();
@@ -197,9 +194,8 @@ class _ProfileHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          // ✅ Push stats down so "16.1K / Followers" aligns with the name top
           const Padding(
-            padding: EdgeInsets.only(top: 70), // 56 (avatar) + 14 (gap)
+            padding: EdgeInsets.only(top: 70),
             child: _StatsColumn(),
           ),
         ],
@@ -207,58 +203,6 @@ class _ProfileHeader extends StatelessWidget {
     );
   }
 }
-
-
-// class _StatsColumn extends StatelessWidget {
-//   const _StatsColumn();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: 88,
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.end,
-//         children: [
-//           _StatItem(value: ProfileData.followers, label: 'Followers'),
-//           const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
-//           _StatItem(value: ProfileData.following, label: 'Following'),
-//           const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
-//           _StatItem(value: ProfileData.works, label: 'Works'),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-
-// class _StatItem extends StatelessWidget {
-//   const _StatItem({required this.value, required this.label});
-//
-//   final String value;
-//   final String label;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.end,
-//       children: [
-//         Text(
-//           value,
-//           style: KolekText.sans(size: 16, weight: FontWeight.w700),
-//         ),
-//         const SizedBox(height: 2),
-//         Text(
-//           label,
-//           style: KolekText.sans(
-//             size: 11,
-//             weight: FontWeight.w400,
-//             color: KolekColors.neutral500,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
 
 class _StatsColumn extends StatelessWidget {
   const _StatsColumn();
@@ -268,12 +212,20 @@ class _StatsColumn extends StatelessWidget {
     return SizedBox(
       width: 88,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start, // ✅ was .end
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _StatItem(value: ProfileData.followers, label: 'Followers'),
-          const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
+          const Divider(
+            height: 20,
+            thickness: 1,
+            color: KolekColors.neutral200,
+          ),
           _StatItem(value: ProfileData.following, label: 'Following'),
-          const Divider(height: 20, thickness: 1, color: KolekColors.neutral200),
+          const Divider(
+            height: 20,
+            thickness: 1,
+            color: KolekColors.neutral200,
+          ),
           _StatItem(value: ProfileData.works, label: 'Works'),
         ],
       ),
@@ -290,18 +242,22 @@ class _StatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // ✅ was .end
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           value,
-          style: KolekText.sans(size: 16, weight: FontWeight.w700),
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: KolekColors.neutral900,
+          ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: KolekText.sans(
-            size: 11,
-            weight: FontWeight.w400,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
             color: KolekColors.neutral500,
           ),
         ),
@@ -309,9 +265,6 @@ class _StatItem extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class _ProfileActions extends StatelessWidget {
   const _ProfileActions();
@@ -370,7 +323,8 @@ class _ProfileTabs extends StatelessWidget {
                       child: _TabItem(
                         label: ProfileData.tabs[i],
                         selected: state.tabIndex == i,
-                        onTap: () => context.read<ProfileCubit>().selectTab(i),
+                        onTap: () =>
+                            context.read<ProfileCubit>().selectTab(i),
                       ),
                     ),
                 ],
@@ -413,9 +367,8 @@ class _TabItem extends StatelessWidget {
               style: KolekText.sans(
                 size: 11,
                 weight: selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected
-                    ? KolekColors.neutral900
-                    : KolekColors.neutral500,
+                color:
+                selected ? KolekColors.neutral900 : KolekColors.neutral500,
               ),
             ),
           ),
@@ -430,28 +383,6 @@ class _TabItem extends StatelessWidget {
   }
 }
 
-/// A single tile in the works masonry grid, expressed entirely in
-/// fractions (0..1) of the grid's own width/height. This mirrors the
-/// dxPct/dyPct/widthPct pattern used for the BOL signature overlay so the
-/// layout stays correct at any screen width without re-deriving pixel math.
-///
-/// Measured directly off the design reference — 6 images total, each used
-/// exactly once (imageIndex 0-5). No 7th tile, no reused asset.
-///
-/// The only non-obvious part: pi6 (the bottom panorama) is ONE full-width
-/// rectangle whose top edge starts higher than pi3/pi4's bottom edge.
-/// pi3/pi4 are painted on top of it afterward, so they visually cover
-/// pi6's top-left corner for about 23px — that's the "overlap" you're
-/// seeing, not a crop and not a separate image:
-/// ```
-/// [   pi1   ][   pi1   ][  pi2  ]
-/// [   pi1   ][   pi1   ][  pi2  ]
-/// [   pi3   ][   pi4   ][  pi2  ]
-/// [ pi3/pi6 ][ pi4/pi6 ][  pi5  ]   <- pi3/pi4 sit on top of pi6 here
-/// [       pi6 (full width)      ]
-/// ```
-/// Stack paint order therefore matters: pi6 must be added to the Stack
-/// BEFORE pi3/pi4 so it sits underneath in the overlap zone.
 class _GridTile {
   const _GridTile({
     required this.col,
@@ -461,39 +392,67 @@ class _GridTile {
     required this.imageIndex,
   });
 
-  final int col; // starting column, 0-2
-  final int colSpan; // how many of the 3 columns this tile occupies
-  final double top; // fraction of total grid height
-  final double height; // fraction of total grid height
+  final int col;
+  final int colSpan;
+  final double top;
+  final double height;
   final int imageIndex;
 }
 
 class _WorksGrid extends StatelessWidget {
   const _WorksGrid();
 
-  // Fractions derived from pixel-measuring the design screenshot
-  // (grid content region was 348px-713px tall == 365px reference height).
-  //
-  // NOTE: list order = paint order (Stack paints later children on top).
-  // pi6 (panorama) is listed BEFORE pi3/pi4 (purple/warm) on purpose, so
-  // that purple/warm paint over its top-left corner in the overlap zone.
   static const List<_GridTile> _tiles = [
-    _GridTile(col: 0, colSpan: 2, top: 0.0000, height: 0.3699, imageIndex: 0), // colorful
-    _GridTile(col: 2, colSpan: 1, top: 0.0000, height: 0.4274, imageIndex: 1), // gray brushstrokes
-    _GridTile(col: 2, colSpan: 1, top: 0.4411, height: 0.2603, imageIndex: 4), // teal/orange
-    _GridTile(col: 0, colSpan: 3, top: 0.7123, height: 0.2877, imageIndex: 5), // panorama — starts high, full width
-    _GridTile(col: 0, colSpan: 1, top: 0.3836, height: 0.3918, imageIndex: 2), // purple circles — overlaps panorama
-    _GridTile(col: 1, colSpan: 1, top: 0.3836, height: 0.3918, imageIndex: 3), // warm abstract — overlaps panorama
+    _GridTile(
+      col: 0,
+      colSpan: 2,
+      top: 0.0000,
+      height: 0.3699,
+      imageIndex: 0,
+    ),
+    _GridTile(
+      col: 2,
+      colSpan: 1,
+      top: 0.0000,
+      height: 0.4274,
+      imageIndex: 1,
+    ),
+    _GridTile(
+      col: 2,
+      colSpan: 1,
+      top: 0.4411,
+      height: 0.2603,
+      imageIndex: 4,
+    ),
+    _GridTile(
+      col: 0,
+      colSpan: 3,
+      top: 0.7123,
+      height: 0.2877,
+      imageIndex: 5,
+    ),
+    _GridTile(
+      col: 0,
+      colSpan: 1,
+      top: 0.3836,
+      height: 0.3918,
+      imageIndex: 2,
+    ),
+    _GridTile(
+      col: 1,
+      colSpan: 1,
+      top: 0.3836,
+      height: 0.3918,
+      imageIndex: 3,
+    ),
   ];
 
-  // Reference aspect ratio of the whole grid block (height / width),
-  // measured from the design so the grid scales correctly on other widths.
   static const double _gridAspectRatio = 365 / 343;
 
   @override
   Widget build(BuildContext context) {
     const gap = ProfileData.gridGap;
-    final images = ProfileData.gridImages; // unchanged, still 6 entries
+    final images = ProfileData.gridImages;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
