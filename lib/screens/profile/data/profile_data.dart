@@ -31,6 +31,6 @@ abstract final class ProfileData {
       'explores color, texture, and the quiet tension between '
       'structure and gesture.';
 
-  static const gridGap = 10.0;
-  static const cardRadius = 14.0;
+  static const gridGap = 4.0;
+  static const cardRadius = 6.0;
 }

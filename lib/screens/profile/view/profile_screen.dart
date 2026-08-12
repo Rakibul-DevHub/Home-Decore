@@ -501,15 +501,6 @@ class _GridImage extends StatelessWidget {
         alignment: Alignment.center,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (_, _, _) => ColoredBox(
-          color: KolekColors.neutral200,
-          child: Center(
-            child: Icon(
-              Icons.image_outlined,
-              color: KolekColors.neutral400,
-            ),
-          ),
-        ),
       ),
     );
   }
