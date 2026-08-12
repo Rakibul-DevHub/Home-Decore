@@ -11,11 +11,19 @@ class NewPostDetailsScreen extends StatelessWidget {
   const NewPostDetailsScreen({super.key});
 
   IconData _iconFor(String label) => switch (label) {
-    'Add Location' => Icons.location_on_outlined,
-    'Add Hashtags' => Icons.tag,
-    'Connect Product' => Icons.link,
-    _ => Icons.tune,
-  };
+        'Add Location' => Icons.location_on_outlined,
+        'Add Hashtags' => Icons.tag,
+        'Connect Product' => Icons.link,
+        _ => Icons.tune,
+      };
+
+  String _captionCountLabel(int length) {
+    final max = NewPostData.maxCaptionLength;
+    final maxLabel = max >= 1000
+        ? '${max ~/ 1000},${(max % 1000).toString().padLeft(3, '0')}'
+        : '$max';
+    return '$length/$maxLabel';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,15 @@ class NewPostDetailsScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.cancel, size: 28),
+          icon: Container(
+            width: 28,
+            height: 28,
+            decoration: const BoxDecoration(
+              color: KolekColors.neutral950,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.close, size: 16, color: Colors.white),
+          ),
         ),
         centerTitle: true,
         title: Text(
@@ -57,7 +73,7 @@ class NewPostDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             children: [
               SizedBox(
-                height: 78,
+                height: 86,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: state.selectedIndexes.length,
@@ -68,11 +84,11 @@ class NewPostDetailsScreen extends StatelessWidget {
                       clipBehavior: Clip.none,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(6),
                           child: Image.asset(
                             NewPostData.gallery[galleryIndex],
-                            width: 72,
-                            height: 72,
+                            width: 68,
+                            height: 78,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -99,84 +115,124 @@ class NewPostDetailsScreen extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               TextField(
-                maxLines: 5,
-                minLines: 4,
+                maxLines: 4,
+                minLines: 3,
                 onChanged: context.read<NewPostCubit>().captionChanged,
+                style: KolekText.sans(size: 14),
                 decoration: InputDecoration(
-                  hintText: 'Write a caption.',
+                  hintText: 'Write a caption',
                   hintStyle: KolekText.sans(
                     size: 14,
                     color: KolekColors.neutral400,
                   ),
                   border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
                 ),
               ),
+              const SizedBox(height: 8),
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  '${state.caption.length}/${NewPostData.maxCaptionLength}',
+                  _captionCountLabel(state.caption.length),
                   style: KolekText.mono(
                     size: 10,
                     color: KolekColors.neutral400,
                   ),
                 ),
               ),
-              const Divider(height: 28),
+              const Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
               ...NewPostData.settings.map(
-                (label) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(_iconFor(label), size: 22),
-                  title: Text(label, style: KolekText.sans(size: 14)),
-                  trailing: const Icon(Icons.chevron_right, size: 20),
-                  onTap: () {},
-                ),
-              ),
-              const SizedBox(height: 18),
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 18, 12, 12),
-                decoration: BoxDecoration(
-                  color: KolekColors.neutral100,
-                  border: Border.all(color: KolekColors.neutral200),
-                ),
-                child: Row(
+                (label) => Column(
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const KolekTextLogo(height: 18),
-                          const SizedBox(height: 10),
-                          Text(
-                            NewPostData.footerTagline,
-                            style: KolekText.sans(
-                              size: 13,
-                              weight: FontWeight.w600,
-                              height: 1.25,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
-                            width: 28,
-                            height: 2,
-                            color: KolekColors.neutral900,
-                          ),
-                        ],
-                      ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      minLeadingWidth: 28,
+                      visualDensity: const VisualDensity(vertical: -1),
+                      leading: Icon(_iconFor(label), size: 22),
+                      title: Text(label, style: KolekText.sans(size: 14)),
+                      trailing: const Icon(Icons.chevron_right, size: 20),
+                      onTap: () {},
                     ),
-                    Image.asset(
-                      NewPostData.footerArt,
-                      width: 84,
-                      height: 96,
-                      fit: BoxFit.contain,
+                    const Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: KolekColors.neutral200,
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 20),
+              const _FooterBrandCard(),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _FooterBrandCard extends StatelessWidget {
+  const _FooterBrandCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 132,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: KolekColors.neutral200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 16,
+            top: 18,
+            right: 130,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const KolekTextLogo(height: 20),
+                const SizedBox(height: 10),
+                Text(
+                  NewPostData.footerTagline,
+                  style: KolekText.sans(
+                    size: 13,
+                    weight: FontWeight.w600,
+                    height: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  width: 26,
+                  height: 3,
+                  color: KolekColors.neutral900,
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 0,
+            bottom: -4,
+            child: Image.asset(
+              NewPostData.footerArt,
+              height: 128,
+              fit: BoxFit.contain,
+              alignment: Alignment.bottomRight,
+            ),
+          ),
+        ],
       ),
     );
   }

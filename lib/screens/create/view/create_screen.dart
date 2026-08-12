@@ -121,7 +121,7 @@ class _HeroSection extends StatelessWidget {
           ),
           Positioned(
             left: 16,
-            top: 236,
+            top: 265,
             child: Text(
               'Post your art, process,\nor inspiration.\nThe world is watching.',
               style: GoogleFonts.ibmPlexMono(
