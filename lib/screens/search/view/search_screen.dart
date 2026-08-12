@@ -24,23 +24,44 @@ class SearchScreen extends StatelessWidget {
         scrolledUnderElevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back, size: 21),
+          icon: const Icon(Icons.arrow_back, size: 22),
         ),
         centerTitle: true,
-        title: const KolekTextLogo(),
+        title: const KolekTextLogo(height: 22),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: SvgPicture.asset(
-              'assets/icons/notification.svg',
-              width: 22,
-              height: 22,
+            icon: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/notification.svg',
+                  width: 22,
+                  height: 22,
+                ),
+                Positioned(
+                  right: -1,
+                  top: -1,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: KolekColors.blue600,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
+        ),
       ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(18, 10, 18, 24),
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
         children: [
           TextField(
             textInputAction: TextInputAction.search,
@@ -49,34 +70,71 @@ class SearchScreen extends StatelessWidget {
               context.read<SearchCubit>().submit(value);
               _goToShop(context);
             },
+            style: KolekText.sans(size: 14),
             decoration: InputDecoration(
               hintText: 'Search',
-              hintStyle: KolekText.sans(size: 14),
-              prefixIcon: SvgPicture.asset(
-                'assets/icons/search.svg',
-                width: 20,
-                height: 20,
-                fit: BoxFit.scaleDown,
+              hintStyle: KolekText.sans(
+                size: 14,
+                color: KolekColors.neutral500,
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 14, right: 8),
+                child: SvgPicture.asset(
+                  'assets/icons/search.svg',
+                  width: 18,
+                  height: 18,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: 40,
+                minHeight: 40,
               ),
               filled: true,
-              fillColor: KolekColors.neutral200,
-              border: InputBorder.none,
+              fillColor: KolekColors.neutral100,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 14,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
             ),
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 28),
           Row(
             children: [
-              Text('Recent Searches', style: KolekText.sans(size: 14)),
+              Text(
+                'Recent Searches',
+                style: KolekText.sans(size: 14, weight: FontWeight.w700),
+              ),
               const Spacer(),
-              TextButton(
-                onPressed: context.read<SearchCubit>().clearRecent,
-                child: Text(
-                  'Clear All',
-                  style: KolekText.mono(size: 11, color: KolekColors.blue600),
+              GestureDetector(
+                onTap: context.read<SearchCubit>().clearRecent,
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(
+                    'Clear All',
+                    style: KolekText.mono(
+                      size: 11,
+                      color: KolekColors.blue600,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 12),
           BlocSelector<SearchCubit, SearchState, List<String>>(
             selector: (state) => state.recentSearches,
             builder: (context, recentSearches) => Wrap(
@@ -84,23 +142,26 @@ class SearchScreen extends StatelessWidget {
               runSpacing: 8,
               children: recentSearches
                   .map(
-                    (item) => Chip(
-                      label: Text(item, style: KolekText.mono(size: 10)),
-                      deleteIcon: const Icon(Icons.close, size: 14),
+                    (item) => _RecentSearchChip(
+                      label: item,
                       onDeleted: () =>
                           context.read<SearchCubit>().removeRecent(item),
-                      backgroundColor: KolekColors.neutral50,
-                      side: const BorderSide(color: KolekColors.neutral300),
-                      shape: const RoundedRectangleBorder(),
-                      padding: EdgeInsets.zero,
+                      onTap: () {
+                        context.read<SearchCubit>().submit(item);
+                        _goToShop(context);
+                      },
                     ),
                   )
                   .toList(),
             ),
           ),
-          const SizedBox(height: 22),
-          Text('Popular Searches', style: KolekText.sans(size: 14)),
-          const SizedBox(height: 8),
+          const SizedBox(height: 28),
+          Text(
+            'Popular Searches',
+            style: KolekText.sans(size: 14, weight: FontWeight.w700),
+          ),
+          const SizedBox(height: 12),
+          const Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
           ...SearchData.popular.map(
             (item) => InkWell(
               key: ValueKey('popular-$item'),
@@ -109,7 +170,7 @@ class SearchScreen extends StatelessWidget {
                 _goToShop(context);
               },
               child: Container(
-                height: 57,
+                height: 52,
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   border: Border(
@@ -118,15 +179,75 @@ class SearchScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Text(item, style: KolekText.mono(size: 11)),
-                    const Spacer(),
-                    const Icon(Icons.chevron_right, size: 18),
+                    Expanded(
+                      child: Text(item, style: KolekText.mono(size: 12)),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      size: 18,
+                      color: KolekColors.neutral400,
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _RecentSearchChip extends StatelessWidget {
+  const _RecentSearchChip({
+    required this.label,
+    required this.onDeleted,
+    required this.onTap,
+  });
+
+  final String label;
+  final VoidCallback onDeleted;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: const BorderSide(color: KolekColors.neutral200),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(4),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: KolekText.mono(
+                  size: 11,
+                  color: KolekColors.neutral500,
+                ),
+              ),
+              const SizedBox(width: 6),
+              GestureDetector(
+                onTap: onDeleted,
+                behavior: HitTestBehavior.opaque,
+                child: const Padding(
+                  padding: EdgeInsets.all(2),
+                  child: Icon(
+                    Icons.close,
+                    size: 14,
+                    color: KolekColors.neutral500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
