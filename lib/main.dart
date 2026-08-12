@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
+import 'app_bootstrap.dart';
 import 'routes/app_routes.dart';
 import 'theme/kolek_colors.dart';
 
@@ -10,47 +9,32 @@ Future<void> main() async {
   runApp(const KolekApp());
 }
 
-/// One-time process setup before [runApp].
-abstract final class AppBootstrap {
-  static Future<void> init() async {
-    WidgetsFlutterBinding.ensureInitialized();
+class KolekApp extends StatefulWidget {
+  const KolekApp({super.key});
 
-    FlutterError.onError = (details) {
-      FlutterError.presentError(details);
-      if (kReleaseMode) {
-        // Hook crash reporting (Firebase Crashlytics / Sentry) here.
-        debugPrint(details.exceptionAsString());
-      }
-    };
-
-    PlatformDispatcher.instance.onError = (error, stack) {
-      if (kReleaseMode) {
-        debugPrint('$error\n$stack');
-      }
-      return true;
-    };
-
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(_overlayStyle);
-
-    await SystemChrome.setPreferredOrientations(const [
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-  }
-
-  static const SystemUiOverlayStyle _overlayStyle = SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
-    systemNavigationBarDividerColor: Colors.transparent,
-  );
+  @override
+  State<KolekApp> createState() => _KolekAppState();
 }
 
-class KolekApp extends StatelessWidget {
-  const KolekApp({super.key});
+class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      AppBootstrap.applySystemUi();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +78,7 @@ class KolekApp extends StatelessWidget {
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: KolekColors.neutral950,
-        systemOverlayStyle: AppBootstrap._overlayStyle,
+        systemOverlayStyle: AppBootstrap.overlayStyle,
       ),
     );
   }

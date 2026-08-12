@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../app_bootstrap.dart';
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
@@ -18,15 +19,6 @@ class NewPostMediaScreen extends StatefulWidget {
 
 class _NewPostMediaScreenState extends State<NewPostMediaScreen> {
   bool _isFullScreen = false;
-
-  static const _overlayStyle = SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
-    systemNavigationBarDividerColor: Colors.transparent,
-  );
 
   @override
   void dispose() {
@@ -45,8 +37,7 @@ class _NewPostMediaScreenState extends State<NewPostMediaScreen> {
   }
 
   Future<void> _restoreSystemUi() async {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setSystemUIOverlayStyle(_overlayStyle);
+    await AppBootstrap.applySystemUi();
   }
 
   void _openDetails(BuildContext context) {
@@ -78,7 +69,7 @@ class _NewPostMediaScreenState extends State<NewPostMediaScreen> {
             : AppBar(
                 backgroundColor: Colors.white,
                 scrolledUnderElevation: 0,
-                systemOverlayStyle: _overlayStyle,
+                systemOverlayStyle: AppBootstrap.overlayStyle,
                 leading: IconButton(
                   onPressed: () => Navigator.of(context).pop(),
                   icon: const Icon(Icons.cancel, size: 28),
