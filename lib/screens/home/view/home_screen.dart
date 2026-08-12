@@ -140,8 +140,8 @@ class _FeedCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: offset.dy + button.size.height - 4,
-              right: overlay.size.width - offset.dx - button.size.width + 4,
+              top: offset.dy + button.size.height + 12,
+              right: overlay.size.width - offset.dx - button.size.width - 4,
               child: TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0, end: 1),
                 duration: const Duration(milliseconds: 180),
