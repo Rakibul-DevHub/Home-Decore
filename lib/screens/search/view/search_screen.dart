@@ -31,27 +31,10 @@ class SearchScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/notification.svg',
-                  width: 22,
-                  height: 22,
-                ),
-                Positioned(
-                  right: -1,
-                  top: -1,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: KolekColors.blue600,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
+            icon: SvgPicture.asset(
+              'assets/icons/notification_active.svg',
+              width: 22,
+              height: 22,
             ),
           ),
         ],
