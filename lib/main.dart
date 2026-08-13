@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app_bootstrap.dart';
 import 'routes/app_routes.dart';
 import 'theme/kolek_colors.dart';
+import 'widgets/kolek_fit_layout.dart';
 
 Future<void> main() async {
   await AppBootstrap.init();
@@ -43,15 +44,7 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(),
       builder: (context, child) {
-        final media = MediaQuery.of(context);
-        return MediaQuery(
-          data: media.copyWith(
-            // Keep layout stable on extreme accessibility text scales.
-            textScaler: media.textScaler.clamp(
-              minScaleFactor: 0.85,
-              maxScaleFactor: 1.25,
-            ),
-          ),
+        return KolekFitLayout(
           child: child ?? const SizedBox.shrink(),
         );
       },
