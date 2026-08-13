@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,7 @@ class NewPostDetailsScreen extends StatelessWidget {
   IconData _iconFor(String label) => switch (label) {
         'Add Location' => Icons.location_on_outlined,
         'Add Hashtags' => Icons.tag,
-        'Connect Product' => Icons.link,
+        'Connect Product' => CupertinoIcons.link,
         _ => Icons.tune,
       };
 
@@ -100,7 +101,7 @@ class NewPostDetailsScreen extends StatelessWidget {
                                 .read<NewPostCubit>()
                                 .removeSelected(galleryIndex),
                             child: const CircleAvatar(
-                              radius: 12,
+                              radius: 14,
                               backgroundColor: Colors.black,
                               child: Icon(
                                 Icons.close,
