@@ -93,18 +93,18 @@ class NewPostDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned(
-                          top: -4,
-                          right: -4,
+                          top: 1,
+                          right: 1,
                           child: GestureDetector(
                             onTap: () => context
                                 .read<NewPostCubit>()
                                 .removeSelected(galleryIndex),
                             child: const CircleAvatar(
-                              radius: 9,
+                              radius: 12,
                               backgroundColor: Colors.black,
                               child: Icon(
                                 Icons.close,
-                                size: 12,
+                                size: 14,
                                 color: Colors.white,
                               ),
                             ),
