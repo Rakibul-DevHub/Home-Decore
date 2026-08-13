@@ -27,11 +27,15 @@ class HomeComment {
     required this.author,
     required this.age,
     required this.message,
+    this.avatarAsset = 'assets/images/demo_user.png',
+    this.replyCount = 17,
   });
 
   final String author;
   final String age;
   final String message;
+  final String avatarAsset;
+  final int replyCount;
 }
 
 enum HomeMenuAction { savePost, message, report }

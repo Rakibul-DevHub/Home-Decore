@@ -465,122 +465,243 @@ class _LiquidGlassMenuItem extends StatelessWidget {
 class _CommentsSheet extends StatelessWidget {
   const _CommentsSheet();
 
+  static const _composerAvatar = 'assets/images/demo_user.png';
+  static const _generalSans = 'GeneralSans-Regular';
+  static const _ibmPlexMono = 'IBMPlexMono-Regular';
+
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.sizeOf(context).height * .62;
-    return Container(
-      height: height,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    final height = MediaQuery.sizeOf(context).height * 0.72;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      child: Container(
+        height: height,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: KolekColors.neutral300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'Comments',
+                style: const TextStyle(
+                  fontFamily: _ibmPlexMono,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: KolekColors.neutral900,
+                ),
+              ),
+              const SizedBox(height: 14),
+              const Divider(
+                height: 1,
+                thickness: 1,
+                color: KolekColors.neutral200,
+              ),
+              Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
+                  itemCount: HomeData.comments.length,
+                  separatorBuilder: (_, _) => const SizedBox(height: 22),
+                  itemBuilder: (_, index) {
+                    return _CommentTile(comment: HomeData.comments[index]);
+                  },
+                ),
+              ),
+              const Divider(
+                height: 1,
+                thickness: 1,
+                color: KolekColors.neutral200,
+              ),
+              const _CommentComposer(avatarAsset: _composerAvatar),
+            ],
+          ),
+        ),
       ),
-      child: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            const SizedBox(height: 9),
-            Container(
-              width: 34,
-              height: 3,
-              decoration: BoxDecoration(
-                color: KolekColors.neutral400,
-                borderRadius: BorderRadius.circular(2),
+    );
+  }
+}
+
+class _CommentTile extends StatelessWidget {
+  const _CommentTile({required this.comment});
+
+  final HomeComment comment;
+
+  static const _generalSans = _CommentsSheet._generalSans;
+  static const _ibmPlexMono = _CommentsSheet._ibmPlexMono;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipOval(
+          child: Image.asset(
+            comment.avatarAsset,
+            width: 40,
+            height: 40,
+            fit: BoxFit.cover,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    comment.author,
+                    style: const TextStyle(
+                      fontFamily: _generalSans, // only username
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: KolekColors.neutral900,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    comment.age,
+                    style: const TextStyle(
+                      fontFamily: _ibmPlexMono,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: KolekColors.neutral400,
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 9),
-            Text('Comments', style: KolekText.sans(size: 15)),
-            const Divider(height: 1, color: KolekColors.neutral200),
-            Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                itemCount: HomeData.comments.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 14),
-                itemBuilder: (_, index) {
-                  final comment = HomeData.comments[index];
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: KolekColors.neutral300,
-                        child: Text('D', style: KolekText.sans(size: 13)),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  comment.author,
-                                  style: KolekText.sans(
-                                    size: 12,
-                                    weight: FontWeight.w700,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  comment.age,
-                                  style: KolekText.mono(
-                                    size: 9,
-                                    color: KolekColors.neutral400,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              comment.message,
-                              style: KolekText.mono(
-                                size: 10,
-                                color: KolekColors.neutral600,
-                                height: 1.4,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text('Reply', style: KolekText.mono(size: 10)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              const SizedBox(height: 6),
+              Text(
+                comment.message.replaceAll('\n', ' '),
+                style: const TextStyle(
+                  fontFamily: _ibmPlexMono,
+                  fontSize: 12,
+                  height: 1.45,
+                  color: KolekColors.neutral500,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                14,
-                10,
-                14,
-                10 + MediaQuery.viewInsetsOf(context).bottom,
+              const SizedBox(height: 8),
+              const Text(
+                'Reply',
+                style: TextStyle(
+                  fontFamily: _ibmPlexMono,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: KolekColors.neutral900,
+                ),
               ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'What do you think of this?',
-                  hintStyle: KolekText.mono(
-                    size: 11,
+              if (comment.replyCount > 0) ...[
+                const SizedBox(height: 10),
+                Text(
+                  '———  View ${comment.replyCount} more replies',
+                  style: const TextStyle(
+                    fontFamily: _ibmPlexMono,
+                    fontSize: 11,
                     color: KolekColors.neutral400,
                   ),
-                  filled: true,
-                  fillColor: KolekColors.neutral100,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CommentComposer extends StatelessWidget {
+  const _CommentComposer({required this.avatarAsset});
+
+  final String avatarAsset;
+
+  static const _ibmPlexMono = _CommentsSheet._ibmPlexMono;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Row(
+        children: [
+          ClipOval(
+            child: Image.asset(
+              avatarAsset,
+              width: 36,
+              height: 36,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: SizedBox(
+              height: 44,
+              child: TextField(
+                style: const TextStyle(
+                  fontFamily: _ibmPlexMono,
+                  fontSize: 12,
+                  color: KolekColors.neutral900,
+                ),
+                decoration: InputDecoration(
+                  isDense: true,
+                  hintText: 'What do you think of this?',
+                  hintStyle: const TextStyle(
+                    fontFamily: _ibmPlexMono,
+                    fontSize: 12,
+                    color: KolekColors.neutral400,
                   ),
-                  suffixIcon: const CircleAvatar(
-                    backgroundColor: KolekColors.blue600,
-                    child: Icon(
-                      Icons.arrow_upward,
-                      size: 17,
-                      color: Colors.white,
+                  contentPadding: const EdgeInsets.fromLTRB(16, 12, 48, 12),
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(999),
+                    borderSide: const BorderSide(
+                      color: KolekColors.neutral300,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(999),
+                    borderSide: const BorderSide(
+                      color: KolekColors.neutral400,
+                    ),
+                  ),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Material(
+                      color: KolekColors.blue600,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {},
+                        child: const SizedBox(
+                          width: 34,
+                          height: 34,
+                          child: Icon(
+                            Icons.arrow_upward,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
