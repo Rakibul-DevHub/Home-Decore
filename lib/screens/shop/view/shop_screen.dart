@@ -22,16 +22,6 @@ class ShopScreen extends StatelessWidget {
         leadingWidth: 96,
         leading: Row(
           children: [
-            const SizedBox(width: 8),
-            Padding(
-              padding: const EdgeInsets.only(left: 8),
-              child: SvgPicture.asset(
-                'assets/icons/semi_circel_logo.svg',
-                width: 24,
-                height: 24,
-              ),
-            ),
-
             IconButton(
               onPressed: () async {
                 final result = await Navigator.of(
