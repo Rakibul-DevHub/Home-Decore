@@ -73,7 +73,7 @@ class NewPostDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
             children: [
               SizedBox(
-                height: 86,
+                height: 200,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: state.selectedIndexes.length,
@@ -87,9 +87,9 @@ class NewPostDetailsScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6),
                           child: Image.asset(
                             NewPostData.gallery[galleryIndex],
-                            width: 68,
-                            height: 78,
-                            fit: BoxFit.cover,
+                            width: 130,
+                            height: 160,
+                            fit: BoxFit.fitHeight,
                           ),
                         ),
                         Positioned(
@@ -180,7 +180,7 @@ class _FooterBrandCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 132,
+      height: 210,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -204,7 +204,7 @@ class _FooterBrandCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const KolekTextLogo(height: 20),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Text(
                   NewPostData.footerTagline,
                   style: KolekText.sans(
@@ -224,10 +224,10 @@ class _FooterBrandCard extends StatelessWidget {
           ),
           Positioned(
             right: 0,
-            bottom: -4,
+            bottom: -8,
             child: Image.asset(
               NewPostData.footerArt,
-              height: 128,
+              height: 180,
               fit: BoxFit.contain,
               alignment: Alignment.bottomRight,
             ),

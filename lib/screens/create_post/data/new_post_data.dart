@@ -11,7 +11,7 @@ abstract final class NewPostData {
   ];
 
   static const maxCaptionLength = 1500;
-  static const footerTagline = 'Your art. Your voice. Your Community.';
+  static const footerTagline = 'Your art. Your voice.\nYour Community.';
   static const footerArt = 'assets/images/one_eye_mini_hand.png';
   static const settings = [
     'Add Location',
