@@ -1,5 +1,5 @@
 abstract final class ProfileData {
-  static const name = 'Avayah Blanchard';
+  static const name = 'Avayah\nBlanchard';
   static const roleLine1 = 'CONTEMPORARY PAINTER';
   static const roleLine2 = '& MIXED MEDIA ARTIST';
   static const avatarAsset = 'assets/images/demo_user.png';
@@ -9,6 +9,12 @@ abstract final class ProfileData {
   static const works = '150';
 
   static const tabs = ['WORKS', 'FOR SALE', 'SAVED', 'ABOUT'];
+
+  /// Space between tab labels. Lower = tighter. Try 12–24.
+  static const tabGap = 28.0;
+
+  /// Left/right padding around the tab row.
+  static const tabHorizontalPadding = 18.0;
 
   static const gridImages = [
     'assets/images/pi1.png',

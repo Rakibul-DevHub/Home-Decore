@@ -101,15 +101,18 @@ class _OnboardingPage extends StatelessWidget {
             '0${index + 1}',
             style: KolekText.mono(
               size: 20,
-              weight: FontWeight.w500,
               color: KolekColors.neutral700,
               letterSpacing: -0.4,
-            ),
+            ).copyWith(fontFamily: item.fontFamily),
           ),
         ),
         if (index == 0) ...[
-          _Title(top: 125, text: item.title),
-          _Description(top: 361, text: item.description),
+          _Title(top: 125, text: item.title, fontFamily: item.fontFamily),
+          _Description(
+            top: 361,
+            text: item.description,
+            fontFamily: item.fontFamily,
+          ),
           _ImageBox(
             top: 492,
             left: 94.5,
@@ -126,12 +129,30 @@ class _OnboardingPage extends StatelessWidget {
             path: item.image,
           ),
           const _PageDivider(top: 519),
-          _Title(top: 536, text: item.title, lineHeight: 1.2),
-          _Description(top: 744, text: item.description),
+          _Title(
+            top: 536,
+            text: item.title,
+            lineHeight: 1.2,
+            fontFamily: item.fontFamily,
+          ),
+          _Description(
+            top: 744,
+            text: item.description,
+            fontFamily: item.fontFamily,
+          ),
         ] else if (index == 2) ...[
-          _Title(top: 128, text: item.title, lineHeight: 1.25),
+          _Title(
+            top: 128,
+            text: item.title,
+            lineHeight: 1.25,
+            fontFamily: item.fontFamily,
+          ),
           const _PageDivider(top: 298),
-          _Description(top: 326, text: item.description),
+          _Description(
+            top: 326,
+            text: item.description,
+            fontFamily: item.fontFamily,
+          ),
           _ImageBox(
             top: 429,
             left: 0,
@@ -148,8 +169,17 @@ class _OnboardingPage extends StatelessWidget {
             path: item.image,
           ),
           const _PageDivider(top: 519),
-          _Title(top: 536, text: item.title, lineHeight: 1.2),
-          _Description(top: 744, text: item.description),
+          _Title(
+            top: 536,
+            text: item.title,
+            lineHeight: 1.2,
+            fontFamily: item.fontFamily,
+          ),
+          _Description(
+            top: 744,
+            text: item.description,
+            fontFamily: item.fontFamily,
+          ),
         ] else ...[
           Positioned(
             left: 20,
@@ -161,7 +191,7 @@ class _OnboardingPage extends StatelessWidget {
                   weight: FontWeight.w500,
                   height: 1.32,
                   letterSpacing: 2,
-                ),
+                ).copyWith(fontFamily: item.fontFamily),
                 children: const [
                   TextSpan(text: 'This is\n'),
                   TextSpan(
@@ -172,7 +202,11 @@ class _OnboardingPage extends StatelessWidget {
               ),
             ),
           ),
-          _Description(top: 450, text: item.description),
+          _Description(
+            top: 450,
+            text: item.description,
+            fontFamily: item.fontFamily,
+          ),
         ],
         _Footer(index: index, onSignIn: onSignIn),
       ],
@@ -210,7 +244,7 @@ class _Header extends StatelessWidget {
                   size: 14,
                   color: KolekColors.neutral500,
                   height: 20 / 14,
-                ),
+                ).copyWith(fontFamily: OnboardingData.fontFamily),
               ),
             ),
           ),
@@ -221,10 +255,16 @@ class _Header extends StatelessWidget {
 }
 
 class _Title extends StatelessWidget {
-  const _Title({required this.top, required this.text, this.lineHeight = 1.3});
+  const _Title({
+    required this.top,
+    required this.text,
+    required this.fontFamily,
+    this.lineHeight = 1.3,
+  });
 
   final double top;
   final String text;
+  final String fontFamily;
   final double lineHeight;
 
   @override
@@ -241,17 +281,22 @@ class _Title extends StatelessWidget {
           color: KolekColors.neutral900,
           height: lineHeight,
           letterSpacing: 1.5,
-        ),
+        ).copyWith(fontFamily: fontFamily),
       ),
     );
   }
 }
 
 class _Description extends StatelessWidget {
-  const _Description({required this.top, required this.text});
+  const _Description({
+    required this.top,
+    required this.text,
+    required this.fontFamily,
+  });
 
   final double top;
   final String text;
+  final String fontFamily;
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +310,7 @@ class _Description extends StatelessWidget {
           size: 16,
           color: KolekColors.neutral700,
           height: 1.6,
-        ),
+        ).copyWith(fontFamily: fontFamily),
       ),
     );
   }
@@ -339,7 +384,15 @@ class _Footer extends StatelessWidget {
           children: [
             _Dots(index: index),
             const SizedBox(height: 16),
-            KolekButton(label: OnboardingData.getStarted, onPressed: onSignIn),
+            KolekButton(
+              label: OnboardingData.getStarted,
+              onPressed: onSignIn,
+              labelStyle: const TextStyle(
+                fontFamily: OnboardingData.getStartedFontFamily,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ],
         ),
       );

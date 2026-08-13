@@ -77,6 +77,7 @@ class KolekButton extends StatelessWidget {
     this.foregroundColor = KolekColors.neutral50,
     this.borderColor,
     this.icon,
+    this.labelStyle,
   });
 
   final String label;
@@ -85,6 +86,7 @@ class KolekButton extends StatelessWidget {
   final Color foregroundColor;
   final Color? borderColor;
   final Widget? icon;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -112,11 +114,13 @@ class KolekButton extends StatelessWidget {
             if (icon != null) ...[icon!, const SizedBox(width: 10)],
             Text(
               label,
-              style: KolekText.sans(
-                size: 16,
-                weight: FontWeight.w500,
-                color: foregroundColor,
-              ),
+              style: (labelStyle ??
+                      KolekText.sans(
+                        size: 16,
+                        weight: FontWeight.w500,
+                        color: foregroundColor,
+                      ))
+                  .copyWith(color: foregroundColor),
             ),
           ],
         ),

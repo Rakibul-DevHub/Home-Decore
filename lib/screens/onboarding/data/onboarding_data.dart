@@ -3,17 +3,27 @@ class OnboardingPageData {
     required this.title,
     required this.description,
     required this.image,
+    this.fontFamily = OnboardingData.fontFamily,
   });
 
   final String title;
   final String description;
   final String image;
+
+  /// Bundled family from `assets/font/IBMPlexMono-Regular.ttf`.
+  final String fontFamily;
 }
 
 abstract final class OnboardingData {
   static const skip = 'Skip';
   static const getStarted = 'Get Started';
   static const arrowAsset = 'assets/icons/arrow_right.svg';
+
+  /// Matches `family: IBMPlexMono-Regular` in pubspec.yaml.
+  static const fontFamily = 'IBMPlexMono-Regular';
+
+  /// Matches `family: GeneralSans-Regular` — Get Started button only.
+  static const getStartedFontFamily = 'GeneralSans-Regular';
 
   static const pages = [
     OnboardingPageData(

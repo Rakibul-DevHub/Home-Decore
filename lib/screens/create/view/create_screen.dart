@@ -132,9 +132,8 @@ class _HeroSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            right: -22,
-            top: 116,
-            width: 200,
+            right: 0,
+            top: 90,
             child: Image.asset(
               _heroAsset,
               fit: BoxFit.contain,
