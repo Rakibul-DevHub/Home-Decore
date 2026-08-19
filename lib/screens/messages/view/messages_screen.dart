@@ -68,11 +68,14 @@ class _MessagesHeader extends StatelessWidget {
           const KolekTextLogo(height: 22),
           const SizedBox(height: 18),
           Text(
-            MessagesData.sectionLabel,
-            style: KolekText.mono(
-              size: 11,
-              color: KolekColors.neutral500,
-              letterSpacing: 0.8,
+            MessagesData.sectionLabel.toUpperCase(),
+            style: KolekText.sans(
+              size: 16,
+              weight: FontWeight.w500,
+              color: KolekColors.neutral900,
+              letterSpacing: 0,
+              height: 1.0,
+
             ),
           ),
           const SizedBox(height: 6),

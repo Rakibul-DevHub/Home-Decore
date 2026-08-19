@@ -21,6 +21,7 @@ class CreateScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const _CreateAppBar(),
+              SizedBox(height: 20,),
               const _HeroSection(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
