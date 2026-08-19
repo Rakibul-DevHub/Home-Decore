@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
@@ -30,16 +29,15 @@ class CreateScreen extends StatelessWidget {
                     _CreateActionCard(
                       title: 'Create Post',
                       subtitle:
-                      'Share photos or videos\nwith your followers.',
+                          'Share photos or videos\nwith your followers.',
                       onTap: () => _goToCreatePost(context),
                     ),
                     const SizedBox(height: 12),
                     _CreateActionCard(
                       title: 'List a Product',
                       subtitle:
-                      'Sell your art or collectibles\nto the kolek community.',
+                          'Sell your art or collectibles\nto the kolek community.',
                       onTap: () {
-                        // TODO: Replace with real navigation when ready
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('List a Product coming soon'),
@@ -96,6 +94,8 @@ class _HeroSection extends StatelessWidget {
   const _HeroSection();
 
   static const String _heroAsset = 'assets/images/one_eye_mini_hand.png';
+  static const double _heroAssetWidth = 229;
+  static const double _heroAssetHeight = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +109,10 @@ class _HeroSection extends StatelessWidget {
             top: 22,
             child: Text(
               'Make\nsomething\nworth\nsharing.',
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 49,
-                height: 0.92,
-                fontWeight: FontWeight.w900,
-                color: KolekColors.neutral900,
+              style: KolekText.sans(
+                size: 55,
+                weight: FontWeight.w600,
+                height: 0.96,
                 letterSpacing: -2.0,
               ),
             ),
@@ -124,18 +122,19 @@ class _HeroSection extends StatelessWidget {
             top: 265,
             child: Text(
               'Post your art, process,\nor inspiration.\nThe world is watching.',
-              style: GoogleFonts.ibmPlexMono(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: KolekColors.neutral900,
+              style: KolekText.mono(
+                size: 10,
+                weight: FontWeight.w700,
               ),
             ),
           ),
           Positioned(
-            right: 0,
-            top: 90,
+            right: -18,
+            top: 135,
             child: Image.asset(
               _heroAsset,
+              width: _heroAssetWidth,
+              height: _heroAssetHeight,
               fit: BoxFit.contain,
               errorBuilder: (_, __, ___) => const SizedBox.shrink(),
             ),
@@ -180,22 +179,19 @@ class _CreateActionCard extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 18,
+                      style: KolekText.sans(
+                        size: 18,
+                        weight: FontWeight.w700,
                         height: 1.0,
-                        fontWeight: FontWeight.w700,
-                        color: KolekColors.neutral900,
                       ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       subtitle,
-                      style: const TextStyle(
-                        fontFamily: 'Courier',
-                        fontSize: 13,
+                      style: KolekText.mono(
+                        size: 13,
+                        weight: FontWeight.w400,
                         height: 1.55,
-                        color: KolekColors.neutral900,
                       ),
                     ),
                   ],

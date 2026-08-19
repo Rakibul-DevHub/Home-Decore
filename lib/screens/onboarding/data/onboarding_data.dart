@@ -1,17 +1,7 @@
 class OnboardingPageData {
-  const OnboardingPageData({
-    required this.title,
-    required this.description,
-    required this.image,
-    this.fontFamily = OnboardingData.fontFamily,
-  });
+  const OnboardingPageData({required this.image});
 
-  final String title;
-  final String description;
   final String image;
-
-  /// Bundled family from `assets/font/IBMPlexMono-Regular.ttf`.
-  final String fontFamily;
 }
 
 abstract final class OnboardingData {
@@ -19,37 +9,14 @@ abstract final class OnboardingData {
   static const getStarted = 'Get Started';
   static const arrowAsset = 'assets/icons/arrow_right.svg';
 
-  /// Matches `family: IBMPlexMono-Regular` in pubspec.yaml.
   static const fontFamily = 'IBMPlexMono-Regular';
-
-  /// Matches `family: GeneralSans-Regular` — Get Started button only.
   static const getStartedFontFamily = 'GeneralSans-Regular';
 
   static const pages = [
-    OnboardingPageData(
-      title: 'Discover\nwhat\nmoves\nyou.',
-      description: 'REAL PEOPLE.\nREAL FINDS.\nFREOM ALL OVER.',
-      image: 'assets/images/onboarding_1.png',
-    ),
-    OnboardingPageData(
-      title: 'Buy\ndirectly\nfrom\ncreators.',
-      description: 'NO MIDDLEMEN.\nJUST REAL CONNECTIONS.',
-      image: 'assets/images/onboarding_2.png',
-    ),
-    OnboardingPageData(
-      title: 'Sell\nanything\nInstantly.',
-      description: 'LIST IN SECONDS.\nREACH THOUSAND OF\nCOLLECTORS.',
-      image: 'assets/images/onboarding_3.png',
-    ),
-    OnboardingPageData(
-      title: 'Connect.\nChat.\nMake it\nYours',
-      description: 'MESSAGE. NEGOTIATE.\nBUILD COMMUNITY.',
-      image: 'assets/images/onboarding_4.png',
-    ),
-    OnboardingPageData(
-      title: 'This is\nkolek.',
-      description: 'A CURATED WORLD OF\nCREATORS AND COLLECTORS.\nWELCOME IN.',
-      image: 'assets/images/onboarding_5.png',
-    ),
+    OnboardingPageData(image: 'assets/images/onboarding_1.png'),
+    OnboardingPageData(image: 'assets/images/onboarding_2.png'),
+    OnboardingPageData(image: 'assets/images/onboarding_3.png'),
+    OnboardingPageData(image: 'assets/images/onboarding_4.png'),
+    OnboardingPageData(image: 'assets/images/onboarding_5.png'),
   ];
 }

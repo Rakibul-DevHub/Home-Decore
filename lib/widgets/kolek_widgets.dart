@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/kolek_colors.dart';
 import 'screen_background.dart';
 
+/// Bundled font families from pubspec.yaml.
+abstract final class KolekFonts {
+  static const ibmPlexMono = 'IBMPlexMono-Regular';
+  static const generalSans = 'GeneralSans-Regular';
+}
+
+/// Text styles using local fonts — every option is customizable per call.
 abstract final class KolekText {
   static TextStyle mono({
     double size = 16,
@@ -12,13 +18,43 @@ abstract final class KolekText {
     Color color = KolekColors.neutral900,
     double? height,
     double? letterSpacing,
+    double? wordSpacing,
+    TextDecoration? decoration,
+    Color? decorationColor,
+    TextDecorationStyle? decorationStyle,
+    double? decorationThickness,
+    FontStyle fontStyle = FontStyle.normal,
+    TextBaseline? textBaseline,
+    String? fontFamily,
+    List<FontFeature>? fontFeatures,
+    List<Shadow>? shadows,
+    Color? backgroundColor,
+    Paint? foreground,
+    Paint? background,
+    TextLeadingDistribution? leadingDistribution,
+    Locale? locale,
   }) {
-    return GoogleFonts.ibmPlexMono(
-      fontSize: size,
-      fontWeight: weight,
+    return _style(
+      fontFamily: fontFamily ?? KolekFonts.ibmPlexMono,
+      size: size,
+      weight: weight,
       color: color,
       height: height,
       letterSpacing: letterSpacing,
+      wordSpacing: wordSpacing,
+      decoration: decoration,
+      decorationColor: decorationColor,
+      decorationStyle: decorationStyle,
+      decorationThickness: decorationThickness,
+      fontStyle: fontStyle,
+      textBaseline: textBaseline,
+      fontFeatures: fontFeatures,
+      shadows: shadows,
+      backgroundColor: backgroundColor,
+      foreground: foreground,
+      background: background,
+      leadingDistribution: leadingDistribution,
+      locale: locale,
     );
   }
 
@@ -27,12 +63,90 @@ abstract final class KolekText {
     FontWeight weight = FontWeight.w500,
     Color color = KolekColors.neutral900,
     double? height,
+    double? letterSpacing,
+    double? wordSpacing,
+    TextDecoration? decoration,
+    Color? decorationColor,
+    TextDecorationStyle? decorationStyle,
+    double? decorationThickness,
+    FontStyle fontStyle = FontStyle.normal,
+    TextBaseline? textBaseline,
+    String? fontFamily,
+    List<FontFeature>? fontFeatures,
+    List<Shadow>? shadows,
+    Color? backgroundColor,
+    Paint? foreground,
+    Paint? background,
+    TextLeadingDistribution? leadingDistribution,
+    Locale? locale,
   }) {
-    return GoogleFonts.inter(
+    return _style(
+      fontFamily: fontFamily ?? KolekFonts.generalSans,
+      size: size,
+      weight: weight,
+      color: color,
+      height: height,
+      letterSpacing: letterSpacing,
+      wordSpacing: wordSpacing,
+      decoration: decoration,
+      decorationColor: decorationColor,
+      decorationStyle: decorationStyle,
+      decorationThickness: decorationThickness,
+      fontStyle: fontStyle,
+      textBaseline: textBaseline,
+      fontFeatures: fontFeatures,
+      shadows: shadows,
+      backgroundColor: backgroundColor,
+      foreground: foreground,
+      background: background,
+      leadingDistribution: leadingDistribution,
+      locale: locale,
+    );
+  }
+
+  static TextStyle _style({
+    required String fontFamily,
+    required double size,
+    required FontWeight weight,
+    required Color color,
+    double? height,
+    double? letterSpacing,
+    double? wordSpacing,
+    TextDecoration? decoration,
+    Color? decorationColor,
+    TextDecorationStyle? decorationStyle,
+    double? decorationThickness,
+    FontStyle fontStyle = FontStyle.normal,
+    TextBaseline? textBaseline,
+    List<FontFeature>? fontFeatures,
+    List<Shadow>? shadows,
+    Color? backgroundColor,
+    Paint? foreground,
+    Paint? background,
+    TextLeadingDistribution? leadingDistribution,
+    Locale? locale,
+  }) {
+    return TextStyle(
+      fontFamily: fontFamily,
       fontSize: size,
       fontWeight: weight,
       color: color,
       height: height,
+      letterSpacing: letterSpacing,
+      wordSpacing: wordSpacing,
+      decoration: decoration,
+      decorationColor: decorationColor,
+      decorationStyle: decorationStyle,
+      decorationThickness: decorationThickness,
+      fontStyle: fontStyle,
+      textBaseline: textBaseline,
+      fontFeatures: fontFeatures,
+      shadows: shadows,
+      backgroundColor: backgroundColor,
+      foreground: foreground,
+      background: background,
+      leadingDistribution: leadingDistribution,
+      locale: locale,
     );
   }
 }

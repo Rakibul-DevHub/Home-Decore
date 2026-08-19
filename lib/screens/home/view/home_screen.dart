@@ -185,15 +185,15 @@ class _FeedCard extends StatelessWidget {
                     Text(
                       post.author,
                       style: KolekText.sans(
-                        size: 14,
-                        weight: FontWeight.w600,
+                        size: 18,
+                        weight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       post.location,
                       style: KolekText.sans(
-                        size: 11,
+                        size: 12,
                         weight: FontWeight.w400,
                         color: KolekColors.neutral500,
                       ),
@@ -246,14 +246,19 @@ class _FeedCard extends StatelessWidget {
                   Text(
                     post.title,
                     style: KolekText.sans(
-                      size: 13,
-                      weight: FontWeight.w700,
+                      size: 12,
+                      weight: FontWeight.w500,
                     ),
                   ),
                   const Spacer(),
                   _StatIcon(
                     asset: 'assets/icons/react_border.svg',
                     value: post.likes,
+                    valueStyle: KolekText.mono(
+                      size: 12,
+                      weight: FontWeight.w400,
+                      color: KolekColors.neutral600,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   InkWell(
@@ -261,12 +266,22 @@ class _FeedCard extends StatelessWidget {
                     child: _StatIcon(
                       asset: 'assets/icons/comment.svg',
                       value: post.commentCount,
+                      valueStyle: KolekText.mono(
+                        size: 12,
+                        weight: FontWeight.w400,
+                        color: KolekColors.neutral600,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   _StatIcon(
                     asset: 'assets/icons/share.svg',
                     value: post.shareCount,
+                    valueStyle: KolekText.mono(
+                      size: 12,
+                      weight: FontWeight.w400,
+                      color: KolekColors.neutral600,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   SvgPicture.asset(
@@ -287,7 +302,8 @@ class _FeedCard extends StatelessWidget {
                     TextSpan(
                       text: post.description,
                       style: KolekText.mono(
-                        size: 11,
+                        size: 12,
+                        weight: FontWeight.w400,
                         color: KolekColors.neutral600,
                         height: 1.45,
                       ),
@@ -295,7 +311,8 @@ class _FeedCard extends StatelessWidget {
                     TextSpan(
                       text: ' ...more',
                       style: KolekText.mono(
-                        size: 11,
+                        size: 12,
+                        weight: FontWeight.w400,
                         color: KolekColors.neutral400,
                         height: 1.45,
                       ),
@@ -312,10 +329,15 @@ class _FeedCard extends StatelessWidget {
 }
 
 class _StatIcon extends StatelessWidget {
-  const _StatIcon({required this.asset, required this.value});
+  const _StatIcon({
+    required this.asset,
+    required this.value,
+    required this.valueStyle,
+  });
 
   final String asset;
   final String? value;
+  final TextStyle valueStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -333,10 +355,7 @@ class _StatIcon extends StatelessWidget {
         ),
         if (value != null) ...[
           const SizedBox(width: 4),
-          Text(
-            value!,
-            style: KolekText.mono(size: 10, color: KolekColors.neutral600),
-          ),
+          Text(value!, style: valueStyle),
         ],
       ],
     );

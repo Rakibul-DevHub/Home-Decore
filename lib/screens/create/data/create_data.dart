@@ -1,5 +1,5 @@
 abstract final class CreateData {
-  static const title = 'Make something\nworth sharing.';
+  // static const title = 'Make something\nworth sharing.';
   static const subtitle =
       'Post your art, process, or inspiration.\nThe world is watching.';
   static const heroImage = 'assets/images/one_eye_mini_hand.png';
