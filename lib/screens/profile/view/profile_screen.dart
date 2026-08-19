@@ -14,6 +14,7 @@ import '../data/profile_data.dart';
 abstract final class _ProfileFonts {
   static const generalSans = 'GeneralSans-Regular';
   static const generalSansSemibold = 'GeneralSans-Semibold';
+  static const generalSansMedium = 'GeneralSans-Medium';
   static const ibmPlexMono = 'IBMPlexMono-Regular';
   static const ibmPlexMonoMedium = 'IBMPlexMono-Medium';
 
@@ -57,11 +58,13 @@ abstract final class _ProfileFonts {
     double? decorationThickness,
   }) =>
       TextStyle(
-        fontFamily: fontFamily ?? generalSansSemibold,
-        fontSize: fontSize ?? 40,
-        fontWeight: fontWeight ?? FontWeight.w600,
-        height: height ?? 1.0,
-        letterSpacing: letterSpacing ?? -0.5,
+        // Matches: font-family GeneralSans, font-weight 500, font-style Medium,
+        // font-size 50px, line-height 53px, letter-spacing 0px.
+        fontFamily: fontFamily ?? generalSansMedium,
+        fontSize: fontSize ?? 50,
+        fontWeight: fontWeight ?? FontWeight.w500,
+        height: height ?? (53 / 50), // 1.06
+        letterSpacing: letterSpacing ?? 0,
         color: color ?? KolekColors.neutral900,
         fontStyle: fontStyle,
         decoration: decoration,
@@ -132,11 +135,12 @@ abstract final class _ProfileFonts {
     FontStyle? fontStyle,
   }) =>
       TextStyle(
-        fontFamily: fontFamily ?? generalSansSemibold,
-        fontSize: fontSize ?? 18,
-        fontWeight: fontWeight ?? FontWeight.w600,
-        height: height ?? 1.1,
-        letterSpacing: letterSpacing,
+        fontFamily: fontFamily ?? generalSansMedium,
+        fontSize: fontSize ?? 16,
+        fontWeight: fontWeight ?? FontWeight.w500,
+        // line-height: 100% => multiplier 1.0
+        height: height ?? 1.0,
+        letterSpacing: letterSpacing ?? 0,
         color: color ?? KolekColors.neutral900,
         fontStyle: fontStyle,
       );
@@ -153,10 +157,11 @@ abstract final class _ProfileFonts {
   }) =>
       TextStyle(
         fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 9,
+        fontSize: fontSize ?? 12,
         fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.4,
-        height: height ?? 1.3,
+        // line-height: 20px with font-size 12px => 20/12
+        height: height ?? (20 / 12),
+        letterSpacing: letterSpacing ?? 0,
         color: color ?? KolekColors.neutral500,
         fontStyle: fontStyle,
       );
