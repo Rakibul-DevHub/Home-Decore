@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../routes/app_route.dart';
 import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
-import '../../../widgets/kolek_widgets.dart';
 import '../cubit/shop_cubit.dart';
 import '../data/shop_data.dart';
 
@@ -53,7 +52,15 @@ class ShopScreen extends StatelessWidget {
             builder: (context, cartCount) => IconButton(
               onPressed: () => Navigator.of(context).pushNamed(AppRoute.cart),
               icon: Badge(
-                label: Text('$cartCount'),
+                label: Text(
+                  '$cartCount',
+                  style: const TextStyle(
+                    fontFamily: 'GeneralSans-Regular',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
                 backgroundColor: KolekColors.blue600,
                 child: SvgPicture.asset(
                   'assets/icons/cart.svg',
@@ -87,19 +94,23 @@ class ShopScreen extends StatelessWidget {
                 children: [
                   Text(
                     ShopData.title,
-                    style: KolekText.sans(
-                      size: 50,
-                      weight: FontWeight.w700,
+                    style: const TextStyle(
+                      fontFamily: 'GeneralSans-Semibold',
+                      fontSize: 60,
+                      fontWeight: FontWeight.w600,
                       height: 1,
+                      color: KolekColors.neutral900,
                     ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     ShopData.subtitle,
-                    style: KolekText.mono(
-                      size: 11,
-                      color: KolekColors.neutral600,
+                    style: const TextStyle(
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                       height: 1.4,
+                      color: KolekColors.neutral600,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -121,7 +132,15 @@ class ShopScreen extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('Filter', style: KolekText.mono(size: 11)),
+                            Text(
+                              'Filter',
+                              style: const TextStyle(
+                                fontFamily: 'IBMPlexMono-Regular',
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: KolekColors.neutral900,
+                              ),
+                            ),
                             const SizedBox(width: 6),
                             const Icon(Icons.tune, size: 17),
                           ],
@@ -138,7 +157,12 @@ class ShopScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Sort: $sortLabel',
-                                style: KolekText.mono(size: 11),
+                                style: const TextStyle(
+                                  fontFamily: 'IBMPlexMono-Regular',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: KolekColors.neutral900,
+                                ),
                               ),
                               const Icon(Icons.keyboard_arrow_down, size: 17),
                             ],
@@ -182,16 +206,24 @@ class ShopScreen extends StatelessWidget {
                         product.name,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: KolekText.sans(size: 11, height: 1.25),
+                        style: const TextStyle(
+                          fontFamily: 'GeneralSans-Medium',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          height: 1.25,
+                          color: KolekColors.neutral900,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Text(
                             '\$${product.price}',
-                            style: KolekText.sans(
-                              size: 12,
-                              weight: FontWeight.w700,
+                            style: const TextStyle(
+                              fontFamily: 'GeneralSans-Semibold',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: KolekColors.neutral900,
                             ),
                           ),
                           const Spacer(),
