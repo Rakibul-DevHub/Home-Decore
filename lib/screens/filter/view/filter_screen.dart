@@ -19,12 +19,12 @@ class FilterScreen extends StatelessWidget {
         leadingWidth: 80,
         leading: TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('CLOSE', style: KolekText.mono(size: 10)),
+          child: Text('CLOSE', style: KolekText.mono(size: 16)),
         ),
         actions: [
           TextButton(
             onPressed: context.read<FilterCubit>().reset,
-            child: Text('RESET', style: KolekText.mono(size: 10)),
+            child: Text('RESET', style: KolekText.mono(size: 16)),
           ),
           const SizedBox(width: 8),
         ],
@@ -36,14 +36,25 @@ class FilterScreen extends StatelessWidget {
           children: [
             Text(
               'Filter',
-              style: KolekText.sans(
-                size: 50,
-                weight: FontWeight.w700,
-                height: 1,
+              style: const TextStyle(
+                fontFamily: 'GeneralSans-Semibold',
+                fontSize: 50,
+                fontWeight: FontWeight.w600,
+                color: KolekColors.neutral900,
               ),
             ),
             const SizedBox(height: 22),
-            _FilterRow(FilterData.sections.first),
+            _FilterRow(
+              FilterData.sections.first,
+              style: const TextStyle(
+                fontFamily: 'GeneralSans-Medium',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                height: 1.0,
+                letterSpacing: 0,
+                color: KolekColors.neutral900,
+              ),
+            ),
             BlocBuilder<FilterCubit, FilterState>(
               builder: (context, state) {
                 return Column(
@@ -164,9 +175,10 @@ class FilterScreen extends StatelessWidget {
 }
 
 class _FilterRow extends StatelessWidget {
-  const _FilterRow(this.label);
+  const _FilterRow(this.label, {this.style});
 
   final String label;
+  final TextStyle? style;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +189,16 @@ class _FilterRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(label, style: KolekText.sans(size: 12)),
+          Text(
+            label,
+            style: style ??
+                const TextStyle(
+                  fontFamily: 'GeneralSans-Regular',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: KolekColors.neutral900,
+                ),
+          ),
           const Spacer(),
           const Icon(Icons.add, size: 19),
         ],
