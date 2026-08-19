@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../cubit/profile_cubit.dart';
@@ -619,11 +620,7 @@ class _FeaturedWork extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(
-                Icons.arrow_forward,
-                size: 16,
-                color: KolekColors.neutral400,
-              ),
+              SvgPicture.asset("assets/icons/arrow_forward.svg"),
             ],
           ),
         ],
