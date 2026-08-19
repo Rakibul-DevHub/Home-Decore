@@ -1,383 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../cubit/profile_cubit.dart';
 import '../data/profile_data.dart';
 
-/// ============================================================
-/// FONT CHOOSER — every property is overridable per-call.
-/// To modify any text, just pass the property you want to change
-/// where the style is used (e.g. _ProfileFonts.name(fontSize: 50)).
-/// ============================================================
-abstract final class _ProfileFonts {
-  static const generalSans = 'GeneralSans-Regular';
-  static const generalSansSemibold = 'GeneralSans-Semibold';
-  static const generalSansMedium = 'GeneralSans-Medium';
-  static const ibmPlexMono = 'IBMPlexMono-Regular';
-  static const ibmPlexMonoMedium = 'IBMPlexMono-Medium';
-
-  // ── Location: "LOS ANGELES, CA" ──
-  static TextStyle location({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 10,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.8,
-        height: height,
-        color: color ?? KolekColors.blue600,
-        fontStyle: fontStyle,
-        decoration: decoration,
-        decorationColor: decorationColor,
-        decorationThickness: decorationThickness,
-      );
-
-  // ── Name: "Nova Styles" ──
-  static TextStyle name({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        // Matches: font-family GeneralSans, font-weight 500, font-style Medium,
-        // font-size 50px, line-height 53px, letter-spacing 0px.
-        fontFamily: fontFamily ?? generalSansMedium,
-        fontSize: fontSize ?? 50,
-        fontWeight: fontWeight ?? FontWeight.w500,
-        height: height ?? (53 / 50), // 1.06
-        letterSpacing: letterSpacing ?? 0,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-        decoration: decoration,
-        decorationColor: decorationColor,
-        decorationThickness: decorationThickness,
-      );
-
-  // ── Role line 1: "CONTEMPORARY PAINTER" ──
-  static TextStyle roleLine1({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 10,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.8,
-        height: height ?? 1.5,
-        color: color ?? KolekColors.neutral600,
-        fontStyle: fontStyle,
-        decoration: decoration,
-        decorationColor: decorationColor,
-        decorationThickness: decorationThickness,
-      );
-
-  // ── Role line 2: "5 MIXED MEDIA ARTIST" ──
-  static TextStyle roleLine2({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 10,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.8,
-        height: height ?? 1.5,
-        color: color ?? KolekColors.neutral600,
-        fontStyle: fontStyle,
-        decoration: decoration,
-        decorationColor: decorationColor,
-        decorationThickness: decorationThickness,
-      );
-
-  // ── Stat value: "16.1K" / "500" / "150" ──
-  static TextStyle statValue({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? generalSansMedium,
-        fontSize: fontSize ?? 16,
-        fontWeight: fontWeight ?? FontWeight.w500,
-        // line-height: 100% => multiplier 1.0
-        height: height ?? 1.0,
-        letterSpacing: letterSpacing ?? 0,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-      );
-
-  // ── Stat label: "FOLLOWERS" / "FOLLOWING" / "WORKS" ──
-  static TextStyle statLabel({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 12,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        // line-height: 20px with font-size 12px => 20/12
-        height: height ?? (20 / 12),
-        letterSpacing: letterSpacing ?? 0,
-        color: color ?? KolekColors.neutral500,
-        fontStyle: fontStyle,
-      );
-
-  // ── "EDIT PROFILE" ──
-  static TextStyle editProfile({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMonoMedium,
-        fontSize: fontSize ?? 11,
-        fontWeight: fontWeight ?? FontWeight.w500,
-        letterSpacing: letterSpacing ?? 0.4,
-        height: height,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-        decoration: decoration ?? TextDecoration.underline,
-        decorationColor: decorationColor ?? KolekColors.neutral900,
-        decorationThickness: decorationThickness ?? 1.5,
-      );
-
-  // ── "SHARE PROFILE" ──
-  static TextStyle shareProfile({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-    TextDecoration? decoration,
-    Color? decorationColor,
-    double? decorationThickness,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMonoMedium,
-        fontSize: fontSize ?? 11,
-        fontWeight: fontWeight ?? FontWeight.w500,
-        letterSpacing: letterSpacing ?? 0.4,
-        height: height,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-        decoration: decoration ?? TextDecoration.underline,
-        decorationColor: decorationColor ?? KolekColors.neutral900,
-        decorationThickness: decorationThickness ?? 1.5,
-      );
-
-  // ── Tab: selected ──
-  static TextStyle tabSelected({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 11,
-        fontWeight: fontWeight ?? FontWeight.w600,
-        letterSpacing: letterSpacing ?? 0.6,
-        height: height,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-      );
-
-  // ── Tab: unselected ──
-  static TextStyle tabUnselected({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 11,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.6,
-        height: height,
-        color: color ?? KolekColors.neutral400,
-        fontStyle: fontStyle,
-      );
-
-  // ── "Featured Work" ──
-  static TextStyle featuredLabel({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 12,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing,
-        height: height,
-        color: color ?? KolekColors.blue600,
-        fontStyle: fontStyle ?? FontStyle.italic,
-      );
-
-  // ── "Blue Depths" ──
-  static TextStyle featuredTitle({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? generalSansSemibold,
-        fontSize: fontSize ?? 22,
-        fontWeight: fontWeight ?? FontWeight.w600,
-        height: height ?? 1.1,
-        letterSpacing: letterSpacing,
-        color: color ?? KolekColors.neutral900,
-        fontStyle: fontStyle,
-      );
-
-  // ── "$2,800" ──
-  static TextStyle featuredPrice({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? generalSans,
-        fontSize: fontSize ?? 14,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing,
-        height: height,
-        color: color ?? KolekColors.neutral600,
-        fontStyle: fontStyle,
-      );
-
-  // ── "ACRYLIC ON CANVAS, 2024" ──
-  static TextStyle featuredMedium({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 10,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.3,
-        height: height ?? 1.4,
-        color: color ?? KolekColors.neutral500,
-        fontStyle: fontStyle,
-      );
-
-  // ── '48" x 60"' ──
-  static TextStyle featuredSize({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 10,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing ?? 0.3,
-        height: height ?? 1.4,
-        color: color ?? KolekColors.neutral500,
-        fontStyle: fontStyle,
-      );
-
-  // ── About body ──
-  static TextStyle about({
-    String? fontFamily,
-    double? fontSize,
-    FontWeight? fontWeight,
-    double? letterSpacing,
-    double? height,
-    Color? color,
-    FontStyle? fontStyle,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily ?? ibmPlexMono,
-        fontSize: fontSize ?? 12,
-        fontWeight: fontWeight ?? FontWeight.w400,
-        letterSpacing: letterSpacing,
-        height: height ?? 1.5,
-        color: color ?? KolekColors.neutral600,
-        fontStyle: fontStyle,
-      );
-}
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -393,7 +20,6 @@ class ProfileScreen extends StatelessWidget {
             const SliverToBoxAdapter(child: _ProfileHeader()),
             const SliverToBoxAdapter(child: _ProfileActions()),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
-            const SliverToBoxAdapter(child: _ThinDivider()),
             const SliverToBoxAdapter(child: SizedBox(height: 6)),
             const SliverToBoxAdapter(child: _ProfileTabs()),
             SliverToBoxAdapter(
@@ -424,20 +50,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _ThinDivider extends StatelessWidget {
-  const _ThinDivider();
 
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(
-      height: 1,
-      thickness: 0.5,
-      color: KolekColors.neutral300,
-      indent: 18,
-      endIndent: 18,
-    );
-  }
-}
 
 class _ProfileAppBar extends StatelessWidget {
   const _ProfileAppBar();
@@ -516,7 +129,13 @@ class _ProfileHeader extends StatelessWidget {
                         const SizedBox(width: 5),
                         Text(
                           ProfileData.location,
-                          style: _ProfileFonts.location(),
+                          style: const TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: 0.8,
+                            color: KolekColors.neutral600,
+                          ),
                         ),
                       ],
                     ),
@@ -526,18 +145,39 @@ class _ProfileHeader extends StatelessWidget {
                 // Name
                 Text(
                   ProfileData.name,
-                  style: _ProfileFonts.name(),
+                  style: const TextStyle(
+                    fontFamily: 'GeneralSans-Medium',
+                    fontSize: 50,
+                    fontWeight: FontWeight.w500,
+                    height: 53 / 50,
+                    letterSpacing: 0,
+                    color: KolekColors.neutral900,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 // Role line 1
                 Text(
                   ProfileData.roleLine1,
-                  style: _ProfileFonts.roleLine1(),
+                  style: const TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.8,
+                    height: 1.5,
+                    color: KolekColors.neutral600,
+                  ),
                 ),
                 // Role line 2
                 Text(
                   ProfileData.roleLine2,
-                  style: _ProfileFonts.roleLine2(),
+                  style: const TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.8,
+                    height: 1.5,
+                    color: KolekColors.neutral600,
+                  ),
                 ),
               ],
             ),
@@ -567,8 +207,22 @@ class _StatsColumn extends StatelessWidget {
           _StatItem(
             value: ProfileData.followers,
             label: 'FOLLOWERS',
-            valueStyle: _ProfileFonts.statValue(),
-            labelStyle: _ProfileFonts.statLabel(),
+            valueStyle: const TextStyle(
+              fontFamily: 'GeneralSans-Medium',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1.0,
+              letterSpacing: 0,
+              color: KolekColors.neutral900,
+            ),
+            labelStyle: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              height: 20 / 12,
+              letterSpacing: 0,
+              color: KolekColors.neutral500,
+            ),
           ),
           const SizedBox(height: 4),
           const Divider(height: 12, thickness: 0.5, color: KolekColors.neutral300),
@@ -577,8 +231,22 @@ class _StatsColumn extends StatelessWidget {
           _StatItem(
             value: ProfileData.following,
             label: 'FOLLOWING',
-            valueStyle: _ProfileFonts.statValue(),
-            labelStyle: _ProfileFonts.statLabel(),
+            valueStyle: const TextStyle(
+              fontFamily: 'GeneralSans-Medium',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1.0,
+              letterSpacing: 0,
+              color: KolekColors.neutral900,
+            ),
+            labelStyle: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              height: 20 / 12,
+              letterSpacing: 0,
+              color: KolekColors.neutral500,
+            ),
           ),
           const SizedBox(height: 4),
           const Divider(height: 12, thickness: 0.5, color: KolekColors.neutral300),
@@ -587,8 +255,22 @@ class _StatsColumn extends StatelessWidget {
           _StatItem(
             value: ProfileData.works,
             label: 'WORKS',
-            valueStyle: _ProfileFonts.statValue(),
-            labelStyle: _ProfileFonts.statLabel(),
+            valueStyle: const TextStyle(
+              fontFamily: 'GeneralSans-Medium',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1.0,
+              letterSpacing: 0,
+              color: KolekColors.neutral900,
+            ),
+            labelStyle: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              height: 20 / 12,
+              letterSpacing: 0,
+              color: KolekColors.neutral500,
+            ),
           ),
         ],
       ),
@@ -635,7 +317,17 @@ class _ProfileActions extends StatelessWidget {
             onTap: () {},
             child: Text(
               'EDIT PROFILE',
-              style: _ProfileFonts.editProfile(),
+              style: const TextStyle(
+                fontFamily: 'GeneralSans-Medium',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                height: 1.0,
+                letterSpacing: 0,
+                decoration: TextDecoration.underline,
+                decorationStyle: TextDecorationStyle.solid,
+                decorationColor: KolekColors.neutral900,
+                color: KolekColors.neutral900,
+              ),
             ),
           ),
           const SizedBox(width: 18),
@@ -643,7 +335,17 @@ class _ProfileActions extends StatelessWidget {
             onTap: () {},
             child: Text(
               'SHARE PROFILE',
-              style: _ProfileFonts.shareProfile(),
+              style: const TextStyle(
+                fontFamily: 'GeneralSans-Medium',
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                height: 1.0,
+                letterSpacing: 0,
+                decoration: TextDecoration.underline,
+                decorationStyle: TextDecorationStyle.solid,
+                decorationColor: KolekColors.neutral900,
+                color: KolekColors.neutral900,
+              ),
             ),
           ),
         ],
@@ -718,8 +420,22 @@ class _TabItem extends StatelessWidget {
                     label,
                     textAlign: TextAlign.center,
                     style: selected
-                        ? _ProfileFonts.tabSelected()
-                        : _ProfileFonts.tabUnselected(),
+                        ? const TextStyle(
+                            fontFamily: 'IBMPlexMono-Medium',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            height: 1.0,
+                            letterSpacing: 0,
+                            color: KolekColors.neutral900,
+                          )
+                        : const TextStyle(
+                            fontFamily: 'IBMPlexMono-Medium',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            height: 1.0,
+                            letterSpacing: 0,
+                            color: KolekColors.neutral400,
+                          ),
                   ),
                 ),
                 AnimatedContainer(
@@ -840,7 +556,13 @@ class _FeaturedWork extends StatelessWidget {
         children: [
           Text(
             ProfileData.featuredLabel,
-            style: _ProfileFonts.featuredLabel(),
+            style: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: KolekColors.blue600,
+              fontStyle: FontStyle.normal,
+            ),
           ),
           const SizedBox(height: 6),
           Row(
@@ -849,19 +571,37 @@ class _FeaturedWork extends StatelessWidget {
               Expanded(
                 child: Text(
                   ProfileData.featuredTitle,
-                  style: _ProfileFonts.featuredTitle(),
+                  style: const TextStyle(
+                    fontFamily: 'GeneralSans-Regular',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    height: 1.1,
+                    color: KolekColors.neutral900,
+                  ),
                 ),
               ),
               Text(
                 ProfileData.featuredPrice,
-                style: _ProfileFonts.featuredPrice(),
+                style: const TextStyle(
+                  fontFamily: 'GeneralSans-Regular',
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: KolekColors.neutral950,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 6),
           Text(
             ProfileData.featuredMedium,
-            style: _ProfileFonts.featuredMedium(),
+            style: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              letterSpacing: 0.3,
+              height: 1.4,
+              color: KolekColors.neutral500,
+            ),
           ),
           const SizedBox(height: 2),
           Row(
@@ -869,7 +609,14 @@ class _FeaturedWork extends StatelessWidget {
               Expanded(
                 child: Text(
                   ProfileData.featuredSize,
-                  style: _ProfileFonts.featuredSize(),
+                  style: const TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    letterSpacing: 0.3,
+                    height: 1.4,
+                    color: KolekColors.neutral500,
+                  ),
                 ),
               ),
               const Icon(
@@ -894,7 +641,13 @@ class _AboutSection extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(18, 20, 18, 8),
       child: Text(
         ProfileData.aboutBody,
-        style: _ProfileFonts.about(),
+        style: const TextStyle(
+          fontFamily: 'IBMPlexMono-Regular',
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          height: 1.5,
+          color: KolekColors.neutral600,
+        ),
       ),
     );
   }
