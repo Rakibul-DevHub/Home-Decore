@@ -93,6 +93,10 @@ flutter:
        fonts:
          - asset: assets/font/GeneralSans-Regular.otf
            style: normal
+     - family: GeneralSans-Semibold
+       fonts:
+         - asset: assets/font/GeneralSans-Semibold.otf
+           style: normal
      - family: IBMPlexMono-Regular
        fonts:
          - asset: assets/font/IBMPlexMono-Regular.ttf

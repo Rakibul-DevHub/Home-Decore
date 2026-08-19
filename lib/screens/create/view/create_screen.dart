@@ -94,8 +94,8 @@ class _HeroSection extends StatelessWidget {
   const _HeroSection();
 
   static const String _heroAsset = 'assets/images/one_eye_mini_hand.png';
-  static const double _heroAssetWidth = 229;
-  static const double _heroAssetHeight = 200;
+  static const double _heroAssetWidth = 180;
+  static const double _heroAssetHeight = 190;
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +114,8 @@ class _HeroSection extends StatelessWidget {
                 weight: FontWeight.w600,
                 height: 0.96,
                 letterSpacing: -2.0,
+                fontStyle: FontStyle.normal,
+                fontFamily: KolekFonts.generalSansSemibold,
               ),
             ),
           ),
@@ -123,14 +125,14 @@ class _HeroSection extends StatelessWidget {
             child: Text(
               'Post your art, process,\nor inspiration.\nThe world is watching.',
               style: KolekText.mono(
-                size: 10,
-                weight: FontWeight.w700,
+                size: 11,
+                weight: FontWeight.w500,
               ),
             ),
           ),
           Positioned(
-            right: -18,
-            top: 135,
+            right: -3,
+            top: 140,
             child: Image.asset(
               _heroAsset,
               width: _heroAssetWidth,

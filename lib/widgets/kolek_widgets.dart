@@ -8,6 +8,7 @@ import 'screen_background.dart';
 abstract final class KolekFonts {
   static const ibmPlexMono = 'IBMPlexMono-Regular';
   static const generalSans = 'GeneralSans-Regular';
+  static const generalSansSemibold = 'GeneralSans-Semibold';
 }
 
 /// Text styles using local fonts — every option is customizable per call.
