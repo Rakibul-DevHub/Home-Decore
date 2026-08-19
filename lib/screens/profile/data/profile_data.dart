@@ -1,7 +1,8 @@
 abstract final class ProfileData {
-  static const name = 'Avayah\nBlanchard';
+  static const name = 'Nova\nStyles';
+  static const location = 'LOS ANGELES, CA';
   static const roleLine1 = 'CONTEMPORARY PAINTER';
-  static const roleLine2 = '& MIXED MEDIA ARTIST';
+  static const roleLine2 = '5 MIXED MEDIA ARTIST';
   static const avatarAsset = 'assets/images/demo_user.png';
 
   static const followers = '16.1K';
