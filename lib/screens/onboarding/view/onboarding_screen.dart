@@ -137,9 +137,9 @@ class _Page1Content extends StatelessWidget {
           child: Text(
             'REAL PEOPLE.\nREAL FINDS.\nFREOM ALL OVER.',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 16,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: KolekColors.neutral700,
               height: 1.6,
             ),
@@ -269,9 +269,9 @@ class _Page3Content extends StatelessWidget {
           child: Text(
             'LIST IN SECONDS.\nREACH THOUSAND OF\nCOLLECTORS.',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 16,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: KolekColors.neutral700,
               height: 1.6,
             ),

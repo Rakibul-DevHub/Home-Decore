@@ -93,9 +93,9 @@ class _CreateAppBar extends StatelessWidget {
 class _HeroSection extends StatelessWidget {
   const _HeroSection();
 
-  static const String _heroAsset = 'assets/images/one_eye_mini_hand.png';
-  static const double _heroAssetWidth = 180;
-  static const double _heroAssetHeight = 190;
+  static const String _heroAsset = 'assets/images/one_eye_mini_hand2.png';
+  static const double _heroAssetWidth = 229-30;
+  static const double _heroAssetHeight = 231;
 
   @override
   Widget build(BuildContext context) {
@@ -112,27 +112,37 @@ class _HeroSection extends StatelessWidget {
               style: KolekText.sans(
                 size: 55,
                 weight: FontWeight.w600,
-                height: 0.96,
+                height: 1,
                 letterSpacing: -2.0,
-                fontStyle: FontStyle.normal,
+                // fontStyle: FontStyle.normal,
                 fontFamily: KolekFonts.generalSansSemibold,
               ),
             ),
           ),
           Positioned(
             left: 16,
-            top: 265,
+            top: 260,
+            child: Container(
+              width: 28,
+              height: 5,
+              color: KolekColors.neutral900,
+            ),
+          ),
+          Positioned(
+            left: 16,
+            top: 300,
             child: Text(
               'Post your art, process,\nor inspiration.\nThe world is watching.',
               style: KolekText.mono(
                 size: 11,
                 weight: FontWeight.w500,
+                fontFamily: 'IBMPlexMono-Medium',
               ),
             ),
           ),
           Positioned(
-            right: -3,
-            top: 140,
+            right: -03,
+            top: 145,
             child: Image.asset(
               _heroAsset,
               width: _heroAssetWidth,
