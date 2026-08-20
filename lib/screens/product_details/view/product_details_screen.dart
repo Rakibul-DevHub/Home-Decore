@@ -31,7 +31,15 @@ class ProductDetailsScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pushNamed(AppRoute.cart),
               icon: Badge(
                 backgroundColor: KolekColors.blue600,
-                label: Text('$cartCount'),
+                label: Text(
+                  '$cartCount',
+                  style: const TextStyle(
+                    fontFamily: 'GeneralSans-Regular',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
                 child: SvgPicture.asset(
                   'assets/icons/cart.svg',
                   width: 24,
@@ -86,7 +94,12 @@ class ProductDetailsScreen extends StatelessWidget {
                         child: Text(
                           '${state.selectedImage + 1}/'
                           '${ProductDetailsData.product.images.length}',
-                          style: KolekText.mono(size: 9),
+                          style: const TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 9,
+                            fontWeight: FontWeight.w400,
+                            color: KolekColors.neutral900,
+                          ),
                         ),
                       ),
                     ),
@@ -101,11 +114,14 @@ class ProductDetailsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  ProductDetailsData.product.title,
-                  style: KolekText.sans(
-                    size: 26,
-                    weight: FontWeight.w700,
-                    height: .95,
+                  ProductDetailsData.product.title.toUpperCase(),
+                  style: const TextStyle(
+                    fontFamily: 'GeneralSans-Semibold',
+                    fontSize: 32,
+                    fontWeight: FontWeight.w600,
+                    height: 38 / 32,
+                    letterSpacing: -2,
+                    color: KolekColors.neutral900,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -113,8 +129,12 @@ class ProductDetailsScreen extends StatelessWidget {
                   children: [
                     Text(
                       '\$${ProductDetailsData.product.price}',
-                      style: KolekText.sans(
-                        size: 22,
+                      style: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Medium',
+                        fontSize: 27,
+                        fontWeight: FontWeight.w500,
+                        height: 40 / 27,
+                        letterSpacing: 0,
                         color: KolekColors.blue600,
                       ),
                     ),
@@ -131,7 +151,14 @@ class ProductDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   ProductDetailsData.product.description,
-                  style: KolekText.mono(size: 11, height: 1.45),
+                  style: const TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    height: 20 / 16,
+                    letterSpacing: 0,
+                    color: KolekColors.neutral900,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(
@@ -144,26 +171,32 @@ class ProductDetailsScreen extends StatelessWidget {
                   label: Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(
+                        const TextSpan(
                           text: 'By ',
-                          style: KolekText.mono(
-                            size: 14,
+                          style: TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                             color: KolekColors.neutral950,
-                          ), // Black color for "By "
+                          ),
                         ),
                         TextSpan(
                           text: ProductDetailsData.product.seller,
-                          style: KolekText.mono(
-                            size: 14,
+                          style: const TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                             color: KolekColors.blue600,
-                          ), // Blue color for seller name
+                          ),
                         ),
-                        TextSpan(
+                        const TextSpan(
                           text: '  →',
-                          style: KolekText.mono(
-                            size: 14,
+                          style: TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
                             color: KolekColors.neutral950,
-                          ), // Black color for "  →"
+                          ),
                         ),
                       ],
                     ),
@@ -195,7 +228,12 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'Add to Cart',
-                      style: KolekText.sans(size: 12, color: Colors.white),
+                      style: const TextStyle(
+                        fontFamily: 'GeneralSans-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -215,8 +253,12 @@ class ProductDetailsScreen extends StatelessWidget {
                     ),
                     child: Text(
                       'Buy Now  —  \$${ProductDetailsData.product.price}',
-                      style: KolekText.sans(size: 11,
-                          color: Colors.white,),
+                      style: const TextStyle(
+                        fontFamily: 'GeneralSans-Regular',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

@@ -184,17 +184,20 @@ class _FeedCard extends StatelessWidget {
                   children: [
                     Text(
                       post.author,
-                      style: KolekText.sans(
-                        size: 18,
-                        weight: FontWeight.w500,
+                      style: const TextStyle(
+                        fontFamily: 'GeneralSans-Medium',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: KolekColors.neutral900,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       post.location,
-                      style: KolekText.sans(
-                        size: 12,
-                        weight: FontWeight.w400,
+                      style: const TextStyle(
+                        fontFamily: 'GeneralSans-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                         color: KolekColors.neutral500,
                       ),
                     ),
@@ -245,18 +248,21 @@ class _FeedCard extends StatelessWidget {
                 children: [
                   Text(
                     post.title,
-                    style: KolekText.sans(
-                      size: 12,
-                      weight: FontWeight.w500,
+                    style: const TextStyle(
+                      fontFamily: 'GeneralSans-Regular',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: KolekColors.neutral900,
                     ),
                   ),
                   const Spacer(),
                   _StatIcon(
                     asset: 'assets/icons/react_border.svg',
                     value: post.likes,
-                    valueStyle: KolekText.mono(
-                      size: 12,
-                      weight: FontWeight.w400,
+                    valueStyle: const TextStyle(
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
                       color: KolekColors.neutral600,
                     ),
                   ),
@@ -266,9 +272,10 @@ class _FeedCard extends StatelessWidget {
                     child: _StatIcon(
                       asset: 'assets/icons/comment.svg',
                       value: post.commentCount,
-                      valueStyle: KolekText.mono(
-                        size: 12,
-                        weight: FontWeight.w400,
+                      valueStyle: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                         color: KolekColors.neutral600,
                       ),
                     ),
@@ -277,9 +284,10 @@ class _FeedCard extends StatelessWidget {
                   _StatIcon(
                     asset: 'assets/icons/share.svg',
                     value: post.shareCount,
-                    valueStyle: KolekText.mono(
-                      size: 12,
-                      weight: FontWeight.w400,
+                    valueStyle: const TextStyle(
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
                       color: KolekColors.neutral600,
                     ),
                   ),
@@ -301,20 +309,22 @@ class _FeedCard extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: post.description,
-                      style: KolekText.mono(
-                        size: 12,
-                        weight: FontWeight.w400,
-                        color: KolekColors.neutral600,
+                      style: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                         height: 1.45,
+                        color: KolekColors.neutral600,
                       ),
                     ),
-                    TextSpan(
+                    const TextSpan(
                       text: ' ...more',
-                      style: KolekText.mono(
-                        size: 12,
-                        weight: FontWeight.w400,
-                        color: KolekColors.neutral400,
+                      style: TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
                         height: 1.45,
+                        color: KolekColors.neutral400,
                       ),
                     ),
                   ],
@@ -466,9 +476,10 @@ class _LiquidGlassMenuItem extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   item.label,
-                  style: KolekText.mono(
-                    size: 12,
-                    weight: FontWeight.w500,
+                  style: const TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
                     color: KolekColors.neutral900,
                   ),
                 ),
@@ -485,8 +496,6 @@ class _CommentsSheet extends StatelessWidget {
   const _CommentsSheet();
 
   static const _composerAvatar = 'assets/images/demo_user.png';
-  static const _generalSans = 'GeneralSans-Regular';
-  static const _ibmPlexMono = 'IBMPlexMono-Regular';
 
   @override
   Widget build(BuildContext context) {
@@ -515,10 +524,10 @@ class _CommentsSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 14),
-              Text(
+              const Text(
                 'Comments',
-                style: const TextStyle(
-                  fontFamily: _ibmPlexMono,
+                style: TextStyle(
+                  fontFamily: 'IBMPlexMono-Regular',
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: KolekColors.neutral900,
@@ -559,9 +568,6 @@ class _CommentTile extends StatelessWidget {
 
   final HomeComment comment;
 
-  static const _generalSans = _CommentsSheet._generalSans;
-  static const _ibmPlexMono = _CommentsSheet._ibmPlexMono;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -585,18 +591,18 @@ class _CommentTile extends StatelessWidget {
                   Text(
                     comment.author,
                     style: const TextStyle(
-                      fontFamily: _generalSans, // only username
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
+                      fontFamily: 'GeneralSans-Semibold',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                       color: KolekColors.neutral900,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 16),
                   Text(
                     comment.age,
                     style: const TextStyle(
-                      fontFamily: _ibmPlexMono,
-                      fontSize: 12,
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: KolekColors.neutral400,
                     ),
@@ -607,7 +613,7 @@ class _CommentTile extends StatelessWidget {
               Text(
                 comment.message.replaceAll('\n', ' '),
                 style: const TextStyle(
-                  fontFamily: _ibmPlexMono,
+                  fontFamily: 'IBMPlexMono-Regular',
                   fontSize: 12,
                   height: 1.45,
                   color: KolekColors.neutral500,
@@ -617,9 +623,9 @@ class _CommentTile extends StatelessWidget {
               const Text(
                 'Reply',
                 style: TextStyle(
-                  fontFamily: _ibmPlexMono,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  fontFamily: 'IBMPlexMono-Medium',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                   color: KolekColors.neutral900,
                 ),
               ),
@@ -628,8 +634,8 @@ class _CommentTile extends StatelessWidget {
                 Text(
                   '———  View ${comment.replyCount} more replies',
                   style: const TextStyle(
-                    fontFamily: _ibmPlexMono,
-                    fontSize: 11,
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 12,
                     color: KolekColors.neutral400,
                   ),
                 ),
@@ -646,8 +652,6 @@ class _CommentComposer extends StatelessWidget {
   const _CommentComposer({required this.avatarAsset});
 
   final String avatarAsset;
-
-  static const _ibmPlexMono = _CommentsSheet._ibmPlexMono;
 
   @override
   Widget build(BuildContext context) {
@@ -669,7 +673,7 @@ class _CommentComposer extends StatelessWidget {
               height: 44,
               child: TextField(
                 style: const TextStyle(
-                  fontFamily: _ibmPlexMono,
+                  fontFamily: 'IBMPlexMono-Regular',
                   fontSize: 12,
                   color: KolekColors.neutral900,
                 ),
@@ -677,7 +681,7 @@ class _CommentComposer extends StatelessWidget {
                   isDense: true,
                   hintText: 'What do you think of this?',
                   hintStyle: const TextStyle(
-                    fontFamily: _ibmPlexMono,
+                    fontFamily: 'IBMPlexMono-Regular',
                     fontSize: 12,
                     color: KolekColors.neutral400,
                   ),
