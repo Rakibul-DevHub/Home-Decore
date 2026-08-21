@@ -454,7 +454,7 @@ class _TabItem extends StatelessWidget {
   }
 }
 
-// ─── Image grid (UNTOUCHED) ───────────────────────────────────
+// ─── Image grid ────────────────────────────────────────────────
 
 class _GridTile {
   const _GridTile({
@@ -558,7 +558,7 @@ class _FeaturedWork extends StatelessWidget {
           Text(
             ProfileData.featuredLabel,
             style: const TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 12,
               fontWeight: FontWeight.w500,
               color: KolekColors.blue600,
