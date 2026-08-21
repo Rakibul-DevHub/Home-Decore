@@ -252,6 +252,8 @@ class KolekField extends StatelessWidget {
     this.obscureText = false,
     this.onVisibilityPressed,
     this.keyboardType,
+    this.labelStyle,
+    this.inputStyle,
   });
 
   final String label;
@@ -259,6 +261,8 @@ class KolekField extends StatelessWidget {
   final bool obscureText;
   final VoidCallback? onVisibilityPressed;
   final TextInputType? keyboardType;
+  final TextStyle? labelStyle;
+  final TextStyle? inputStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +271,8 @@ class KolekField extends StatelessWidget {
       children: [
         Text(
           label.toUpperCase(),
-          style: KolekText.mono(size: 12, color: KolekColors.neutral800),
+          style: labelStyle ??
+              KolekText.mono(size: 12, color: KolekColors.neutral800),
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -276,7 +281,7 @@ class KolekField extends StatelessWidget {
             initialValue: hint,
             obscureText: obscureText,
             keyboardType: keyboardType,
-            style: KolekText.mono(size: 14),
+            style: inputStyle ?? KolekText.mono(size: 14),
             decoration: InputDecoration(
               filled: true,
               fillColor: KolekColors.neutral50,
@@ -386,10 +391,18 @@ class AuthScaffold extends StatelessWidget {
 }
 
 class AuthHeading extends StatelessWidget {
-  const AuthHeading({required this.title, required this.subtitle, super.key});
+  const AuthHeading({
+    required this.title,
+    required this.subtitle,
+    this.titleStyle,
+    this.subtitleStyle,
+    super.key,
+  });
 
   final String title;
   final String subtitle;
+  final TextStyle? titleStyle;
+  final TextStyle? subtitleStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -400,22 +413,24 @@ class AuthHeading extends StatelessWidget {
         children: [
           Text(
             title,
-            style: KolekText.mono(
-              size: 50,
-              weight: FontWeight.w600,
-              height: 1.1,
-              letterSpacing: -3,
-            ),
+            style: titleStyle ??
+                KolekText.mono(
+                  size: 50,
+                  weight: FontWeight.w600,
+                  height: 1.1,
+                  letterSpacing: -3,
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: KolekText.mono(
-              size: 14,
-              weight: FontWeight.w500,
-              color: KolekColors.neutral600,
-              height: 1.3,
-            ),
+            style: subtitleStyle ??
+                KolekText.mono(
+                  size: 14,
+                  weight: FontWeight.w500,
+                  color: KolekColors.neutral600,
+                  height: 1.3,
+                ),
           ),
         ],
       ),
@@ -428,12 +443,16 @@ class AuthLinkRow extends StatelessWidget {
     required this.text,
     required this.link,
     required this.onPressed,
+    this.textStyle,
+    this.linkStyle,
     super.key,
   });
 
   final String text;
   final String link;
   final VoidCallback onPressed;
+  final TextStyle? textStyle;
+  final TextStyle? linkStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -443,7 +462,8 @@ class AuthLinkRow extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: KolekText.mono(size: 14, color: KolekColors.neutral400),
+            style: textStyle ??
+                KolekText.mono(size: 14, color: KolekColors.neutral400),
           ),
         ),
         const SizedBox(width: 8),
@@ -451,7 +471,8 @@ class AuthLinkRow extends StatelessWidget {
           onTap: onPressed,
           child: Text(
             link,
-            style: KolekText.mono(size: 14, color: KolekColors.blue600),
+            style: linkStyle ??
+                KolekText.mono(size: 14, color: KolekColors.blue600),
           ),
         ),
       ],

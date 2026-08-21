@@ -109,6 +109,10 @@ flutter:
        fonts:
         - asset: assets/font/IBMPlexMono-Medium.ttf
           style: normal
+     - family: IBMPlexMono-SemiBold
+       fonts:
+        - asset: assets/font/IBMPlexMono-SemiBold.ttf
+          style: normal
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

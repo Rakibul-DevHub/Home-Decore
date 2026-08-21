@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../routes/app_route.dart';
 import '../../../../theme/kolek_colors.dart';
@@ -23,6 +24,20 @@ class WelcomeScreen extends StatelessWidget {
             const AuthHeading(
               title: WelcomeData.title,
               subtitle: WelcomeData.subtitle,
+              titleStyle: TextStyle(
+                fontFamily: 'IBMPlexMono-SemiBold',
+                fontSize: 50,
+                fontWeight: FontWeight.w600,
+                height: 55 / 50,
+                letterSpacing: -3 / 50,
+                color: KolekColors.neutral900,
+              ),
+              subtitleStyle: TextStyle(
+                fontFamily: 'IBMPlexMono-Medium',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: KolekColors.neutral600,
+              ),
             ),
             const SizedBox(height: 64),
             BlocBuilder<WelcomeCubit, bool>(
@@ -33,6 +48,18 @@ class WelcomeScreen extends StatelessWidget {
                       label: WelcomeData.emailLabel,
                       hint: WelcomeData.email,
                       keyboardType: TextInputType.emailAddress,
+                      labelStyle: TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: KolekColors.neutral800,
+                      ),
+                      inputStyle: TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: KolekColors.neutral900,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     KolekField(
@@ -42,6 +69,18 @@ class WelcomeScreen extends StatelessWidget {
                       onVisibilityPressed: context
                           .read<WelcomeCubit>()
                           .togglePasswordVisibility,
+                      labelStyle: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: KolekColors.neutral800,
+                      ),
+                      inputStyle: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: KolekColors.neutral900,
+                      ),
                     ),
                   ],
                 );
@@ -57,18 +96,28 @@ class WelcomeScreen extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   foregroundColor: KolekColors.neutral500,
                 ),
-                child: Text(
+                child: const Text(
                   WelcomeData.forgotPassword,
-                  style: KolekText.mono(
-                    size: 16,
+                  style: TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                     color: KolekColors.neutral500,
-                  ).copyWith(decoration: TextDecoration.underline),
+                    decoration: TextDecoration.underline,
+                    decorationColor: KolekColors.neutral500,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 34),
             KolekButton(
               label: WelcomeData.signIn,
+              labelStyle: const TextStyle(
+                fontFamily: 'GeneralSans-Medium',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: KolekColors.neutral50,
+              ),
               onPressed: () => Navigator.of(
                 context,
               ).pushNamedAndRemoveUntil(AppRoute.mainShell, (_) => false),
@@ -81,14 +130,13 @@ class WelcomeScreen extends StatelessWidget {
                 Expanded(
                   child: _SocialButton(
                     label: WelcomeData.google,
-                    icon: const Text(
-                      'G',
-                      style: TextStyle(
-                        color: Color(0xFF4285F4),
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
-                      ),
+                    labelStyle: const TextStyle(
+                      fontFamily: 'GeneralSans-Medium',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: KolekColors.neutral900,
                     ),
+                    icon: SvgPicture.asset("assets/icons/google_logo.svg"),
                     onPressed: () {},
                   ),
                 ),
@@ -96,11 +144,13 @@ class WelcomeScreen extends StatelessWidget {
                 Expanded(
                   child: _SocialButton(
                     label: WelcomeData.apple,
-                    icon: const Icon(
-                      Icons.apple,
-                      size: 23,
+                    labelStyle: const TextStyle(
+                      fontFamily: 'GeneralSans-Medium',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       color: KolekColors.neutral900,
                     ),
+                    icon: SvgPicture.asset("assets/icons/apple_logo.svg"),
                     onPressed: () {},
                   ),
                 ),
@@ -110,6 +160,18 @@ class WelcomeScreen extends StatelessWidget {
             AuthLinkRow(
               text: WelcomeData.accountPrompt,
               link: WelcomeData.signUp,
+              textStyle: const TextStyle(
+                fontFamily: 'IBMPlexMono-Regular',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: KolekColors.neutral400,
+              ),
+              linkStyle: const TextStyle(
+                fontFamily: 'IBMPlexMono-Regular',
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: KolekColors.blue600,
+              ),
               onPressed: () =>
                   Navigator.of(context).pushNamed(AppRoute.createAccount),
             ),
@@ -133,7 +195,12 @@ class _OrDivider extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             WelcomeData.divider,
-            style: KolekText.mono(size: 12, color: KolekColors.neutral400),
+            style: const TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: KolekColors.neutral400,
+            ),
           ),
         ),
         const Expanded(child: Divider(color: KolekColors.neutral300)),
@@ -147,11 +214,13 @@ class _SocialButton extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.labelStyle,
   });
 
   final String label;
   final Widget icon;
   final VoidCallback onPressed;
+  final TextStyle? labelStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +238,16 @@ class _SocialButton extends StatelessWidget {
           children: [
             icon,
             const SizedBox(width: 10),
-            Text(label, style: KolekText.sans(size: 16)),
+            Text(
+              label,
+              style: labelStyle ??
+                  const TextStyle(
+                    fontFamily: 'GeneralSans-Regular',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: KolekColors.neutral900,
+                  ),
+            ),
           ],
         ),
       ),
