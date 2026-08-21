@@ -10,7 +10,7 @@ abstract final class OnboardingData {
   static const arrowAsset = 'assets/icons/arrow_right.svg';
 
   static const fontFamily = 'IBMPlexMono-Regular';
-  static const getStartedFontFamily = 'GeneralSans-Regular';
+  static const getStartedFontFamily = 'GeneralSans-Medium';
 
   static const pages = [
     OnboardingPageData(image: 'assets/images/onboarding_1.png'),

@@ -121,12 +121,12 @@ class _Page1Content extends StatelessWidget {
           child: Text(
             'Discover\nwhat\nmoves\nyou.',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 40,
               fontWeight: FontWeight.w500,
               color: KolekColors.neutral900,
-              height: 1.3,
-              letterSpacing: 1.5,
+              height: 52/40,
+              letterSpacing: 2/40,
             ),
           ),
         ),
@@ -194,7 +194,7 @@ class _Page2Content extends StatelessWidget {
           child: Text(
             'Buy\ndirectly\nfrom\ncreators.',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 40,
               fontWeight: FontWeight.w500,
               color: KolekColors.neutral900,
@@ -252,7 +252,7 @@ class _Page3Content extends StatelessWidget {
           child: Text(
             'Sell\nanything\nInstantly.',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 40,
               fontWeight: FontWeight.w500,
               color: KolekColors.neutral900,
@@ -326,7 +326,7 @@ class _Page4Content extends StatelessWidget {
           child: Text(
             'Connect.\nChat.\nMake it\nYours',
             style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
+              fontFamily: 'IBMPlexMono-Medium',
               fontSize: 40,
               fontWeight: FontWeight.w500,
               color: KolekColors.neutral900,
@@ -396,7 +396,7 @@ class _Page5Content extends StatelessWidget {
           child: Text.rich(
             TextSpan(
               style: TextStyle(
-                fontFamily: 'IBMPlexMono-Regular',
+                fontFamily: 'IBMPlexMono-Medium',
                 fontSize: 40,
                 fontWeight: FontWeight.w500,
                 height: 1.32,
@@ -424,7 +424,7 @@ class _Page5Content extends StatelessWidget {
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: KolekColors.neutral700,
-              height: 1.6,
+              height: 24/16,
             ),
           ),
         ),
@@ -549,7 +549,7 @@ class _Footer extends StatelessWidget {
               labelStyle: const TextStyle(
                 fontFamily: OnboardingData.getStartedFontFamily,
                 fontSize: 16,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
