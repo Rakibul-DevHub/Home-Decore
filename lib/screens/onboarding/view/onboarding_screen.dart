@@ -400,7 +400,7 @@ class _Page5Content extends StatelessWidget {
                 fontSize: 40,
                 fontWeight: FontWeight.w500,
                 height: 1.32,
-                letterSpacing: 2,
+                letterSpacing: 2/40,
                 color: KolekColors.neutral900,
               ),
               children: [
