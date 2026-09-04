@@ -80,7 +80,8 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
       title: const KolekTextLogo(height: 22),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () =>
+              Navigator.of(context).pushNamed(AppRoute.notifications),
           icon: SvgPicture.asset(
             'assets/icons/notification_active.svg',
             width: 24,

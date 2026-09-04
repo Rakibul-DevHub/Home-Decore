@@ -152,7 +152,6 @@ class _KolekBottomNavState extends State<KolekBottomNav>
 
   Widget _buildNavItem(int index, NavItem item, double underlineDy) {
     final isSelected = widget.selectedIndex == index;
-
     return Semantics(
       button: true,
       selected: isSelected,
@@ -180,6 +179,9 @@ class _KolekBottomNavState extends State<KolekBottomNav>
                 ),
               ),
             ),
+            ///
+            /// ----- selected bottom index underline ------
+            ///
             SizedBox(
               height: _slotHeight,
               width: double.infinity,
@@ -189,7 +191,7 @@ class _KolekBottomNavState extends State<KolekBottomNav>
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                      width: 22,
+                      width: 0, // ----- controll underline width -----
                       height: _barHeight,
                       decoration: BoxDecoration(
                         color: KolekBottomNav.indicatorColor,

@@ -30,6 +30,8 @@ import '../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../screens/main_shell/view/main_shell_screen.dart';
 import '../screens/messages/cubit/messages_cubit.dart';
 import '../screens/messages/data/messages_data.dart';
+import '../screens/notification/cubit/notification_cubit.dart';
+import '../screens/notification/view/notification_screen.dart';
 import '../screens/product_details/cubit/product_details_cubit.dart';
 import '../screens/product_details/view/product_details_screen.dart';
 import '../screens/profile/cubit/profile_cubit.dart';
@@ -60,6 +62,7 @@ abstract final class AppRoutes {
   static const newPost = '/new-post';
   static const newPostDetails = '/new-post-details';
   static const inbox = '/inbox';
+  static const notifications = '/notifications';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -144,6 +147,10 @@ abstract final class AppRoutes {
     newPost: (_) => BlocProvider(
       create: (_) => NewPostCubit(),
       child: const NewPostMediaScreen(),
+    ),
+    notifications: (_) => BlocProvider(
+      create: (_) => NotificationCubit(),
+      child: const NotificationScreen(),
     ),
   };
 

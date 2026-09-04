@@ -75,7 +75,8 @@ class ShopScreen extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AppRoute.notifications),
             icon: SvgPicture.asset(
               'assets/icons/notification_active.svg',
               width: 24,
