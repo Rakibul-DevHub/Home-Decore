@@ -343,22 +343,53 @@ class AuthScaffold extends StatelessWidget {
     required this.child,
     super.key,
     this.showBack = true,
+    this.scrollable = true,
   });
 
   final String routeName;
   final Widget child;
   final bool showBack;
 
+  /// When false, content fills the screen height and does not scroll.
+  final bool scrollable;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KolekColors.neutral50,
+      resizeToAvoidBottomInset: scrollable,
       body: SafeArea(
         child: Stack(
           children: [
             ScreenBackground(routeName: routeName),
             LayoutBuilder(
               builder: (context, constraints) {
+                final header = Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: showBack
+                      ? AuthBackButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                        )
+                      : const KolekLogo(),
+                );
+
+                if (!scrollable) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: SizedBox(
+                      height: constraints.maxHeight,
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          header,
+                          Expanded(child: child),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+
                 return SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ConstrainedBox(
@@ -369,13 +400,7 @@ class AuthScaffold extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 16),
-                        if (showBack)
-                          AuthBackButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                          )
-                        else
-                          const KolekLogo(),
+                        header,
                         child,
                       ],
                     ),
