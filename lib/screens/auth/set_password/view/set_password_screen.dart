@@ -28,7 +28,7 @@ class SetPasswordScreen extends StatelessWidget {
     return AuthScaffold(
       routeName: AppRoute.setPassword,
       child: Padding(
-        padding: const EdgeInsets.only(top: 96),
+        padding: const EdgeInsets.only(top: 24),
         child: Column(
           children: [
             const AuthHeading(

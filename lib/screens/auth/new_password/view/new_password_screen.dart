@@ -16,7 +16,7 @@ class NewPasswordScreen extends StatelessWidget {
     return AuthScaffold(
       routeName: AppRoute.newPassword,
       child: Padding(
-        padding: const EdgeInsets.only(top: 96),
+        padding: const EdgeInsets.only(top: 24),
         child: Column(
           children: [
             const AuthHeading(

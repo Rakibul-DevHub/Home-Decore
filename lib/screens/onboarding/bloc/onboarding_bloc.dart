@@ -8,6 +8,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
   OnboardingBloc() : super(const OnboardingState()) {
     on<OnboardingNextPressed>(_onNextPressed);
     on<OnboardingPreviousPressed>(_onPreviousPressed);
+    on<OnboardingSkipPressed>(_onSkipPressed);
   }
 
   void _onNextPressed(
@@ -36,6 +37,21 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
         pageIndex: state.pageIndex - 1,
         finished: false,
         isForward: false,
+      ),
+    );
+  }
+
+  void _onSkipPressed(
+    OnboardingSkipPressed event,
+    Emitter<OnboardingState> emit,
+  ) {
+    final lastIndex = OnboardingData.pages.length - 1;
+    if (state.pageIndex >= lastIndex) return;
+    emit(
+      state.copyWith(
+        pageIndex: lastIndex,
+        finished: false,
+        isForward: true,
       ),
     );
   }

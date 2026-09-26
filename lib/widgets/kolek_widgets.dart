@@ -343,12 +343,17 @@ class AuthScaffold extends StatelessWidget {
     required this.child,
     super.key,
     this.showBack = true,
+    this.showLogo = true,
     this.scrollable = true,
   });
 
   final String routeName;
   final Widget child;
   final bool showBack;
+
+  /// When [showBack] is true, places [KolekLogo] under the back button.
+  /// When [showBack] is false, shows the logo in place of the back button.
+  final bool showLogo;
 
   /// When false, content fills the screen height and does not scroll.
   final bool scrollable;
@@ -357,56 +362,48 @@ class AuthScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KolekColors.neutral50,
-      resizeToAvoidBottomInset: scrollable,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Stack(
           children: [
             ScreenBackground(routeName: routeName),
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final header = Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: showBack
-                      ? AuthBackButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                        )
-                      : const KolekLogo(),
-                );
-
-                if (!scrollable) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: SizedBox(
-                      height: constraints.maxHeight,
-                      width: double.infinity,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          header,
-                          Expanded(child: child),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                      maxWidth: 400,
-                    ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        header,
-                        child,
+                        if (showBack)
+                          AuthBackButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                          )
+                        else if (showLogo)
+                          const KolekLogo(),
+                        if (showBack && showLogo) ...[
+                          const SizedBox(height: 16),
+                          const KolekLogo(),
+                        ],
                       ],
                     ),
                   ),
-                );
-              },
+                  // Logo / back stay pinned above the scroll area.
+                  if (scrollable)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: child,
+                      ),
+                    )
+                  else
+                    Expanded(child: child),
+                ],
+              ),
             ),
           ],
         ),

@@ -14,3 +14,7 @@ final class OnboardingNextPressed extends OnboardingEvent {
 final class OnboardingPreviousPressed extends OnboardingEvent {
   const OnboardingPreviousPressed();
 }
+
+final class OnboardingSkipPressed extends OnboardingEvent {
+  const OnboardingSkipPressed();
+}

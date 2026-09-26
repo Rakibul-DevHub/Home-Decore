@@ -97,7 +97,9 @@ class OnboardingScreen extends StatelessWidget {
                             ),
                             _Header(
                               showSkip: page < OnboardingData.pages.length - 1,
-                              onSkip: () => _openSignIn(context),
+                              onSkip: () => context
+                                  .read<OnboardingBloc>()
+                                  .add(const OnboardingSkipPressed()),
                             ),
                             _Footer(
                               index: page,
