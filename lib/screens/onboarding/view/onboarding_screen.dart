@@ -28,6 +28,7 @@ class OnboardingScreen extends StatelessWidget {
           listener: (context, state) => _openSignIn(context),
           builder: (context, state) {
             final page = state.pageIndex;
+            final isForward = state.isForward;
             return LayoutBuilder(
               builder: (context, constraints) {
                 return Center(
@@ -50,13 +51,59 @@ class OnboardingScreen extends StatelessWidget {
                                 .add(const OnboardingPreviousPressed());
                           }
                         },
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 280),
-                          child: _OnboardingPage(
-                            key: ValueKey(page),
-                            index: page,
-                            onSignIn: () => _openSignIn(context),
-                          ),
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            // Page content (text + image) with vertical fade/slide.
+                            Positioned.fill(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 420),
+                                switchInCurve: Curves.easeOutCubic,
+                                switchOutCurve: Curves.easeInCubic,
+                                layoutBuilder: (currentChild, previousChildren) {
+                                  return Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ...previousChildren,
+                                      if (currentChild != null) currentChild,
+                                    ],
+                                  );
+                                },
+                                transitionBuilder: (child, animation) {
+                                  // Next: exit/enter through the bottom (slide down).
+                                  // Previous: exit/enter through the top (slide up).
+                                  final beginOffset = Offset(
+                                    0,
+                                    isForward ? 0.18 : -0.18,
+                                  );
+                                  final offset = Tween<Offset>(
+                                    begin: beginOffset,
+                                    end: Offset.zero,
+                                  ).animate(animation);
+
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: SlideTransition(
+                                      position: offset,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: KeyedSubtree(
+                                  key: ValueKey(page),
+                                  child: _OnboardingPageContent(index: page),
+                                ),
+                              ),
+                            ),
+                            _Header(
+                              showSkip: page < OnboardingData.pages.length - 1,
+                              onSkip: () => _openSignIn(context),
+                            ),
+                            _Footer(
+                              index: page,
+                              onSignIn: () => _openSignIn(context),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -71,32 +118,20 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-class _OnboardingPage extends StatelessWidget {
-  const _OnboardingPage({
-    required this.index,
-    required this.onSignIn,
-    super.key,
-  });
+class _OnboardingPageContent extends StatelessWidget {
+  const _OnboardingPageContent({required this.index});
 
   final int index;
-  final VoidCallback onSignIn;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        switch (index) {
-          0 => const _Page1Content(),
-          1 => const _Page2Content(),
-          2 => const _Page3Content(),
-          3 => const _Page4Content(),
-          _ => const _Page5Content(),
-        },
-        _Header(onSkip: onSignIn),
-        _Footer(index: index, onSignIn: onSignIn),
-      ],
-    );
+    return switch (index) {
+      0 => const _Page1Content(),
+      1 => const _Page2Content(),
+      2 => const _Page3Content(),
+      3 => const _Page4Content(),
+      _ => const _Page5Content(),
+    };
   }
 }
 
@@ -442,9 +477,13 @@ class _Page5Content extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({required this.onSkip});
+  const _Header({
+    required this.onSkip,
+    this.showSkip = true,
+  });
 
   final VoidCallback onSkip;
+  final bool showSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -456,27 +495,28 @@ class _Header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const KolekLogo(),
-          InkWell(
-            onTap: onSkip,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: KolekColors.neutral700),
+          if (showSkip)
+            InkWell(
+              onTap: onSkip,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(color: KolekColors.neutral700),
+                  ),
                 ),
-              ),
-              child: const Text(
-                OnboardingData.skip,
-                style: TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: KolekColors.neutral500,
-                  height: 20 / 14,
+                child: const Text(
+                  OnboardingData.skip,
+                  style: TextStyle(
+                    fontFamily: 'IBMPlexMono-Regular',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: KolekColors.neutral500,
+                    height: 20 / 14,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

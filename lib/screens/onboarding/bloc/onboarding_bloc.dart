@@ -15,14 +15,13 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
     Emitter<OnboardingState> emit,
   ) {
     final lastIndex = OnboardingData.pages.length - 1;
-    if (state.pageIndex >= lastIndex) {
-      emit(state.copyWith(finished: true));
-      return;
-    }
+    // Last page: only "Get Started" may leave onboarding (not next/swipe).
+    if (state.pageIndex >= lastIndex) return;
     emit(
       state.copyWith(
         pageIndex: state.pageIndex + 1,
         finished: false,
+        isForward: true,
       ),
     );
   }
@@ -36,6 +35,7 @@ class OnboardingBloc extends Bloc<OnboardingEvent, OnboardingState> {
       state.copyWith(
         pageIndex: state.pageIndex - 1,
         finished: false,
+        isForward: false,
       ),
     );
   }
