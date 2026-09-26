@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../theme/kolek_colors.dart';
 import '../cubit/notification_cubit.dart';
 import '../data/notification_data.dart';

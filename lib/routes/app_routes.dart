@@ -13,7 +13,7 @@ import '../screens/auth/set_password/cubit/set_password_cubit.dart';
 import '../screens/auth/set_password/view/set_password_screen.dart';
 import '../screens/auth/welcome/cubit/welcome_cubit.dart';
 import '../screens/auth/welcome/view/welcome_screen.dart';
-import '../screens/onboarding/cubit/onboarding_cubit.dart';
+import '../screens/onboarding/bloc/onboarding_bloc.dart';
 import '../screens/onboarding/view/onboarding_screen.dart';
 import '../screens/cart/cubit/cart_cubit.dart';
 import '../screens/cart/view/cart_screen.dart';
@@ -39,7 +39,8 @@ import '../screens/search/cubit/search_cubit.dart';
 import '../screens/search/view/search_screen.dart';
 import '../screens/shop/cubit/shop_cubit.dart';
 import '../screens/shop/view/shop_screen.dart';
-import '../screens/splash/cubit/splash_cubit.dart';
+import '../screens/splash/bloc/splash_bloc.dart';
+import '../screens/splash/bloc/splash_event.dart';
 import '../screens/splash/view/splash_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
@@ -69,11 +70,12 @@ abstract final class AppRoutes {
 
   static Map<String, WidgetBuilder> get routes => {
     splash: (_) => BlocProvider(
-      create: (_) => SplashCubit(duration: splashDuration)..start(),
+      create: (_) => SplashBloc(duration: splashDuration)
+        ..add(const SplashStarted()),
       child: const SplashScreen(),
     ),
     onboarding: (_) => BlocProvider(
-      create: (_) => OnboardingCubit(),
+      create: (_) => OnboardingBloc(),
       child: const OnboardingScreen(),
     ),
     signIn: (_) => BlocProvider(

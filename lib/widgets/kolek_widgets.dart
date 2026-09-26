@@ -160,7 +160,7 @@ class KolekLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      'assets/icons/logo_k.svg',
+      'assets/icons/logo.svg',
       width: size,
       height: size,
     );

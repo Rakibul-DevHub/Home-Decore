@@ -1,9 +1,9 @@
 abstract final class SplashData {
-  static const logoAsset = 'assets/images/kolek_logo.png';
-  static const logoWidth = 213.0;
-  static const logoHeight = 175.0;
+  static const logoAsset = 'assets/icons/logo.svg';
+  static const logoSize = 88.0;
+  static const brandName = 'kolek';
   static const logoSemanticsLabel = 'Kolek';
 
-  /// Logo fade-in on first paint.
-  static const fadeInDuration = Duration(milliseconds: 480);
+  /// Logo slides down from top; text slides up from bottom.
+  static const enterDuration = Duration(milliseconds: 900);
 }

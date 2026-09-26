@@ -5,7 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
-import '../cubit/onboarding_cubit.dart';
+import '../bloc/onboarding_bloc.dart';
+import '../bloc/onboarding_event.dart';
+import '../bloc/onboarding_state.dart';
 import '../data/onboarding_data.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -20,8 +22,12 @@ class OnboardingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: KolekColors.background,
       body: SafeArea(
-        child: BlocBuilder<OnboardingCubit, int>(
-          builder: (context, page) {
+        child: BlocConsumer<OnboardingBloc, OnboardingState>(
+          listenWhen: (previous, current) =>
+              !previous.finished && current.finished,
+          listener: (context, state) => _openSignIn(context),
+          builder: (context, state) {
+            final page = state.pageIndex;
             return LayoutBuilder(
               builder: (context, constraints) {
                 return Center(
@@ -35,11 +41,13 @@ class OnboardingScreen extends StatelessWidget {
                         onHorizontalDragEnd: (details) {
                           final velocity = details.primaryVelocity ?? 0;
                           if (velocity < -150) {
-                            if (context.read<OnboardingCubit>().nextPage()) {
-                              _openSignIn(context);
-                            }
+                            context
+                                .read<OnboardingBloc>()
+                                .add(const OnboardingNextPressed());
                           } else if (velocity > 150) {
-                            context.read<OnboardingCubit>().previousPage();
+                            context
+                                .read<OnboardingBloc>()
+                                .add(const OnboardingPreviousPressed());
                           }
                         },
                         child: AnimatedSwitcher(
@@ -570,9 +578,9 @@ class _Footer extends StatelessWidget {
             label: 'Next onboarding page',
             child: InkWell(
               onTap: () {
-                if (context.read<OnboardingCubit>().nextPage()) {
-                  onSignIn();
-                }
+                context
+                    .read<OnboardingBloc>()
+                    .add(const OnboardingNextPressed());
               },
               customBorder: const CircleBorder(),
               child: SvgPicture.asset(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/kolek_colors.dart';
-import '../cubit/splash_cubit.dart';
+import '../bloc/splash_bloc.dart';
+import '../bloc/splash_state.dart';
 import '../data/splash_data.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -16,9 +18,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _fadeController;
+  late final AnimationController _enterController;
+  late final Animation<double> _logoSlide;
+  late final Animation<double> _textSlide;
   late final Animation<double> _fade;
-  late final Animation<double> _scale;
 
   bool _navigated = false;
 
@@ -26,35 +29,23 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    _fadeController = AnimationController(
+    _enterController = AnimationController(
       vsync: this,
-      duration: SplashData.fadeInDuration,
+      duration: SplashData.enterDuration,
     );
-    _fade = CurvedAnimation(
-      parent: _fadeController,
+
+    final curve = CurvedAnimation(
+      parent: _enterController,
       curve: Curves.easeOutCubic,
     );
-    _scale = Tween<double>(begin: 0.96, end: 1).animate(
-      CurvedAnimation(
-        parent: _fadeController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
 
-    _fadeController.forward();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _precacheLogo());
-  }
+    // Logo comes from above (negative offset) to center.
+    _logoSlide = Tween<double>(begin: -140, end: 0).animate(curve);
+    // Text comes from below (positive offset) to center.
+    _textSlide = Tween<double>(begin: 140, end: 0).animate(curve);
+    _fade = Tween<double>(begin: 0, end: 1).animate(curve);
 
-  Future<void> _precacheLogo() async {
-    if (!mounted) return;
-    try {
-      await precacheImage(
-        const AssetImage(SplashData.logoAsset),
-        context,
-      );
-    } catch (_) {
-      // Image.asset will still attempt a normal load.
-    }
+    _enterController.forward();
   }
 
   void _goNext() {
@@ -65,13 +56,13 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    _enterController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SplashCubit, SplashState>(
+    return BlocListener<SplashBloc, SplashState>(
       listenWhen: (previous, current) =>
           !previous.isReady && current.isReady,
       listener: (_, _) => _goNext(),
@@ -84,24 +75,48 @@ class _SplashScreenState extends State<SplashScreen>
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
-          backgroundColor: KolekColors.neutral50,
+          backgroundColor: Colors.white,
           body: SafeArea(
-            child: Center(
-              child: FadeTransition(
-                opacity: _fade,
-                child: ScaleTransition(
-                  scale: _scale,
-                  child: Image.asset(
-                    SplashData.logoAsset,
-                    width: SplashData.logoWidth,
-                    height: SplashData.logoHeight,
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.high,
-                    gaplessPlayback: true,
-                    semanticLabel: SplashData.logoSemanticsLabel,
+            child: AnimatedBuilder(
+              animation: _enterController,
+              builder: (context, _) {
+                return Center(
+                  child: Opacity(
+                    opacity: _fade.value,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Transform.translate(
+                          offset: Offset(0, _logoSlide.value),
+                          child: SvgPicture.asset(
+                            SplashData.logoAsset,
+                            width: SplashData.logoSize,
+                            height: SplashData.logoSize,
+                            fit: BoxFit.contain,
+                            semanticsLabel: SplashData.logoSemanticsLabel,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Transform.translate(
+                          offset: Offset(0, _textSlide.value),
+                          child: const Text(
+                            SplashData.brandName,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'GeneralSans-Semibold',
+                              fontSize: 68,
+                              fontWeight: FontWeight.w600,
+                              height: 1.0,
+                              letterSpacing: 0,
+                              color: KolekColors.blue600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
         ),
