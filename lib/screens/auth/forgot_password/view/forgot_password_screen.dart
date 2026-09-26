@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../routes/app_route.dart';
 import '../../../../widgets/kolek_widgets.dart';
-import '../cubit/forgot_password_cubit.dart';
+import '../bloc/forgot_password_bloc.dart';
+import '../bloc/forgot_password_event.dart';
 import '../data/forgot_password_data.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -31,7 +32,9 @@ class ForgotPasswordScreen extends StatelessWidget {
             KolekButton(
               label: ForgotPasswordData.confirm,
               onPressed: () {
-                context.read<ForgotPasswordCubit>().submit();
+                context
+                    .read<ForgotPasswordBloc>()
+                    .add(const ForgotPasswordSubmitted());
                 Navigator.of(context).pushNamed(AppRoute.otpVerification);
               },
             ),

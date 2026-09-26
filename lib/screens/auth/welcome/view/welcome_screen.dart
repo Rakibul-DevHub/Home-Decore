@@ -5,7 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../routes/app_route.dart';
 import '../../../../theme/kolek_colors.dart';
 import '../../../../widgets/kolek_widgets.dart';
-import '../cubit/welcome_cubit.dart';
+import '../bloc/welcome_bloc.dart';
+import '../bloc/welcome_event.dart';
+import '../bloc/welcome_state.dart';
 import '../data/welcome_data.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -48,8 +50,8 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   const Spacer(flex: 2),
-                  BlocBuilder<WelcomeCubit, bool>(
-                    builder: (context, passwordVisible) {
+                  BlocBuilder<WelcomeBloc, WelcomeState>(
+                    builder: (context, state) {
                       return Column(
                         children: [
                           const KolekField(
@@ -73,10 +75,12 @@ class WelcomeScreen extends StatelessWidget {
                           KolekField(
                             label: WelcomeData.passwordLabel,
                             hint: WelcomeData.password,
-                            obscureText: !passwordVisible,
-                            onVisibilityPressed: context
-                                .read<WelcomeCubit>()
-                                .togglePasswordVisibility,
+                            obscureText: !state.passwordVisible,
+                            onVisibilityPressed: () => context
+                                .read<WelcomeBloc>()
+                                .add(
+                                  const WelcomePasswordVisibilityToggled(),
+                                ),
                             labelStyle: const TextStyle(
                               fontFamily: 'IBMPlexMono-Regular',
                               fontSize: 12,

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../routes/app_route.dart';
 import '../../../../widgets/kolek_widgets.dart';
-import '../cubit/new_password_cubit.dart';
+import '../bloc/new_password_bloc.dart';
+import '../bloc/new_password_event.dart';
+import '../bloc/new_password_state.dart';
 import '../data/new_password_data.dart';
 
 class NewPasswordScreen extends StatelessWidget {
@@ -22,24 +24,27 @@ class NewPasswordScreen extends StatelessWidget {
               subtitle: NewPasswordData.subtitle,
             ),
             const SizedBox(height: 28),
-            BlocBuilder<NewPasswordCubit, NewPasswordState>(
+            BlocBuilder<NewPasswordBloc, NewPasswordState>(
               builder: (context, state) {
-                final cubit = context.read<NewPasswordCubit>();
+                final bloc = context.read<NewPasswordBloc>();
                 return Column(
                   children: [
                     KolekField(
                       label: NewPasswordData.passwordLabel,
                       hint: NewPasswordData.password,
                       obscureText: !state.passwordVisible,
-                      onVisibilityPressed: cubit.togglePasswordVisibility,
+                      onVisibilityPressed: () => bloc.add(
+                        const NewPasswordVisibilityToggled(),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     KolekField(
                       label: NewPasswordData.confirmPasswordLabel,
                       hint: NewPasswordData.password,
                       obscureText: !state.confirmPasswordVisible,
-                      onVisibilityPressed:
-                          cubit.toggleConfirmPasswordVisibility,
+                      onVisibilityPressed: () => bloc.add(
+                        const NewConfirmPasswordVisibilityToggled(),
+                      ),
                     ),
                   ],
                 );

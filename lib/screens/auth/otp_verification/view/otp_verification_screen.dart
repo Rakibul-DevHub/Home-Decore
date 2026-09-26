@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../routes/app_route.dart';
 import '../../../../theme/kolek_colors.dart';
 import '../../../../widgets/kolek_widgets.dart';
-import '../cubit/otp_verification_cubit.dart';
+import '../bloc/otp_verification_bloc.dart';
+import '../bloc/otp_verification_event.dart';
+import '../bloc/otp_verification_state.dart';
 import '../data/otp_verification_data.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
@@ -34,7 +36,9 @@ class OtpVerificationScreen extends StatelessWidget {
             AuthLinkRow(
               text: OtpVerificationData.resendPrompt,
               link: OtpVerificationData.resend,
-              onPressed: context.read<OtpVerificationCubit>().resend,
+              onPressed: () => context
+                  .read<OtpVerificationBloc>()
+                  .add(const OtpResendRequested()),
             ),
           ],
         ),
@@ -48,8 +52,9 @@ class _OtpFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OtpVerificationCubit, String>(
-      builder: (context, code) {
+    return BlocBuilder<OtpVerificationBloc, OtpVerificationState>(
+      builder: (context, state) {
+        final code = state.code;
         return Row(
           children: List.generate(OtpVerificationData.digits, (index) {
             return Expanded(

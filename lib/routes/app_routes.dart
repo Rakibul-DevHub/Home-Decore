@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../screens/auth/create_account/cubit/create_account_cubit.dart';
+import '../screens/auth/create_account/bloc/create_account_bloc.dart';
 import '../screens/auth/create_account/view/create_account_screen.dart';
-import '../screens/auth/forgot_password/cubit/forgot_password_cubit.dart';
+import '../screens/auth/forgot_password/bloc/forgot_password_bloc.dart';
 import '../screens/auth/forgot_password/view/forgot_password_screen.dart';
-import '../screens/auth/new_password/cubit/new_password_cubit.dart';
+import '../screens/auth/new_password/bloc/new_password_bloc.dart';
 import '../screens/auth/new_password/view/new_password_screen.dart';
-import '../screens/auth/otp_verification/cubit/otp_verification_cubit.dart';
+import '../screens/auth/otp_verification/bloc/otp_verification_bloc.dart';
 import '../screens/auth/otp_verification/view/otp_verification_screen.dart';
-import '../screens/auth/set_password/cubit/set_password_cubit.dart';
+import '../screens/auth/set_password/bloc/set_password_bloc.dart';
 import '../screens/auth/set_password/view/set_password_screen.dart';
-import '../screens/auth/welcome/cubit/welcome_cubit.dart';
+import '../screens/auth/welcome/bloc/welcome_bloc.dart';
 import '../screens/auth/welcome/view/welcome_screen.dart';
 import '../screens/onboarding/bloc/onboarding_bloc.dart';
 import '../screens/onboarding/view/onboarding_screen.dart';
@@ -79,27 +79,27 @@ abstract final class AppRoutes {
       child: const OnboardingScreen(),
     ),
     signIn: (_) => BlocProvider(
-      create: (_) => WelcomeCubit(),
+      create: (_) => WelcomeBloc(),
       child: const WelcomeScreen(),
     ),
     createAccount: (_) => BlocProvider(
-      create: (_) => CreateAccountCubit(),
+      create: (_) => CreateAccountBloc(),
       child: const CreateAccountScreen(),
     ),
     forgotPassword: (_) => BlocProvider(
-      create: (_) => ForgotPasswordCubit(),
+      create: (_) => ForgotPasswordBloc(),
       child: const ForgotPasswordScreen(),
     ),
     otpVerification: (_) => BlocProvider(
-      create: (_) => OtpVerificationCubit(),
+      create: (_) => OtpVerificationBloc(),
       child: const OtpVerificationScreen(),
     ),
     newPassword: (_) => BlocProvider(
-      create: (_) => NewPasswordCubit(),
+      create: (_) => NewPasswordBloc(),
       child: const NewPasswordScreen(),
     ),
     setPassword: (_) => BlocProvider(
-      create: (_) => SetPasswordCubit(),
+      create: (_) => SetPasswordBloc(),
       child: const SetPasswordScreen(),
     ),
     mainShell: (_) => MultiBlocProvider(
