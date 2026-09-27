@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'app_bootstrap.dart';
 import 'routes/app_routes.dart';
+import 'screens/appearance/appearance_page.dart';
 import 'theme/kolek_colors.dart';
 import 'widgets/kolek_fit_layout.dart';
 
@@ -42,7 +43,9 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
     return MaterialApp(
       title: 'Kolek',
       debugShowCheckedModeBanner: false,
-      theme: _buildTheme(),
+      theme: _buildTheme(Brightness.light),
+      darkTheme: _buildTheme(Brightness.dark),
+      themeMode: AppearancePage.themeMode,
       builder: (context, child) {
         return KolekFitLayout(
           child: child ?? const SizedBox.shrink(),
@@ -54,15 +57,17 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
     );
   }
 
-  static ThemeData _buildTheme() {
+  static ThemeData _buildTheme(Brightness brightness) {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: KolekColors.blue600,
-      brightness: Brightness.light,
+      brightness: brightness,
     );
+    final dark = brightness == Brightness.dark;
 
     return ThemeData(
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: KolekColors.neutral50,
+      scaffoldBackgroundColor:
+          dark ? const Color(0xFF000000) : KolekColors.neutral50,
       useMaterial3: true,
       visualDensity: VisualDensity.standard,
       splashFactory: InkSparkle.splashFactory,

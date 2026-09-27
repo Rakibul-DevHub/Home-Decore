@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_routes.dart';
 import '../../../theme/kolek_colors.dart';
+import '../../../theme/kolek_scheme.dart';
 import '../bloc/splash_bloc.dart';
 import '../bloc/splash_state.dart';
 import '../data/splash_data.dart';
@@ -67,15 +68,11 @@ class _SplashScreenState extends State<SplashScreen>
           !previous.isReady && current.isReady,
       listener: (_, _) => _goNext(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light,
-          systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: Brightness.dark,
-        ),
+        value: KolekScheme.overlay(context),
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: KolekScheme.isDark(context)
+              ? KolekScheme.darkBackground
+              : Colors.white,
           body: SafeArea(
             child: AnimatedBuilder(
               animation: _enterController,
@@ -99,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
                         const SizedBox(height: 18),
                         Transform.translate(
                           offset: Offset(0, _textSlide.value),
-                          child: const Text(
+                          child: Text(
                             SplashData.brandName,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -108,7 +105,10 @@ class _SplashScreenState extends State<SplashScreen>
                               fontWeight: FontWeight.w600,
                               height: 1.0,
                               letterSpacing: 0,
-                              color: KolekColors.blue600,
+                              color: KolekScheme.text(
+                                context,
+                                KolekColors.blue600,
+                              ),
                             ),
                           ),
                         ),

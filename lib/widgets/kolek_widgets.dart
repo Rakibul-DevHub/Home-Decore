@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/kolek_colors.dart';
+import '../theme/kolek_scheme.dart';
 import 'screen_background.dart';
 
 /// Bundled font families from pubspec.yaml.
@@ -266,14 +268,20 @@ class KolekField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dark = KolekScheme.isDark(context);
+    final resolvedLabel = KolekScheme.textStyle(
+      context,
+      labelStyle ?? KolekText.mono(size: 12, color: KolekColors.neutral800),
+    );
+    final input = KolekScheme.textStyle(
+      context,
+      inputStyle ?? KolekText.mono(size: 14),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label.toUpperCase(),
-          style: labelStyle ??
-              KolekText.mono(size: 12, color: KolekColors.neutral800),
-        ),
+        Text(label.toUpperCase(), style: resolvedLabel),
         const SizedBox(height: 4),
         SizedBox(
           height: 56,
@@ -281,10 +289,11 @@ class KolekField extends StatelessWidget {
             initialValue: hint,
             obscureText: obscureText,
             keyboardType: keyboardType,
-            style: inputStyle ?? KolekText.mono(size: 14),
+            cursorColor: dark ? KolekScheme.darkText : KolekColors.blue600,
+            style: input,
             decoration: InputDecoration(
               filled: true,
-              fillColor: KolekColors.neutral50,
+              fillColor: dark ? KolekScheme.darkBackground : KolekColors.neutral50,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 17,
@@ -305,7 +314,9 @@ class KolekField extends StatelessWidget {
                         obscureText
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
-                        color: KolekColors.neutral700,
+                        color: dark
+                            ? KolekScheme.darkText
+                            : KolekColors.neutral700,
                         size: 23,
                       ),
                     ),
@@ -328,10 +339,10 @@ class AuthBackButton extends StatelessWidget {
       onPressed: onPressed,
       padding: EdgeInsets.zero,
       constraints: const BoxConstraints.tightFor(width: 32, height: 32),
-      icon: const Icon(
+      icon: Icon(
         Icons.arrow_back,
         size: 22,
-        color: KolekColors.neutral700,
+        color: KolekScheme.text(context, KolekColors.neutral700),
       ),
     );
   }
@@ -360,8 +371,12 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: KolekColors.neutral50,
+    final dark = KolekScheme.isDark(context);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: KolekScheme.overlay(context),
+      child: Scaffold(
+      backgroundColor:
+          dark ? KolekScheme.darkBackground : KolekColors.neutral50,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Stack(
@@ -408,6 +423,7 @@ class AuthScaffold extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 }
@@ -435,24 +451,30 @@ class AuthHeading extends StatelessWidget {
         children: [
           Text(
             title,
-            style: titleStyle ??
-                KolekText.mono(
-                  size: 50,
-                  weight: FontWeight.w600,
-                  height: 1.1,
-                  letterSpacing: -3,
-                ),
+            style: KolekScheme.textStyle(
+              context,
+              titleStyle ??
+                  KolekText.mono(
+                    size: 50,
+                    weight: FontWeight.w600,
+                    height: 1.1,
+                    letterSpacing: -3,
+                  ),
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: subtitleStyle ??
-                KolekText.mono(
-                  size: 14,
-                  weight: FontWeight.w500,
-                  color: KolekColors.neutral600,
-                  height: 1.3,
-                ),
+            style: KolekScheme.textStyle(
+              context,
+              subtitleStyle ??
+                  KolekText.mono(
+                    size: 14,
+                    weight: FontWeight.w500,
+                    color: KolekColors.neutral600,
+                    height: 1.3,
+                  ),
+            ),
           ),
         ],
       ),
@@ -484,8 +506,11 @@ class AuthLinkRow extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: textStyle ??
-                KolekText.mono(size: 14, color: KolekColors.neutral400),
+            style: KolekScheme.textStyle(
+              context,
+              textStyle ??
+                  KolekText.mono(size: 14, color: KolekColors.neutral400),
+            ),
           ),
         ),
         const SizedBox(width: 8),
@@ -493,8 +518,11 @@ class AuthLinkRow extends StatelessWidget {
           onTap: onPressed,
           child: Text(
             link,
-            style: linkStyle ??
-                KolekText.mono(size: 14, color: KolekColors.blue600),
+            style: KolekScheme.textStyle(
+              context,
+              linkStyle ??
+                  KolekText.mono(size: 14, color: KolekColors.blue600),
+            ),
           ),
         ),
       ],
@@ -519,10 +547,13 @@ class UnderlinedLink extends StatelessWidget {
         onTap: onPressed,
         child: Text(
           label,
-          style: KolekText.mono(
-            size: 14,
-            color: KolekColors.neutral500,
-          ).copyWith(decoration: TextDecoration.underline),
+          style: KolekScheme.textStyle(
+            context,
+            KolekText.mono(
+              size: 14,
+              color: KolekColors.neutral500,
+            ).copyWith(decoration: TextDecoration.underline),
+          ),
         ),
       ),
     );

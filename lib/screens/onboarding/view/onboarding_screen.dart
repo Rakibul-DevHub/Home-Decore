@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
+import '../../../theme/kolek_scheme.dart';
 import '../../../widgets/kolek_widgets.dart';
 import '../bloc/onboarding_bloc.dart';
 import '../bloc/onboarding_event.dart';
@@ -23,8 +25,12 @@ class OnboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: KolekColors.background,
+    final dark = KolekScheme.isDark(context);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: KolekScheme.overlay(context),
+      child: Scaffold(
+        backgroundColor:
+            dark ? KolekScheme.darkBackground : KolekColors.background,
       body: SafeArea(
         child: BlocConsumer<OnboardingBloc, OnboardingState>(
           listenWhen: (previous, current) =>
@@ -65,12 +71,25 @@ class OnboardingScreen extends StatelessWidget {
                           ),
                         ),
                         Positioned.fill(
-                          child: _OnboardingLayerSwitcher(
-                            page: page,
-                            isForward: isForward,
-                            moveDownOnForward: true,
-                            child: _OnboardingTextLayer(index: page),
-                          ),
+                          child: dark
+                              ? ColorFiltered(
+                                  colorFilter: const ColorFilter.mode(
+                                    KolekScheme.darkText,
+                                    BlendMode.srcIn,
+                                  ),
+                                  child: _OnboardingLayerSwitcher(
+                                    page: page,
+                                    isForward: isForward,
+                                    moveDownOnForward: true,
+                                    child: _OnboardingTextLayer(index: page),
+                                  ),
+                                )
+                              : _OnboardingLayerSwitcher(
+                                  page: page,
+                                  isForward: isForward,
+                                  moveDownOnForward: true,
+                                  child: _OnboardingTextLayer(index: page),
+                                ),
                         ),
                         _PageNumber(index: page),
                         _Header(
@@ -91,6 +110,7 @@ class OnboardingScreen extends StatelessWidget {
             );
           },
         ),
+      ),
       ),
     );
   }

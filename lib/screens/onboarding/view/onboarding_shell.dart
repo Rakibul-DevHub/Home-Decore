@@ -13,11 +13,11 @@ class _PageNumber extends StatelessWidget {
       top: 88,
       child: Text(
         label,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'IBMPlexMono-Regular',
           fontSize: 20,
           fontWeight: FontWeight.w500,
-          color: KolekColors.neutral700,
+          color: KolekScheme.text(context, KolekColors.neutral700),
           letterSpacing: -0.4,
         ),
       ),
@@ -49,18 +49,20 @@ class _Header extends StatelessWidget {
               onTap: onSkip,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: KolekColors.neutral700),
+                    bottom: BorderSide(
+                      color: KolekScheme.text(context, KolekColors.neutral700),
+                    ),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   OnboardingData.skip,
                   style: TextStyle(
                     fontFamily: 'IBMPlexMono-Regular',
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
-                    color: KolekColors.neutral500,
+                    color: KolekScheme.text(context, KolekColors.neutral500),
                     height: 20 / 14,
                   ),
                 ),
@@ -122,7 +124,9 @@ class _Footer extends StatelessWidget {
               },
               customBorder: const CircleBorder(),
               child: SvgPicture.asset(
-                OnboardingData.arrowAsset,
+                KolekScheme.isDark(context)
+                    ? OnboardingData.arrowAssetDark
+                    : OnboardingData.arrowAsset,
                 width: 56,
                 height: 56,
               ),

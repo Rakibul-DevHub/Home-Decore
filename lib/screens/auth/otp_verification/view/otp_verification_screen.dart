@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../routes/app_route.dart';
 import '../../../../theme/kolek_colors.dart';
+import '../../../../theme/kolek_scheme.dart';
 import '../../../../widgets/kolek_widgets.dart';
 import '../bloc/otp_verification_bloc.dart';
 import '../bloc/otp_verification_event.dart';
@@ -64,13 +65,18 @@ class _OtpFields extends StatelessWidget {
                   right: index == OtpVerificationData.digits - 1 ? 0 : 8,
                 ),
                 decoration: BoxDecoration(
-                  color: KolekColors.neutral50,
+                  color: KolekScheme.isDark(context)
+                      ? KolekScheme.darkBackground
+                      : KolekColors.neutral50,
                   border: Border.all(color: KolekColors.neutral300),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   index < code.length ? code[index] : '',
-                  style: KolekText.mono(size: 20),
+                  style: KolekScheme.textStyle(
+                    context,
+                    KolekText.mono(size: 20),
+                  ),
                 ),
               ),
             );

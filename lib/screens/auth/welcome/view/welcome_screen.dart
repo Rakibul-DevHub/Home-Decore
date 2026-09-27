@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../routes/app_route.dart';
 import '../../../../theme/kolek_colors.dart';
+import '../../../../theme/kolek_scheme.dart';
 import '../../../../widgets/kolek_widgets.dart';
 import '../bloc/welcome_bloc.dart';
 import '../bloc/welcome_event.dart';
@@ -98,17 +99,23 @@ class WelcomeScreen extends StatelessWidget {
                     Navigator.of(context).pushNamed(AppRoute.forgotPassword),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
-                  foregroundColor: KolekColors.neutral500,
+                  foregroundColor: KolekScheme.text(
+                    context,
+                    KolekColors.neutral500,
+                  ),
                 ),
-                child: const Text(
+                child: Text(
                   WelcomeData.forgotPassword,
-                  style: TextStyle(
-                    fontFamily: 'IBMPlexMono-Regular',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: KolekColors.neutral500,
-                    decoration: TextDecoration.underline,
-                    decorationColor: KolekColors.neutral500,
+                  style: KolekScheme.textStyle(
+                    context,
+                    const TextStyle(
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: KolekColors.neutral500,
+                      decoration: TextDecoration.underline,
+                      decorationColor: KolekColors.neutral500,
+                    ),
                   ),
                 ),
               ),
@@ -204,11 +211,14 @@ class _OrDivider extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             WelcomeData.divider,
-            style: const TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: KolekColors.neutral400,
+            style: KolekScheme.textStyle(
+              context,
+              const TextStyle(
+                fontFamily: 'IBMPlexMono-Regular',
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: KolekColors.neutral400,
+              ),
             ),
           ),
         ),
