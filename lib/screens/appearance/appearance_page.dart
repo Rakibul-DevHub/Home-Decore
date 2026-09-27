@@ -5,5 +5,5 @@ import 'package:flutter/material.dart';
 /// Change [themeMode], then hot restart:
 /// [ThemeMode.light], [ThemeMode.dark], or [ThemeMode.system].
 abstract final class AppearancePage {
-  static const themeMode = ThemeMode.light;
+  static const themeMode = ThemeMode.dark;
 }

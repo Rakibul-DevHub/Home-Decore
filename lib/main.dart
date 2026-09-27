@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'app_bootstrap.dart';
 import 'routes/app_routes.dart';
 import 'screens/appearance/appearance_page.dart';
