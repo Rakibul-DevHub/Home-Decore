@@ -24,7 +24,7 @@ class OnboardingScreen extends StatelessWidget {
       body: SafeArea(
         child: BlocConsumer<OnboardingBloc, OnboardingState>(
           listenWhen: (previous, current) =>
-              !previous.finished && current.finished,
+          !previous.finished && current.finished,
           listener: (context, state) => _openSignIn(context),
           builder: (context, state) {
             final page = state.pageIndex;
@@ -54,47 +54,23 @@ class OnboardingScreen extends StatelessWidget {
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            // Page content (text + image) with vertical fade/slide.
                             Positioned.fill(
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 420),
-                                switchInCurve: Curves.easeOutCubic,
-                                switchOutCurve: Curves.easeInCubic,
-                                layoutBuilder: (currentChild, previousChildren) {
-                                  return Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      ...previousChildren,
-                                      if (currentChild != null) currentChild,
-                                    ],
-                                  );
-                                },
-                                transitionBuilder: (child, animation) {
-                                  // Next: exit/enter through the bottom (slide down).
-                                  // Previous: exit/enter through the top (slide up).
-                                  final beginOffset = Offset(
-                                    0,
-                                    isForward ? 0.18 : -0.18,
-                                  );
-                                  final offset = Tween<Offset>(
-                                    begin: beginOffset,
-                                    end: Offset.zero,
-                                  ).animate(animation);
-
-                                  return FadeTransition(
-                                    opacity: animation,
-                                    child: SlideTransition(
-                                      position: offset,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                child: KeyedSubtree(
-                                  key: ValueKey(page),
-                                  child: _OnboardingPageContent(index: page),
-                                ),
+                              child: _OnboardingLayerSwitcher(
+                                page: page,
+                                isForward: isForward,
+                                moveDownOnForward: false,
+                                child: _OnboardingImageLayer(index: page),
                               ),
                             ),
+                            Positioned.fill(
+                              child: _OnboardingLayerSwitcher(
+                                page: page,
+                                isForward: isForward,
+                                moveDownOnForward: true,
+                                child: _OnboardingTextLayer(index: page),
+                              ),
+                            ),
+                            _PageNumber(index: page),
                             _Header(
                               showSkip: page < OnboardingData.pages.length - 1,
                               onSkip: () => context
@@ -120,46 +96,102 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-class _OnboardingPageContent extends StatelessWidget {
-  const _OnboardingPageContent({required this.index});
+class _OnboardingLayerSwitcher extends StatelessWidget {
+  const _OnboardingLayerSwitcher({
+    required this.page,
+    required this.isForward,
+    required this.moveDownOnForward,
+    required this.child,
+  });
+
+  final int page;
+  final bool isForward;
+
+  /// Text moves down on next. Image moves up on next.
+  final bool moveDownOnForward;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final distance = (isForward == moveDownOnForward) ? 0.22 : -0.22;
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 420),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      layoutBuilder: (currentChild, previousChildren) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            ...previousChildren,
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      transitionBuilder: (child, animation) {
+        final offset = Tween<Offset>(
+          begin: Offset(0, distance),
+          end: Offset.zero,
+        ).animate(animation);
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: offset,
+            child: child,
+          ),
+        );
+      },
+      child: KeyedSubtree(
+        key: ValueKey(page),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _OnboardingTextLayer extends StatelessWidget {
+  const _OnboardingTextLayer({required this.index});
 
   final int index;
 
   @override
   Widget build(BuildContext context) {
     return switch (index) {
-      0 => const _Page1Content(),
-      1 => const _Page2Content(),
-      2 => const _Page3Content(),
-      3 => const _Page4Content(),
-      _ => const _Page5Content(),
+      0 => const _Page1Text(),
+      1 => const _Page2Text(),
+      2 => const _Page3Text(),
+      3 => const _Page4Text(),
+      _ => const _Page5Text(),
     };
   }
 }
 
-/// Page 1 — edit this page's texts/styles only.
-class _Page1Content extends StatelessWidget {
-  const _Page1Content();
+class _OnboardingImageLayer extends StatelessWidget {
+  const _OnboardingImageLayer({required this.index});
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return switch (index) {
+      0 => const _Page1Image(),
+      1 => const _Page2Image(),
+      2 => const _Page3Image(),
+      3 => const _Page4Image(),
+      _ => const _Page5Image(),
+    };
+  }
+}
+
+class _Page1Text extends StatelessWidget {
+  const _Page1Text();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Stack(
       children: [
-        const Positioned(
-          left: 20,
-          top: 88,
-          child: Text(
-            '01',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: KolekColors.neutral700,
-              letterSpacing: -0.4,
-            ),
-          ),
-        ),
-        const Positioned(
+        Positioned(
           left: 20,
           top: 125,
           width: 400,
@@ -170,12 +202,12 @@ class _Page1Content extends StatelessWidget {
               fontSize: 40,
               fontWeight: FontWeight.w500,
               color: KolekColors.neutral900,
-              height: 52/40,
-              letterSpacing: 2/40,
+              height: 52 / 40,
+              letterSpacing: 2 / 40,
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
           left: 20,
           top: 361,
           width: 400,
@@ -190,6 +222,18 @@ class _Page1Content extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _Page1Image extends StatelessWidget {
+  const _Page1Image();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
         _ImageBox(
           top: 492,
           left: 94.5,
@@ -202,37 +246,15 @@ class _Page1Content extends StatelessWidget {
   }
 }
 
-/// Page 2 — edit this page's texts/styles only.
-class _Page2Content extends StatelessWidget {
-  const _Page2Content();
+class _Page2Text extends StatelessWidget {
+  const _Page2Text();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const Positioned(
-          left: 20,
-          top: 88,
-          child: Text(
-            '02',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: KolekColors.neutral700,
-              letterSpacing: -0.4,
-            ),
-          ),
-        ),
-        _ImageBox(
-          top: 138,
-          left: 80.5,
-          width: 279,
-          height: 375,
-          path: OnboardingData.pages[1].image,
-        ),
-        const _PageDivider(top: 519),
-        const Positioned(
+        _PageDivider(top: 519),
+        Positioned(
           left: 20,
           top: 536,
           width: 400,
@@ -248,7 +270,7 @@ class _Page2Content extends StatelessWidget {
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
           left: 20,
           top: 744,
           width: 400,
@@ -268,29 +290,33 @@ class _Page2Content extends StatelessWidget {
   }
 }
 
-/// Page 3 — edit this page's texts/styles only.
-class _Page3Content extends StatelessWidget {
-  const _Page3Content();
+class _Page2Image extends StatelessWidget {
+  const _Page2Image();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const Positioned(
-          left: 20,
-          top: 88,
-          child: Text(
-            '03',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: KolekColors.neutral700,
-              letterSpacing: -0.4,
-            ),
-          ),
+        _ImageBox(
+          top: 138,
+          left: 80.5,
+          width: 279,
+          height: 375,
+          path: OnboardingData.pages[1].image,
         ),
-        const Positioned(
+      ],
+    );
+  }
+}
+
+class _Page3Text extends StatelessWidget {
+  const _Page3Text();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Stack(
+      children: [
+        Positioned(
           left: 20,
           top: 128,
           width: 400,
@@ -306,8 +332,8 @@ class _Page3Content extends StatelessWidget {
             ),
           ),
         ),
-        const _PageDivider(top: 298),
-        const Positioned(
+        _PageDivider(top: 298),
+        Positioned(
           left: 20,
           top: 326,
           width: 400,
@@ -322,6 +348,18 @@ class _Page3Content extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _Page3Image extends StatelessWidget {
+  const _Page3Image();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
         _ImageBox(
           top: 429,
           left: 0,
@@ -334,37 +372,15 @@ class _Page3Content extends StatelessWidget {
   }
 }
 
-/// Page 4 — edit this page's texts/styles only.
-class _Page4Content extends StatelessWidget {
-  const _Page4Content();
+class _Page4Text extends StatelessWidget {
+  const _Page4Text();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return const Stack(
       children: [
-        const Positioned(
-          left: 20,
-          top: 88,
-          child: Text(
-            '04',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: KolekColors.neutral700,
-              letterSpacing: -0.4,
-            ),
-          ),
-        ),
-        _ImageBox(
-          top: 138,
-          left: 103.5,
-          width: 233,
-          height: 360,
-          path: OnboardingData.pages[3].image,
-        ),
-        const _PageDivider(top: 519),
-        const Positioned(
+        _PageDivider(top: 519),
+        Positioned(
           left: 20,
           top: 536,
           width: 400,
@@ -380,7 +396,7 @@ class _Page4Content extends StatelessWidget {
             ),
           ),
         ),
-        const Positioned(
+        Positioned(
           left: 20,
           top: 744,
           width: 400,
@@ -400,9 +416,77 @@ class _Page4Content extends StatelessWidget {
   }
 }
 
-/// Page 5 — edit this page's texts/styles only.
-class _Page5Content extends StatelessWidget {
-  const _Page5Content();
+class _Page4Image extends StatelessWidget {
+  const _Page4Image();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        _ImageBox(
+          top: 138,
+          left: 103.5,
+          width: 233,
+          height: 360,
+          path: OnboardingData.pages[3].image,
+        ),
+      ],
+    );
+  }
+}
+
+class _Page5Text extends StatelessWidget {
+  const _Page5Text();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Stack(
+      children: [
+        Positioned(
+          left: 20,
+          top: 330,
+          child: Text.rich(
+            TextSpan(
+              style: TextStyle(
+                fontFamily: 'IBMPlexMono-Medium',
+                fontSize: 40,
+                fontWeight: FontWeight.w500,
+                height: 1.32,
+                letterSpacing: 2 / 40,
+                color: KolekColors.neutral900,
+              ),
+              children: [
+                TextSpan(text: 'This is\n'),
+                TextSpan(
+                  text: 'kolek.',
+                  style: TextStyle(color: KolekColors.blue600),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          left: 20,
+          top: 450,
+          width: 400,
+          child: Text(
+            'A CURATED WORLD OF\nCREATORS AND COLLECTORS.\nWELCOME IN.',
+            style: TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: KolekColors.neutral700,
+              height: 24 / 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Page5Image extends StatelessWidget {
+  const _Page5Image();
 
   @override
   Widget build(BuildContext context) {
@@ -421,59 +505,32 @@ class _Page5Content extends StatelessWidget {
             filterQuality: FilterQuality.high,
           ),
         ),
-        const Positioned(
-          left: 20,
-          top: 88,
-          child: Text(
-            '05',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: KolekColors.neutral700,
-              letterSpacing: -0.4,
-            ),
-          ),
-        ),
-        const Positioned(
-          left: 20,
-          top: 330,
-          child: Text.rich(
-            TextSpan(
-              style: TextStyle(
-                fontFamily: 'IBMPlexMono-Medium',
-                fontSize: 40,
-                fontWeight: FontWeight.w500,
-                height: 1.32,
-                letterSpacing: 2/40,
-                color: KolekColors.neutral900,
-              ),
-              children: [
-                TextSpan(text: 'This is\n'),
-                TextSpan(
-                  text: 'kolek.',
-                  style: TextStyle(color: KolekColors.blue600),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const Positioned(
-          left: 20,
-          top: 450,
-          width: 400,
-          child: Text(
-            'A CURATED WORLD OF\nCREATORS AND COLLECTORS.\nWELCOME IN.',
-            style: TextStyle(
-              fontFamily: 'IBMPlexMono-Regular',
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: KolekColors.neutral700,
-              height: 24/16,
-            ),
-          ),
-        ),
       ],
+    );
+  }
+}
+
+class _PageNumber extends StatelessWidget {
+  const _PageNumber({required this.index});
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final label = (index + 1).toString().padLeft(2, '0');
+    return Positioned(
+      left: 20,
+      top: 88,
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontFamily: 'IBMPlexMono-Regular',
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          color: KolekColors.neutral700,
+          letterSpacing: -0.4,
+        ),
+      ),
     );
   }
 }
