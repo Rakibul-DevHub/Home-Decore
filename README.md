@@ -1,4 +1,4 @@
-# kolek
+# Home Decore
 
 A new Flutter project.
 
