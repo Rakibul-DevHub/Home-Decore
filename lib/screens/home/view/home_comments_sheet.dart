@@ -23,6 +23,10 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   HomeComment? _replyTo;
   double? _lastExtent;
   bool _closing = false;
+  bool _movingProgrammatically = false;
+  bool _armedFromFull = false;
+  double _sheetHeight = 1;
+  double _screenHeight = 1;
   late List<HomeComment> _comments = List.of(HomeData.comments);
 
   @override
@@ -122,19 +126,49 @@ class _CommentsSheetState extends State<_CommentsSheet> {
 
   void _fitSheet() {
     if (!_sheet.isAttached) return;
-    _sheet.animateTo(
-      _expanded.isEmpty ? _collapsed : 1,
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOutCubic,
-    );
+    _movingProgrammatically = true;
+    _sheet
+        .animateTo(
+          _expanded.isEmpty ? _collapsed : 1,
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
+        )
+        .whenComplete(() {
+          _movingProgrammatically = false;
+          if (_sheet.isAttached) _lastExtent = _sheet.size;
+        });
+  }
+
+  double get _fullScreenDismissExtent {
+    if (_sheetHeight <= 0) return 0.75;
+    final drop = (_screenHeight * 0.25) / _sheetHeight;
+    return (1 - drop).clamp(_closeExtent, 0.9);
   }
 
   void _closeNearBottom() {
     if (_closing || !_sheet.isAttached) return;
     final extent = _sheet.size;
+    if (_movingProgrammatically) {
+      _lastExtent = extent;
+      _armedFromFull = extent >= 0.98;
+      return;
+    }
     final last = _lastExtent;
     _lastExtent = extent;
-    if (last == null || extent >= last || extent > _closeExtent) return;
+    if (extent >= 0.98) {
+      _armedFromFull = true;
+      return;
+    }
+    if (last == null || extent >= last) return;
+    if (_armedFromFull && extent <= _fullScreenDismissExtent) {
+      _closeSheet();
+      return;
+    }
+    if (extent <= _closeExtent) _closeSheet();
+  }
+
+  void _closeSheet() {
+    if (_closing) return;
     _closing = true;
     Navigator.of(context).pop();
   }
@@ -187,7 +221,12 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   @override
   Widget build(BuildContext context) {
     final view = View.of(context);
-    final topInset = view.viewPadding.top / view.devicePixelRatio;
+    final pixelRatio = view.devicePixelRatio;
+    final logicalTop = view.viewPadding.top / pixelRatio;
+    final logicalWidth = view.physicalSize.width / pixelRatio;
+    final layoutWidth = MediaQuery.sizeOf(context).width;
+    final scale = layoutWidth <= 0 ? 1.0 : logicalWidth / layoutWidth;
+    final topInset = scale <= 0 ? logicalTop : logicalTop / scale;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
     return LayoutBuilder(
@@ -196,6 +235,8 @@ class _CommentsSheetState extends State<_CommentsSheet> {
             ? constraints.maxHeight
             : MediaQuery.sizeOf(context).height;
         final sheetHeight = (available - topInset).clamp(0.0, available);
+        _sheetHeight = sheetHeight;
+        _screenHeight = available;
 
         return Padding(
           padding: EdgeInsets.only(top: topInset),

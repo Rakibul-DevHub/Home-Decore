@@ -32,6 +32,7 @@ class HomeScreen extends StatelessWidget {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      enableDrag: false,
       backgroundColor: Colors.transparent,
       sheetAnimationStyle: const AnimationStyle(
         duration: Duration(milliseconds: 240),
