@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../theme/kolek_colors.dart';
-import '../cubit/notification_cubit.dart';
+import '../bloc/notification_bloc.dart';
+import '../bloc/notification_event.dart';
+import '../bloc/notification_state.dart';
 import '../data/notification_data.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -60,7 +62,7 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: BlocBuilder<NotificationCubit, NotificationState>(
+      body: BlocBuilder<NotificationBloc, NotificationState>(
         builder: (context, state) {
           return ListView(
             children: [
@@ -285,7 +287,9 @@ class _Trailing extends StatelessWidget {
         return _FollowButton(
           following: notification.isFollowing,
           onPressed: () =>
-              context.read<NotificationCubit>().toggleFollow(notification.id),
+              context
+                  .read<NotificationBloc>()
+                  .add(NotificationFollowToggled(notification.id)),
         );
       case NotificationKind.like:
       case NotificationKind.comment:

@@ -23,19 +23,19 @@ import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
 import '../screens/filter/cubit/filter_cubit.dart';
 import '../screens/filter/view/filter_screen.dart';
-import '../screens/home/cubit/home_cubit.dart';
+import '../screens/home/bloc/home_bloc.dart';
 import '../screens/inbox/cubit/inbox_cubit.dart';
 import '../screens/inbox/view/inbox_screen.dart';
 import '../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../screens/main_shell/view/main_shell_screen.dart';
 import '../screens/messages/cubit/messages_cubit.dart';
 import '../screens/messages/data/messages_data.dart';
-import '../screens/notification/cubit/notification_cubit.dart';
+import '../screens/notification/bloc/notification_bloc.dart';
 import '../screens/notification/view/notification_screen.dart';
 import '../screens/product_details/cubit/product_details_cubit.dart';
 import '../screens/product_details/view/product_details_screen.dart';
 import '../screens/profile/cubit/profile_cubit.dart';
-import '../screens/search/cubit/search_cubit.dart';
+import '../screens/search/bloc/search_bloc.dart';
 import '../screens/search/view/search_screen.dart';
 import '../screens/shop/cubit/shop_cubit.dart';
 import '../screens/shop/view/shop_screen.dart';
@@ -105,7 +105,7 @@ abstract final class AppRoutes {
     mainShell: (_) => MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => MainShellCubit()),
-        BlocProvider(create: (_) => HomeCubit()),
+        BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => ShopCubit()),
         BlocProvider(create: (_) => MessagesCubit()),
         BlocProvider(create: (_) => ProfileCubit()),
@@ -123,7 +123,7 @@ abstract final class AppRoutes {
       );
     },
     search: (_) => BlocProvider(
-      create: (_) => SearchCubit(),
+      create: (_) => SearchBloc(),
       child: const SearchScreen(),
     ),
     shop: (_) => BlocProvider(
@@ -151,7 +151,7 @@ abstract final class AppRoutes {
       child: const NewPostMediaScreen(),
     ),
     notifications: (_) => BlocProvider(
-      create: (_) => NotificationCubit(),
+      create: (_) => NotificationBloc(),
       child: const NotificationScreen(),
     ),
   };

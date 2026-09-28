@@ -119,14 +119,19 @@ class _KolekBottomNavState extends State<KolekBottomNav>
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final background = dark ? const Color(0xFF0A0A0A) : Colors.white;
+    final line = dark ? const Color(0xFF2A2A2A) : KolekColors.neutral200;
+    final icon = dark ? const Color(0xFFE8E8E8) : const Color(0xFF171717);
+
     return Material(
-      color: Colors.white,
+      color: background,
       child: SafeArea(
         top: false,
         child: Container(
           height: 64,
-          decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: KolekColors.neutral200)),
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: line)),
           ),
           child: AnimatedBuilder(
             animation: _progress,
@@ -139,6 +144,7 @@ class _KolekBottomNavState extends State<KolekBottomNav>
                       index,
                       KolekBottomNav.items[index],
                       _dyFor(index, t),
+                      icon,
                     ),
                   );
                 }),
@@ -150,7 +156,12 @@ class _KolekBottomNavState extends State<KolekBottomNav>
     );
   }
 
-  Widget _buildNavItem(int index, NavItem item, double underlineDy) {
+  Widget _buildNavItem(
+    int index,
+    NavItem item,
+    double underlineDy,
+    Color iconColor,
+  ) {
     final isSelected = widget.selectedIndex == index;
     return Semantics(
       button: true,
@@ -175,6 +186,9 @@ class _KolekBottomNavState extends State<KolekBottomNav>
                     key: ValueKey('${item.label}-$isSelected'),
                     width: 22,
                     height: 22,
+                    colorFilter: isSelected
+                        ? null
+                        : ColorFilter.mode(iconColor, BlendMode.srcIn),
                   ),
                 ),
               ),

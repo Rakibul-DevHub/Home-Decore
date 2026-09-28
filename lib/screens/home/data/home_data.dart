@@ -1,3 +1,7 @@
+import 'home_post_type.dart';
+
+export 'home_post_type.dart';
+
 class HomePost {
   const HomePost({
     required this.id,
@@ -9,6 +13,9 @@ class HomePost {
     required this.likes,
     required this.commentCount,
     required this.shareCount,
+    required this.type,
+    this.year,
+    this.ownedByViewer = false,
   });
 
   final String id;
@@ -16,26 +23,51 @@ class HomePost {
   final String location;
   final String image;
   final String title;
+  final String? year;
   final String description;
   final String likes;
   final String commentCount;
   final String shareCount;
+  final HomePostType type;
+  final bool ownedByViewer;
 }
 
 class HomeComment {
   const HomeComment({
+    required this.id,
     required this.author,
     required this.age,
     required this.message,
     this.avatarAsset = 'assets/images/demo_user.png',
-    this.replyCount = 17,
+    this.mention,
+    this.isMine = false,
+    this.replies = const [],
+    this.hiddenReplyCount = 0,
   });
 
+  final String id;
   final String author;
   final String age;
   final String message;
+  final String? mention;
   final String avatarAsset;
-  final int replyCount;
+  final bool isMine;
+  final List<HomeComment> replies;
+  final int hiddenReplyCount;
+
+  HomeComment copyWith({List<HomeComment>? replies, int? hiddenReplyCount}) {
+    return HomeComment(
+      id: id,
+      author: author,
+      age: age,
+      message: message,
+      mention: mention,
+      avatarAsset: avatarAsset,
+      isMine: isMine,
+      replies: replies ?? this.replies,
+      hiddenReplyCount: hiddenReplyCount ?? this.hiddenReplyCount,
+    );
+  }
 }
 
 enum HomeMenuAction { savePost, message, report }
@@ -48,6 +80,9 @@ class HomeMenuItem {
 }
 
 abstract final class HomeData {
+  static const viewerName = 'Rakib Khan';
+  static const postDescription =
+      'Exploring movement and stillness. Each curve holds a moment of balance. Fired slowly so the surface stays quiet, with a soft edge that catches the light.';
   static const menuItems = [
     HomeMenuItem(action: HomeMenuAction.savePost, label: 'Save Post'),
     HomeMenuItem(action: HomeMenuAction.message, label: 'Message'),
@@ -59,50 +94,75 @@ abstract final class HomeData {
       id: 'vase-series',
       author: 'Ronald Richards',
       location: 'Dhaka, Bangladesh',
-      image: 'assets/images/vase_series.png',
+      image: 'assets/images/home_post_1.png',
       title: 'Vase Series',
-      description:
-          'Exploring movement and stillness. Each curve holds a moment of '
-          'balance.',
+      description: postDescription,
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
+      type: HomePostType.sell,
+      ownedByViewer: true,
+    ),
+    HomePost(
+      id: 'quiet-forms',
+      author: 'Ronald Richards',
+      location: 'Dhaka, Bangladesh',
+      image: 'assets/images/home_post_2.png',
+      title: 'Vase Series',
+      description: postDescription,
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
+      type: HomePostType.auction,
+    ),
+    HomePost(
+      id: 'theresa-vase',
+      author: 'Theresa Webb',
+      location: 'Dhaka, Bangladesh',
+      image: 'assets/images/home_post_3.png',
+      title: 'Vase Series',
+      year: '2026',
+      description: postDescription,
+      type: HomePostType.normal,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
     ),
     HomePost(
-      id: 'quiet-forms',
-      author: 'Wade Warren',
+      id: 'jacob-vase',
+      author: 'Jacob Jones',
       location: 'Dhaka, Bangladesh',
-      image: 'assets/images/vase_series_1.png',
-      title: 'Quiet Forms',
-      description:
-          'A study in texture, form, and patient craftsmanship across quiet '
-          'spaces.',
-      likes: '1,204',
-      commentCount: '86',
-      shareCount: '41',
+      image: 'assets/images/home_post_4.png',
+      title: 'Vase Series',
+      year: '2026',
+      description: postDescription,
+      type: HomePostType.sell,
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
     ),
   ];
 
-  static const comments = [
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
+  static const _commentBody =
+      'The details here really draw me in, wonderful work.';
+
+  static final List<HomeComment> comments = [
+    for (var i = 0; i < 3; i++)
+      HomeComment(
+        id: 'c$i',
+        author: 'Darren Lee',
+        age: '3h ago',
+        message: _commentBody,
+        replies: [
+          for (var reply = 0; reply < 17; reply++)
+            HomeComment(
+              id: 'c${i}r$reply',
+              author: 'Rakib Khan',
+              age: '3h ago',
+              message: _commentBody,
+              isMine: true,
+            ),
+        ],
+      ),
   ];
 }

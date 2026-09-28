@@ -38,7 +38,6 @@ class OnboardingScreen extends StatelessWidget {
           listener: (context, state) => _openSignIn(context),
           builder: (context, state) {
             final page = state.pageIndex;
-            final isForward = state.isForward;
             return Center(
               child: FittedBox(
                 fit: BoxFit.contain,
@@ -60,14 +59,16 @@ class OnboardingScreen extends StatelessWidget {
                       }
                     },
                     child: Stack(
-                      clipBehavior: Clip.none,
+                      clipBehavior: Clip.hardEdge,
                       children: [
                         Positioned.fill(
                           child: _OnboardingLayerSwitcher(
                             page: page,
-                            isForward: isForward,
-                            moveDownOnForward: false,
-                            child: _OnboardingImageLayer(index: page),
+                            tops: [
+                              for (final p in OnboardingData.pages) p.imageTop,
+                            ],
+                            builder: (index) =>
+                                _OnboardingImageLayer(index: index),
                           ),
                         ),
                         Positioned.fill(
@@ -79,16 +80,22 @@ class OnboardingScreen extends StatelessWidget {
                                   ),
                                   child: _OnboardingLayerSwitcher(
                                     page: page,
-                                    isForward: isForward,
-                                    moveDownOnForward: true,
-                                    child: _OnboardingTextLayer(index: page),
+                                    tops: [
+                                      for (final p in OnboardingData.pages)
+                                        p.textTop,
+                                    ],
+                                    builder: (index) =>
+                                        _OnboardingTextLayer(index: index),
                                   ),
                                 )
                               : _OnboardingLayerSwitcher(
                                   page: page,
-                                  isForward: isForward,
-                                  moveDownOnForward: true,
-                                  child: _OnboardingTextLayer(index: page),
+                                  tops: [
+                                    for (final p in OnboardingData.pages)
+                                      p.textTop,
+                                  ],
+                                  builder: (index) =>
+                                      _OnboardingTextLayer(index: index),
                                 ),
                         ),
                         _PageNumber(index: page),

@@ -32,7 +32,7 @@ abstract final class AppBootstrap {
 
   /// Hides system nav (and status) bars until the user swipes from the edge.
   static Future<void> applySystemUi() async {
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     SystemChrome.setSystemUIOverlayStyle(overlayStyle);
   }
 
