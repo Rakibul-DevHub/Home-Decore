@@ -62,8 +62,11 @@ class HomeScreen extends StatelessWidget {
             return _FeedCard(
               post: post,
               saved: state.savedPostIds.contains(post.id),
+              liked: state.likedPostIds.contains(post.id),
               onSaved: () =>
                   context.read<HomeBloc>().add(HomeSavedToggled(post.id)),
+              onReact: () =>
+                  context.read<HomeBloc>().add(HomeReactToggled(post.id)),
               onComments: () => _showComments(context, post),
             );
           },

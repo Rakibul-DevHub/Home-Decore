@@ -1,3 +1,7 @@
+import 'home_post_type.dart';
+
+export 'home_post_type.dart';
+
 class HomePost {
   const HomePost({
     required this.id,
@@ -9,9 +13,8 @@ class HomePost {
     required this.likes,
     required this.commentCount,
     required this.shareCount,
+    required this.type,
     this.year,
-    this.showBag = true,
-    this.isAuction = false,
     this.ownedByViewer = false,
   });
 
@@ -25,8 +28,7 @@ class HomePost {
   final String likes;
   final String commentCount;
   final String shareCount;
-  final bool showBag;
-  final bool isAuction;
+  final HomePostType type;
   final bool ownedByViewer;
 }
 
@@ -98,6 +100,7 @@ abstract final class HomeData {
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
+      type: HomePostType.sell,
       ownedByViewer: true,
     ),
     HomePost(
@@ -110,8 +113,7 @@ abstract final class HomeData {
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
-      showBag: false,
-      isAuction: true,
+      type: HomePostType.auction,
     ),
     HomePost(
       id: 'theresa-vase',
@@ -120,8 +122,8 @@ abstract final class HomeData {
       image: 'assets/images/home_post_3.png',
       title: 'Vase Series',
       year: '2026',
-      showBag: false,
       description: postDescription,
+      type: HomePostType.normal,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
@@ -134,6 +136,7 @@ abstract final class HomeData {
       title: 'Vase Series',
       year: '2026',
       description: postDescription,
+      type: HomePostType.sell,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',

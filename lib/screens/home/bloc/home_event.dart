@@ -16,6 +16,15 @@ final class HomeSavedToggled extends HomeEvent {
   List<Object?> get props => [postId];
 }
 
+final class HomeReactToggled extends HomeEvent {
+  const HomeReactToggled(this.postId);
+
+  final String postId;
+
+  @override
+  List<Object?> get props => [postId];
+}
+
 final class HomeCommentsOpened extends HomeEvent {
   const HomeCommentsOpened(this.postId);
 

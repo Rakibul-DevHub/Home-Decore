@@ -4,13 +4,17 @@ class _FeedCard extends StatelessWidget {
   const _FeedCard({
     required this.post,
     required this.saved,
+    required this.liked,
     required this.onSaved,
+    required this.onReact,
     required this.onComments,
   });
 
   final HomePost post;
   final bool saved;
+  final bool liked;
   final VoidCallback onSaved;
+  final VoidCallback onReact;
   final VoidCallback onComments;
 
   Future<void> _openMenu(BuildContext context) async {
@@ -170,16 +174,7 @@ class _FeedCard extends StatelessWidget {
                     ),
                   ],
                   const Spacer(),
-                  _StatIcon(
-                    asset: 'assets/icons/react_border.svg',
-                    value: post.likes,
-                    valueStyle: const TextStyle(
-                      fontFamily: 'IBMPlexMono-Regular',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: KolekColors.neutral600,
-                    ),
-                  ),
+                  _ReactHeart(liked: liked, count: post.likes, onTap: onReact),
                   const SizedBox(width: 10),
                   InkWell(
                     onTap: onComments,
@@ -208,18 +203,16 @@ class _FeedCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (post.isAuction || post.showBag) ...[
+                  if (post.type.commerceIcon != null) ...[
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: post.showBag
+                      onTap: post.type.opensProduct
                           ? () => Navigator.of(
                               context,
                             ).pushNamed(AppRoute.productDetails)
                           : null,
                       child: SvgPicture.asset(
-                        post.isAuction
-                            ? 'assets/icons/auction.svg'
-                            : 'assets/icons/cart.svg',
+                        post.type.commerceIcon!,
                         width: 20,
                         height: 20,
                         colorFilter: const ColorFilter.mode(
@@ -290,6 +283,111 @@ class _PostDescriptionState extends State<_PostDescription> {
               child: Text(_expanded ? 'see less' : '...more', style: _action),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReactHeart extends StatefulWidget {
+  const _ReactHeart({
+    required this.liked,
+    required this.count,
+    required this.onTap,
+  });
+
+  final bool liked;
+  final String count;
+  final VoidCallback onTap;
+
+  @override
+  State<_ReactHeart> createState() => _ReactHeartState();
+}
+
+class _ReactHeartState extends State<_ReactHeart>
+    with SingleTickerProviderStateMixin {
+  static const _countStyle = TextStyle(
+    fontFamily: 'IBMPlexMono-Regular',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: KolekColors.neutral600,
+  );
+
+  late final AnimationController _bounce;
+  late final Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounce = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 320),
+    );
+    _scale = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1,
+          end: 1.28,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1.28,
+          end: 0.92,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 30,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 0.92,
+          end: 1,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 30,
+      ),
+    ]).animate(_bounce);
+  }
+
+  @override
+  void didUpdateWidget(covariant _ReactHeart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.liked && !oldWidget.liked) {
+      _bounce.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _bounce.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ScaleTransition(
+            scale: _scale,
+            child: SvgPicture.asset(
+              widget.liked
+                  ? 'assets/icons/react_active.svg'
+                  : 'assets/icons/react_border.svg',
+              width: 18,
+              height: 18,
+              colorFilter: widget.liked
+                  ? null
+                  : const ColorFilter.mode(
+                      KolekColors.neutral700,
+                      BlendMode.srcIn,
+                    ),
+            ),
+          ),
+          const SizedBox(width: 4),
+          Text(widget.count, style: _countStyle),
         ],
       ),
     );
