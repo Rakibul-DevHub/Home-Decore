@@ -1,0 +1,214 @@
+part of 'home_screen.dart';
+
+class _CommentThread extends StatelessWidget {
+  const _CommentThread({
+    required this.comment,
+    required this.expanded,
+    required this.onToggle,
+    required this.onMenu,
+    required this.onReply,
+  });
+
+  final HomeComment comment;
+  final bool expanded;
+  final VoidCallback onToggle;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+  final ValueChanged<HomeComment> onReply;
+
+  @override
+  Widget build(BuildContext context) {
+    final replies = comment.replies;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _CommentTile(
+          comment: comment,
+          onMenu: onMenu,
+          onReply: () => onReply(comment),
+          replyLabel: replies.isEmpty
+              ? null
+              : (expanded ? 'Collapse' : 'View ${replies.length} more replies'),
+          onReplies: replies.isEmpty ? null : onToggle,
+        ),
+        if (expanded)
+          for (final reply in replies)
+            Padding(
+              padding: const EdgeInsets.only(left: 36, top: 12),
+              child: _NestedReply(
+                comment: reply,
+                onMenu: onMenu,
+                onReply: onReply,
+              ),
+            ),
+      ],
+    );
+  }
+}
+
+class _NestedReply extends StatelessWidget {
+  const _NestedReply({
+    required this.comment,
+    required this.onMenu,
+    required this.onReply,
+  });
+
+  final HomeComment comment;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+  final ValueChanged<HomeComment> onReply;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _CommentTile(
+          comment: comment,
+          nested: true,
+          onMenu: onMenu,
+          onReply: () => onReply(comment),
+        ),
+        for (final reply in comment.replies)
+          Padding(
+            padding: const EdgeInsets.only(left: 36, top: 12),
+            child: _NestedReply(
+              comment: reply,
+              onMenu: onMenu,
+              onReply: onReply,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _CommentTile extends StatelessWidget {
+  const _CommentTile({
+    required this.comment,
+    required this.onMenu,
+    required this.onReply,
+    this.nested = false,
+    this.replyLabel,
+    this.onReplies,
+  });
+
+  final HomeComment comment;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+  final VoidCallback onReply;
+  final bool nested;
+  final String? replyLabel;
+  final VoidCallback? onReplies;
+
+  @override
+  Widget build(BuildContext context) {
+    final avatar = nested ? 28.0 : 48.0;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipOval(
+          child: Image.asset(
+            comment.avatarAsset,
+            width: avatar,
+            height: avatar,
+            fit: BoxFit.cover,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    comment.author,
+                    style: TextStyle(
+                      fontFamily: 'GeneralSans-Semibold',
+                      fontSize: nested ? 14 : 16,
+                      fontWeight: FontWeight.w600,
+                      height: 1.2,
+                      color: KolekColors.neutral900,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    comment.age,
+                    style: TextStyle(
+                      fontFamily: 'IBMPlexMono-Regular',
+                      fontSize: nested ? 12 : 14,
+                      letterSpacing: -1,
+                      height: 1.2,
+                      color: KolekColors.neutral500,
+                    ),
+                  ),
+                  if (nested) ...[
+                    const Spacer(),
+                    Builder(
+                      builder: (buttonContext) => InkWell(
+                        onTap: () => onMenu(buttonContext, comment),
+                        borderRadius: BorderRadius.circular(12),
+                        child: const Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Icon(
+                            Icons.more_horiz,
+                            size: 18,
+                            color: KolekColors.neutral500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 6),
+              _CommentBody(comment: comment),
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: onReply,
+                behavior: HitTestBehavior.opaque,
+                child: const Text(
+                  'Reply',
+                  style: TextStyle(
+                    fontFamily: 'IBMPlexMono-Medium',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    height: 16 / 14,
+                    color: KolekColors.neutral900,
+                  ),
+                ),
+              ),
+              if (replyLabel != null) ...[
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: onReplies,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 1,
+                        color: KolekColors.neutral200,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        replyLabel!,
+                        style: const TextStyle(
+                          fontFamily: 'IBMPlexMono-Regular',
+                          fontSize: 12,
+                          height: 1,
+                          letterSpacing: -1,
+                          color: KolekColors.neutral400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
