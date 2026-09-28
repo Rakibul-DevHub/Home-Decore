@@ -77,6 +77,7 @@ class _FeedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -90,21 +91,21 @@ class _FeedCard extends StatelessWidget {
                   children: [
                     Text(
                       post.author,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'GeneralSans-Medium',
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: KolekColors.neutral900,
+                        color: colors.text,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       post.location,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'GeneralSans-Regular',
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: KolekColors.neutral500,
+                        color: colors.muted,
                       ),
                     ),
                   ],
@@ -121,12 +122,7 @@ class _FeedCard extends StatelessWidget {
                         : 'assets/icons/save_post.svg',
                     width: 22,
                     height: 22,
-                    colorFilter: saved
-                        ? null
-                        : const ColorFilter.mode(
-                            KolekColors.neutral700,
-                            BlendMode.srcIn,
-                          ),
+                    colorFilter: saved ? null : colors.iconFilter,
                   ),
                 ),
               ),
@@ -134,10 +130,10 @@ class _FeedCard extends StatelessWidget {
                 builder: (buttonContext) => IconButton(
                   onPressed: () => _openMenu(buttonContext),
                   visualDensity: VisualDensity.compact,
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.more_horiz,
                     size: 22,
-                    color: KolekColors.neutral900,
+                    color: colors.text,
                   ),
                 ),
               ),
@@ -158,21 +154,21 @@ class _FeedCard extends StatelessWidget {
                 children: [
                   Text(
                     post.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'GeneralSans-Medium',
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: KolekColors.neutral900,
+                      color: colors.text,
                     ),
                   ),
                   if (post.year != null) ...[
                     const SizedBox(width: 16),
                     Text(
                       post.year!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'IBMPlexMono-Regular',
                         fontSize: 12,
-                        color: KolekColors.neutral500,
+                        color: colors.muted,
                       ),
                     ),
                   ],
@@ -184,11 +180,11 @@ class _FeedCard extends StatelessWidget {
                     child: _StatIcon(
                       asset: 'assets/icons/comment.svg',
                       value: post.commentCount,
-                      valueStyle: const TextStyle(
+                      valueStyle: TextStyle(
                         fontFamily: 'IBMPlexMono-Regular',
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: KolekColors.neutral600,
+                        color: colors.secondary,
                       ),
                     ),
                   ),
@@ -198,11 +194,11 @@ class _FeedCard extends StatelessWidget {
                     child: _StatIcon(
                       asset: 'assets/icons/share.svg',
                       value: post.shareCount,
-                      valueStyle: const TextStyle(
+                      valueStyle: TextStyle(
                         fontFamily: 'IBMPlexMono-Regular',
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        color: KolekColors.neutral600,
+                        color: colors.secondary,
                       ),
                     ),
                   ),
@@ -218,10 +214,7 @@ class _FeedCard extends StatelessWidget {
                         post.type.commerceIcon!,
                         width: 20,
                         height: 20,
-                        colorFilter: const ColorFilter.mode(
-                          KolekColors.neutral700,
-                          BlendMode.srcIn,
-                        ),
+                        colorFilter: colors.iconFilter,
                       ),
                     ),
                   ],
@@ -247,24 +240,23 @@ class _PostDescription extends StatefulWidget {
 }
 
 class _PostDescriptionState extends State<_PostDescription> {
-  static const _body = TextStyle(
-    fontFamily: 'IBMPlexMono-Regular',
-    fontSize: 12,
-    height: 20 / 12,
-    color: KolekColors.neutral500,
-  );
-
-  static const _action = TextStyle(
-    fontFamily: 'IBMPlexMono-Regular',
-    fontSize: 10,
-    height: 20 / 10,
-    color: KolekColors.neutral500,
-  );
-
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
+    final body = TextStyle(
+      fontFamily: 'IBMPlexMono-Regular',
+      fontSize: 12,
+      height: 20 / 12,
+      color: colors.muted,
+    );
+    final action = TextStyle(
+      fontFamily: 'IBMPlexMono-Regular',
+      fontSize: 10,
+      height: 20 / 10,
+      color: colors.muted,
+    );
     return AnimatedSize(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOutCubic,
@@ -276,14 +268,14 @@ class _PostDescriptionState extends State<_PostDescription> {
             widget.text,
             maxLines: _expanded ? null : 2,
             overflow: _expanded ? TextOverflow.visible : TextOverflow.clip,
-            style: _body,
+            style: body,
           ),
           GestureDetector(
             onTap: () => setState(() => _expanded = !_expanded),
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.only(top: 2, bottom: 2),
-              child: Text(_expanded ? 'see less' : '...more', style: _action),
+              child: Text(_expanded ? 'see less' : '...more', style: action),
             ),
           ),
         ],
@@ -309,13 +301,6 @@ class _ReactHeart extends StatefulWidget {
 
 class _ReactHeartState extends State<_ReactHeart>
     with SingleTickerProviderStateMixin {
-  static const _countStyle = TextStyle(
-    fontFamily: 'IBMPlexMono-Regular',
-    fontSize: 12,
-    fontWeight: FontWeight.w400,
-    color: KolekColors.neutral600,
-  );
-
   late final AnimationController _bounce;
   late final Animation<double> _scale;
 
@@ -367,6 +352,7 @@ class _ReactHeartState extends State<_ReactHeart>
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     return GestureDetector(
       onTap: widget.onTap,
       behavior: HitTestBehavior.opaque,
@@ -381,16 +367,19 @@ class _ReactHeartState extends State<_ReactHeart>
                   : 'assets/icons/react_border.svg',
               width: 18,
               height: 18,
-              colorFilter: widget.liked
-                  ? null
-                  : const ColorFilter.mode(
-                      KolekColors.neutral700,
-                      BlendMode.srcIn,
-                    ),
+              colorFilter: widget.liked ? null : colors.iconFilter,
             ),
           ),
           const SizedBox(width: 4),
-          Text(widget.count, style: _countStyle),
+          Text(
+            widget.count,
+            style: TextStyle(
+              fontFamily: 'IBMPlexMono-Regular',
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: colors.secondary,
+            ),
+          ),
         ],
       ),
     );
@@ -410,6 +399,7 @@ class _StatIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -417,10 +407,7 @@ class _StatIcon extends StatelessWidget {
           asset,
           width: 18,
           height: 18,
-          colorFilter: const ColorFilter.mode(
-            KolekColors.neutral700,
-            BlendMode.srcIn,
-          ),
+          colorFilter: colors.iconFilter,
         ),
         if (value != null) ...[
           const SizedBox(width: 4),

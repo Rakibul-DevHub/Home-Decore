@@ -8,12 +8,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../routes/app_route.dart';
 import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
-import '../../../widgets/kolek_widgets.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
 import '../data/home_data.dart';
 
+part 'home_colors.dart';
 part 'home_anchored_menu.dart';
 part 'home_comment_body.dart';
 part 'home_comment_composer.dart';
@@ -47,30 +47,31 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: KolekColors.neutral50,
-      appBar: const _KolekHeader(),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) => ListView.separated(
-          itemCount: HomeData.posts.length,
-          separatorBuilder: (_, _) => const Divider(
-            height: 1,
-            thickness: 1,
-            color: KolekColors.neutral200,
+    final colors = _HomeColors.of(context);
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: colors.overlay,
+      child: Scaffold(
+        backgroundColor: colors.canvas,
+        appBar: const _KolekHeader(),
+        body: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) => ListView.separated(
+            itemCount: HomeData.posts.length,
+            separatorBuilder: (_, _) =>
+                Divider(height: 1, thickness: 1, color: colors.line),
+            itemBuilder: (context, index) {
+              final post = HomeData.posts[index];
+              return _FeedCard(
+                post: post,
+                saved: state.savedPostIds.contains(post.id),
+                liked: state.likedPostIds.contains(post.id),
+                onSaved: () =>
+                    context.read<HomeBloc>().add(HomeSavedToggled(post.id)),
+                onReact: () =>
+                    context.read<HomeBloc>().add(HomeReactToggled(post.id)),
+                onComments: () => _showComments(context, post),
+              );
+            },
           ),
-          itemBuilder: (context, index) {
-            final post = HomeData.posts[index];
-            return _FeedCard(
-              post: post,
-              saved: state.savedPostIds.contains(post.id),
-              liked: state.likedPostIds.contains(post.id),
-              onSaved: () =>
-                  context.read<HomeBloc>().add(HomeSavedToggled(post.id)),
-              onReact: () =>
-                  context.read<HomeBloc>().add(HomeReactToggled(post.id)),
-              onComments: () => _showComments(context, post),
-            );
-          },
         ),
       ),
     );

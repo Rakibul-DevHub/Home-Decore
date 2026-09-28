@@ -8,10 +8,12 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: KolekColors.neutral50,
+      backgroundColor: colors.canvas,
+      systemOverlayStyle: colors.overlay,
       centerTitle: true,
       leading: IconButton(
         onPressed: () async {
@@ -24,9 +26,15 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
           'assets/icons/search.svg',
           width: 22,
           height: 22,
+          colorFilter: colors.iconFilter,
         ),
       ),
-      title: const KolekTextLogo(height: 22),
+      title: SvgPicture.asset(
+        'assets/icons/text_logo.svg',
+        height: 22,
+        fit: BoxFit.contain,
+        colorFilter: colors.textFilter,
+      ),
       actions: [
         IconButton(
           onPressed: () =>
@@ -35,13 +43,14 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
             'assets/icons/notification_active.svg',
             width: 24,
             height: 24,
+            colorFilter: colors.iconFilter,
           ),
         ),
         const SizedBox(width: 2),
       ],
-      bottom: const PreferredSize(
-        preferredSize: Size.fromHeight(1),
-        child: Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(1),
+        child: Divider(height: 1, thickness: 1, color: colors.line),
       ),
     );
   }

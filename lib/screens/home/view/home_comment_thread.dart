@@ -100,6 +100,7 @@ class _CommentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     final avatar = nested ? 28.0 : 48.0;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,7 +129,7 @@ class _CommentTile extends StatelessWidget {
                       fontSize: nested ? 14 : 16,
                       fontWeight: FontWeight.w600,
                       height: 1.2,
-                      color: KolekColors.neutral900,
+                      color: colors.text,
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -139,7 +140,7 @@ class _CommentTile extends StatelessWidget {
                       fontSize: nested ? 12 : 14,
                       letterSpacing: -1,
                       height: 1.2,
-                      color: KolekColors.neutral500,
+                      color: colors.muted,
                     ),
                   ),
                   if (nested) ...[
@@ -148,12 +149,12 @@ class _CommentTile extends StatelessWidget {
                       builder: (buttonContext) => InkWell(
                         onTap: () => onMenu(buttonContext, comment),
                         borderRadius: BorderRadius.circular(12),
-                        child: const Padding(
-                          padding: EdgeInsets.all(2),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2),
                           child: Icon(
                             Icons.more_horiz,
                             size: 18,
-                            color: KolekColors.neutral500,
+                            color: colors.muted,
                           ),
                         ),
                       ),
@@ -167,14 +168,14 @@ class _CommentTile extends StatelessWidget {
               GestureDetector(
                 onTap: onReply,
                 behavior: HitTestBehavior.opaque,
-                child: const Text(
+                child: Text(
                   'Reply',
                   style: TextStyle(
                     fontFamily: 'IBMPlexMono-Medium',
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     height: 16 / 14,
-                    color: KolekColors.neutral900,
+                    color: colors.text,
                   ),
                 ),
               ),
@@ -185,20 +186,16 @@ class _CommentTile extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   child: Row(
                     children: [
-                      Container(
-                        width: 32,
-                        height: 1,
-                        color: KolekColors.neutral200,
-                      ),
+                      Container(width: 32, height: 1, color: colors.line),
                       const SizedBox(width: 8),
                       Text(
                         replyLabel!,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'IBMPlexMono-Regular',
                           fontSize: 12,
                           height: 1,
                           letterSpacing: -1,
-                          color: KolekColors.neutral400,
+                          color: colors.muted,
                         ),
                       ),
                     ],

@@ -5,31 +5,31 @@ class _CommentBody extends StatelessWidget {
 
   final HomeComment comment;
 
-  static const _body = TextStyle(
-    fontFamily: 'IBMPlexMono-Regular',
-    fontSize: 14,
-    height: 20 / 14,
-    color: KolekColors.neutral500,
-  );
-
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
+    final body = TextStyle(
+      fontFamily: 'IBMPlexMono-Regular',
+      fontSize: 14,
+      height: 20 / 14,
+      color: colors.muted,
+    );
     final mention = comment.mention;
-    if (mention == null) return Text(comment.message, style: _body);
+    if (mention == null) return Text(comment.message, style: body);
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(
             text: mention,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'GeneralSans-Semibold',
               fontSize: 14,
               fontWeight: FontWeight.w600,
               height: 20 / 14,
-              color: KolekColors.neutral900,
+              color: colors.text,
             ),
           ),
-          TextSpan(text: ' ${comment.message}', style: _body),
+          TextSpan(text: ' ${comment.message}', style: body),
         ],
       ),
     );

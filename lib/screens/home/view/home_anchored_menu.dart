@@ -31,6 +31,7 @@ Future<T?> _showAnchoredMenu<T>(
 
   entry = OverlayEntry(
     builder: (context) {
+      final colors = _HomeColors.of(context);
       return Stack(
         children: [
           Positioned.fill(
@@ -44,7 +45,7 @@ Future<T?> _showAnchoredMenu<T>(
             top: top,
             right: right < 8 ? 8 : right,
             child: Material(
-              color: Colors.white,
+              color: colors.menu,
               elevation: 8,
               shadowColor: Colors.black26,
               borderRadius: BorderRadius.circular(10),
@@ -56,11 +57,7 @@ Future<T?> _showAnchoredMenu<T>(
                   children: [
                     for (var i = 0; i < entries.length; i++) ...[
                       if (i > 0)
-                        const Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: KolekColors.neutral200,
-                        ),
+                        Divider(height: 1, thickness: 1, color: colors.line),
                       InkWell(
                         onTap: () => close(entries[i].value),
                         child: SizedBox(
@@ -78,7 +75,7 @@ Future<T?> _showAnchoredMenu<T>(
                                   fontWeight: FontWeight.w500,
                                   color: entries[i].destructive
                                       ? const Color(0xFFFF3B30)
-                                      : KolekColors.neutral900,
+                                      : colors.text,
                                 ),
                               ),
                             ),

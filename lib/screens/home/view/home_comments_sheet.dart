@@ -220,6 +220,7 @@ class _CommentsSheetState extends State<_CommentsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     final view = View.of(context);
     final pixelRatio = view.devicePixelRatio;
     final logicalTop = view.viewPadding.top / pixelRatio;
@@ -259,7 +260,7 @@ class _CommentsSheetState extends State<_CommentsSheet> {
                       top: Radius.circular(32),
                     ),
                     child: ColoredBox(
-                      color: KolekColors.neutral50,
+                      color: colors.canvas,
                       child: Column(
                         children: [
                           Expanded(
@@ -346,15 +347,16 @@ class _CommentsHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return const ColoredBox(
-      color: KolekColors.neutral50,
+    final colors = _HomeColors.of(context);
+    return ColoredBox(
+      color: colors.canvas,
       child: Column(
         children: [
           SizedBox(height: 24),
           Center(
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: KolekColors.neutral400,
+                color: colors.muted,
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
               child: SizedBox(width: 40, height: 3),
@@ -369,11 +371,11 @@ class _CommentsHeaderDelegate extends SliverPersistentHeaderDelegate {
               fontSize: 16,
               fontWeight: FontWeight.w500,
               height: 1,
-              color: KolekColors.neutral900,
+              color: colors.text,
             ),
           ),
           SizedBox(height: 8),
-          Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
+          Divider(height: 1, thickness: 1, color: colors.line),
         ],
       ),
     );

@@ -19,6 +19,7 @@ class _CommentComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = _HomeColors.of(context);
     final bottom = MediaQuery.paddingOf(context).bottom;
     return Padding(
       padding: EdgeInsets.fromLTRB(20, 12, 20, 12 + bottom),
@@ -39,20 +40,20 @@ class _CommentComposer extends StatelessWidget {
               height: 40,
               padding: const EdgeInsets.only(left: 16, right: 4),
               decoration: BoxDecoration(
-                color: KolekColors.neutral100,
+                color: colors.field,
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: KolekColors.neutral200),
+                border: Border.all(color: colors.line),
               ),
               child: Row(
                 children: [
                   if (mention != null) ...[
                     Text(
                       mention!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'GeneralSans-Semibold',
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: KolekColors.neutral900,
+                        color: colors.text,
                       ),
                     ),
                     const SizedBox(width: 6),
@@ -74,10 +75,11 @@ class _CommentComposer extends StatelessWidget {
                         focusNode: focusNode,
                         textInputAction: TextInputAction.send,
                         onSubmitted: (_) => onSubmit(),
-                        style: const TextStyle(
+                        cursorColor: colors.text,
+                        style: TextStyle(
                           fontFamily: 'IBMPlexMono-Regular',
                           fontSize: 14,
-                          color: KolekColors.neutral900,
+                          color: colors.text,
                         ),
                         decoration: InputDecoration(
                           isCollapsed: true,
@@ -85,10 +87,10 @@ class _CommentComposer extends StatelessWidget {
                           hintText: mention == null
                               ? 'What do you think of this?'
                               : 'Add a comment',
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
                             fontFamily: 'IBMPlexMono-Regular',
                             fontSize: 14,
-                            color: KolekColors.neutral500,
+                            color: colors.muted,
                           ),
                         ),
                       ),
