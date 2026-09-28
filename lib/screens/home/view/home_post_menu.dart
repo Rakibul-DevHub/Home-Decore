@@ -1,8 +1,9 @@
 part of 'home_screen.dart';
 
 class _PostMenu extends StatelessWidget {
-  const _PostMenu({required this.onSelected});
+  const _PostMenu({required this.saved, required this.onSelected});
 
+  final bool saved;
   final ValueChanged<HomeMenuAction> onSelected;
 
   @override
@@ -27,6 +28,7 @@ class _PostMenu extends StatelessWidget {
                 ),
               _PostMenuRow(
                 item: HomeData.menuItems[i],
+                saved: saved,
                 onTap: () => onSelected(HomeData.menuItems[i].action),
               ),
             ],
@@ -38,9 +40,14 @@ class _PostMenu extends StatelessWidget {
 }
 
 class _PostMenuRow extends StatelessWidget {
-  const _PostMenuRow({required this.item, required this.onTap});
+  const _PostMenuRow({
+    required this.item,
+    required this.saved,
+    required this.onTap,
+  });
 
   final HomeMenuItem item;
+  final bool saved;
   final VoidCallback onTap;
 
   @override
@@ -51,7 +58,7 @@ class _PostMenuRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            _PostMenuIcon(action: item.action),
+            _PostMenuIcon(action: item.action, saved: saved),
             const SizedBox(width: 12),
             Text(
               item.label,
@@ -70,21 +77,18 @@ class _PostMenuRow extends StatelessWidget {
 }
 
 class _PostMenuIcon extends StatelessWidget {
-  const _PostMenuIcon({required this.action});
+  const _PostMenuIcon({required this.action, required this.saved});
 
   final HomeMenuAction action;
+  final bool saved;
 
   @override
   Widget build(BuildContext context) {
     return switch (action) {
-      HomeMenuAction.savePost => SvgPicture.asset(
-        'assets/icons/save_post.svg',
+      HomeMenuAction.savePost => SvgPicture.string(
+        saved ? _saveActiveIcon : _saveIcon,
         width: 22,
         height: 22,
-        colorFilter: const ColorFilter.mode(
-          KolekColors.neutral900,
-          BlendMode.srcIn,
-        ),
       ),
       HomeMenuAction.message => SvgPicture.string(
         _messageIcon,
@@ -99,6 +103,18 @@ class _PostMenuIcon extends StatelessWidget {
     };
   }
 }
+
+const _saveIcon = '''
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 21L12 17L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" stroke="#171717" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+''';
+
+const _saveActiveIcon = '''
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 21L12 17L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" fill="#2B7FFF"/>
+</svg>
+''';
 
 const _messageIcon = '''
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

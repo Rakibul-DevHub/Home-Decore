@@ -62,7 +62,7 @@ class _FeedCard extends StatelessWidget {
                     ),
                   );
                 },
-                child: _PostMenu(onSelected: close),
+                child: _PostMenu(saved: saved, onSelected: close),
               ),
             ),
           ],
