@@ -110,21 +110,24 @@ class _FeedCard extends StatelessWidget {
                   ],
                 ),
               ),
-              IconButton(
-                onPressed: onSaved,
-                visualDensity: VisualDensity.compact,
-                icon: SvgPicture.asset(
-                  saved
-                      ? 'assets/icons/save_active.svg'
-                      : 'assets/icons/save_post.svg',
-                  width: 22,
-                  height: 22,
-                  colorFilter: saved
-                      ? null
-                      : const ColorFilter.mode(
-                          KolekColors.neutral700,
-                          BlendMode.srcIn,
-                        ),
+              GestureDetector(
+                onTap: onSaved,
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SvgPicture.asset(
+                    saved
+                        ? 'assets/icons/save_active.svg'
+                        : 'assets/icons/save_post.svg',
+                    width: 22,
+                    height: 22,
+                    colorFilter: saved
+                        ? null
+                        : const ColorFilter.mode(
+                            KolekColors.neutral700,
+                            BlendMode.srcIn,
+                          ),
+                  ),
                 ),
               ),
               Builder(
