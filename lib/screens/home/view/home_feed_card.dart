@@ -110,13 +110,17 @@ class _FeedCard extends StatelessWidget {
                 onPressed: onSaved,
                 visualDensity: VisualDensity.compact,
                 icon: SvgPicture.asset(
-                  'assets/icons/save_post.svg',
+                  saved
+                      ? 'assets/icons/save_active.svg'
+                      : 'assets/icons/save_post.svg',
                   width: 22,
                   height: 22,
-                  colorFilter: ColorFilter.mode(
-                    saved ? KolekColors.blue600 : KolekColors.neutral700,
-                    BlendMode.srcIn,
-                  ),
+                  colorFilter: saved
+                      ? null
+                      : const ColorFilter.mode(
+                          KolekColors.neutral700,
+                          BlendMode.srcIn,
+                        ),
                 ),
               ),
               Builder(
