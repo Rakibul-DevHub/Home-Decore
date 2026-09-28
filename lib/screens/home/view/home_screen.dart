@@ -22,6 +22,7 @@ part 'home_comments_sheet.dart';
 part 'home_feed_card.dart';
 part 'home_header.dart';
 part 'home_post_menu.dart';
+part 'home_share_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,6 +33,12 @@ class HomeScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
+      sheetAnimationStyle: const AnimationStyle(
+        duration: Duration(milliseconds: 240),
+        reverseDuration: Duration(milliseconds: 180),
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      ),
       builder: (_) => _CommentsSheet(isPostOwner: post.ownedByViewer),
     );
     bloc.add(const HomeCommentsClosed());

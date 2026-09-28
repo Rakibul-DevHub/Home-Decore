@@ -191,14 +191,17 @@ class _FeedCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  _StatIcon(
-                    asset: 'assets/icons/share.svg',
-                    value: post.shareCount,
-                    valueStyle: const TextStyle(
-                      fontFamily: 'IBMPlexMono-Regular',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: KolekColors.neutral600,
+                  InkWell(
+                    onTap: () => _showShareSheet(context),
+                    child: _StatIcon(
+                      asset: 'assets/icons/share.svg',
+                      value: post.shareCount,
+                      valueStyle: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: KolekColors.neutral600,
+                      ),
                     ),
                   ),
                   if (post.isAuction || post.showBag) ...[

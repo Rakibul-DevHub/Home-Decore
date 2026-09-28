@@ -1,4 +1,4 @@
-part of 'home_screen.dart';
+﻿part of 'home_screen.dart';
 
 enum _CommentAction { edit, delete, hide, report }
 
@@ -14,16 +14,26 @@ class _CommentsSheet extends StatefulWidget {
 class _CommentsSheetState extends State<_CommentsSheet> {
   static const _composerAvatar = 'assets/images/demo_user.png';
   static const _collapsed = 0.68;
+  static const _closeExtent = 0.2;
 
   final _sheet = DraggableScrollableController();
   final _composer = TextEditingController();
   final _composerFocus = FocusNode();
   final _expanded = <String>{};
   HomeComment? _replyTo;
+  double? _lastExtent;
+  bool _closing = false;
   late List<HomeComment> _comments = List.of(HomeData.comments);
 
   @override
+  void initState() {
+    super.initState();
+    _sheet.addListener(_closeNearBottom);
+  }
+
+  @override
   void dispose() {
+    _sheet.removeListener(_closeNearBottom);
     _sheet.dispose();
     _composer.dispose();
     _composerFocus.dispose();
@@ -114,9 +124,19 @@ class _CommentsSheetState extends State<_CommentsSheet> {
     if (!_sheet.isAttached) return;
     _sheet.animateTo(
       _expanded.isEmpty ? _collapsed : 1,
-      duration: const Duration(milliseconds: 280),
+      duration: const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
     );
+  }
+
+  void _closeNearBottom() {
+    if (_closing || !_sheet.isAttached) return;
+    final extent = _sheet.size;
+    final last = _lastExtent;
+    _lastExtent = extent;
+    if (last == null || extent >= last || extent > _closeExtent) return;
+    _closing = true;
+    Navigator.of(context).pop();
   }
 
   List<HomeComment> _withoutId(List<HomeComment> items, String id) {
@@ -170,73 +190,100 @@ class _CommentsSheetState extends State<_CommentsSheet> {
     final topInset = view.viewPadding.top / view.devicePixelRatio;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Padding(
-      padding: EdgeInsets.only(top: topInset, bottom: bottomInset),
-      child: DraggableScrollableSheet(
-        controller: _sheet,
-        expand: false,
-        snap: true,
-        initialChildSize: _collapsed,
-        minChildSize: 0.45,
-        maxChildSize: 1,
-        snapSizes: const [_collapsed],
-        builder: (context, scrollController) {
-          return ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-            child: ColoredBox(
-              color: KolekColors.neutral50,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: CustomScrollView(
-                      controller: scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      slivers: [
-                        const SliverPersistentHeader(
-                          pinned: true,
-                          delegate: _CommentsHeaderDelegate(),
-                        ),
-                        SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                          sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (context, index) {
-                                if (index.isOdd) {
-                                  return const SizedBox(height: 12);
-                                }
-                                final comment = _comments[index ~/ 2];
-                                return _CommentThread(
-                                  comment: comment,
-                                  expanded: _expanded.contains(comment.id),
-                                  onToggle: () => _toggleReplies(comment.id),
-                                  onMenu: (context, target) =>
-                                      _openCommentMenu(context, target),
-                                  onReply: _startReply,
-                                );
-                              },
-                              childCount: _comments.isEmpty
-                                  ? 0
-                                  : _comments.length * 2 - 1,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final available = constraints.maxHeight.isFinite
+            ? constraints.maxHeight
+            : MediaQuery.sizeOf(context).height;
+        final sheetHeight = (available - topInset).clamp(0.0, available);
+
+        return Padding(
+          padding: EdgeInsets.only(top: topInset),
+          child: SizedBox(
+            height: sheetHeight,
+            child: DraggableScrollableSheet(
+              controller: _sheet,
+              expand: true,
+              snap: true,
+              snapAnimationDuration: const Duration(milliseconds: 180),
+              initialChildSize: _collapsed,
+              minChildSize: _closeExtent,
+              maxChildSize: 1,
+              snapSizes: const [_collapsed],
+              builder: (context, scrollController) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: bottomInset),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(32),
+                    ),
+                    child: ColoredBox(
+                      color: KolekColors.neutral50,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: CustomScrollView(
+                              controller: scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              slivers: [
+                                const SliverPersistentHeader(
+                                  pinned: true,
+                                  delegate: _CommentsHeaderDelegate(),
+                                ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    20,
+                                    12,
+                                    20,
+                                    12,
+                                  ),
+                                  sliver: SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                        if (index.isOdd) {
+                                          return const SizedBox(height: 12);
+                                        }
+                                        final comment = _comments[index ~/ 2];
+                                        return _CommentThread(
+                                          comment: comment,
+                                          expanded: _expanded.contains(
+                                            comment.id,
+                                          ),
+                                          onToggle: () =>
+                                              _toggleReplies(comment.id),
+                                          onMenu: (context, target) =>
+                                              _openCommentMenu(context, target),
+                                          onReply: _startReply,
+                                        );
+                                      },
+                                      childCount: _comments.isEmpty
+                                          ? 0
+                                          : _comments.length * 2 - 1,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                          _CommentComposer(
+                            avatarAsset: _composerAvatar,
+                            controller: _composer,
+                            focusNode: _composerFocus,
+                            mention: _replyTo?.author,
+                            onSubmit: _submit,
+                            onClearMention: () =>
+                                setState(() => _replyTo = null),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  _CommentComposer(
-                    avatarAsset: _composerAvatar,
-                    controller: _composer,
-                    focusNode: _composerFocus,
-                    mention: _replyTo?.author,
-                    onSubmit: _submit,
-                    onClearMention: () => setState(() => _replyTo = null),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -262,14 +309,14 @@ class _CommentsHeaderDelegate extends SliverPersistentHeaderDelegate {
       color: KolekColors.neutral50,
       child: Column(
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 24),
           Center(
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: KolekColors.neutral500,
+                color: KolekColors.neutral400,
                 borderRadius: BorderRadius.all(Radius.circular(16)),
               ),
-              child: SizedBox(width: 40, height: 2),
+              child: SizedBox(width: 40, height: 3),
             ),
           ),
           SizedBox(height: 8),
