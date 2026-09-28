@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../../routes/app_route.dart';
 import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
@@ -17,14 +14,13 @@ import '../data/home_data.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<void> _showComments(BuildContext context, String postId) async {
-    final bloc = context.read<HomeBloc>()
-      ..add(HomeCommentsOpened(postId));
+  Future<void> _showComments(BuildContext context, HomePost post) async {
+    final bloc = context.read<HomeBloc>()..add(HomeCommentsOpened(post.id));
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const _CommentsSheet(),
+      builder: (_) => _CommentsSheet(isPostOwner: post.ownedByViewer),
     );
     bloc.add(const HomeCommentsClosed());
   }
@@ -37,8 +33,11 @@ class HomeScreen extends StatelessWidget {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) => ListView.separated(
           itemCount: HomeData.posts.length,
-          separatorBuilder: (_, _) =>
-              const Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
+          separatorBuilder: (_, _) => const Divider(
+            height: 1,
+            thickness: 1,
+            color: KolekColors.neutral200,
+          ),
           itemBuilder: (context, index) {
             final post = HomeData.posts[index];
             return _FeedCard(
@@ -46,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               saved: state.savedPostIds.contains(post.id),
               onSaved: () =>
                   context.read<HomeBloc>().add(HomeSavedToggled(post.id)),
-              onComments: () => _showComments(context, post.id),
+              onComments: () => _showComments(context, post),
             );
           },
         ),
@@ -66,8 +65,8 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
-        backgroundColor: KolekColors.neutral50,
-        centerTitle: true,
+      backgroundColor: KolekColors.neutral50,
+      centerTitle: true,
       leading: IconButton(
         onPressed: () async {
           final result = await Navigator.of(context).pushNamed(AppRoute.search);
@@ -118,8 +117,7 @@ class _FeedCard extends StatelessWidget {
   Future<void> _openMenu(BuildContext context) async {
     final button = context.findRenderObject() as RenderBox?;
     final overlayState = Overlay.of(context);
-    final overlay =
-        overlayState.context.findRenderObject() as RenderBox?;
+    final overlay = overlayState.context.findRenderObject() as RenderBox?;
     if (button == null || overlay == null) return;
 
     final offset = button.localToGlobal(Offset.zero, ancestor: overlay);
@@ -161,7 +159,7 @@ class _FeedCard extends StatelessWidget {
                     ),
                   );
                 },
-                child: _LiquidGlassMenu(onSelected: close),
+                child: _PostMenu(onSelected: close),
               ),
             ),
           ],
@@ -239,10 +237,7 @@ class _FeedCard extends StatelessWidget {
         SizedBox(
           height: 300,
           width: double.infinity,
-          child: Image.asset(
-            post.image,
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset(post.image, fit: BoxFit.cover),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
@@ -311,8 +306,9 @@ class _FeedCard extends StatelessWidget {
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: post.showBag
-                          ? () => Navigator.of(context)
-                              .pushNamed(AppRoute.productDetails)
+                          ? () => Navigator.of(
+                              context,
+                            ).pushNamed(AppRoute.productDetails)
                           : null,
                       child: SvgPicture.asset(
                         post.isAuction
@@ -390,212 +386,387 @@ class _StatIcon extends StatelessWidget {
   }
 }
 
-class _LiquidGlassMenu extends StatelessWidget {
-  const _LiquidGlassMenu({required this.onSelected});
+class _PostMenu extends StatelessWidget {
+  const _PostMenu({required this.onSelected});
 
   final ValueChanged<HomeMenuAction> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.75),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.10),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
+    return Material(
+      color: const Color(0xFFF4F4F4),
+      elevation: 10,
+      shadowColor: Colors.black26,
+      borderRadius: BorderRadius.circular(18),
+      clipBehavior: Clip.antiAlias,
+      child: SizedBox(
+        width: 200,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < HomeData.menuItems.length; i++) ...[
+              if (i > 0)
+                const Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Color(0xFFE4E4E4),
+                ),
+              _PostMenuRow(
+                item: HomeData.menuItems[i],
+                onTap: () => onSelected(HomeData.menuItems[i].action),
               ),
             ],
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white.withValues(alpha: 0.42),
-                Colors.white.withValues(alpha: 0.18),
-              ],
-            ),
-          ),
-          child: SizedBox(
-            width: 168,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (var i = 0; i < HomeData.menuItems.length; i++) ...[
-                  if (i > 0)
-                    Divider(
-                      height: 1,
-                      thickness: 1,
-                      color: Colors.white.withValues(alpha: 0.55),
-                    ),
-                  _LiquidGlassMenuItem(
-                    item: HomeData.menuItems[i],
-                    onTap: () => onSelected(HomeData.menuItems[i].action),
-                  ),
-                ],
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _LiquidGlassMenuItem extends StatelessWidget {
-  const _LiquidGlassMenuItem({required this.item, required this.onTap});
+class _PostMenuRow extends StatelessWidget {
+  const _PostMenuRow({required this.item, required this.onTap});
 
   final HomeMenuItem item;
   final VoidCallback onTap;
 
-  String? get _asset => switch (item.action) {
-    HomeMenuAction.savePost => 'assets/icons/save_post.svg',
-    HomeMenuAction.message => 'assets/icons/message.svg',
-    HomeMenuAction.report => null,
-  };
-
   @override
   Widget build(BuildContext context) {
-    final asset = _asset;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          height: 46,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Row(
-              children: [
-                if (asset != null)
-                  SvgPicture.asset(
-                    asset,
-                    width: 18,
-                    height: 18,
-                    colorFilter: const ColorFilter.mode(
-                      KolekColors.neutral900,
-                      BlendMode.srcIn,
-                    ),
-                  )
-                else
-                  const Icon(
-                    Icons.report_outlined,
-                    size: 18,
-                    color: KolekColors.neutral900,
-                  ),
-                const SizedBox(width: 12),
-                Text(
-                  item.label,
-                  style: const TextStyle(
-                    fontFamily: 'IBMPlexMono-Regular',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: KolekColors.neutral900,
-                  ),
-                ),
-              ],
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            _PostMenuIcon(action: item.action),
+            const SizedBox(width: 12),
+            Text(
+              item.label,
+              style: const TextStyle(
+                fontFamily: 'GeneralSans-Medium',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: KolekColors.neutral900,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _CommentsSheet extends StatelessWidget {
-  const _CommentsSheet();
+class _PostMenuIcon extends StatelessWidget {
+  const _PostMenuIcon({required this.action});
 
-  static const _composerAvatar = 'assets/images/demo_user.png';
+  final HomeMenuAction action;
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.sizeOf(context).height * 0.72;
+    return switch (action) {
+      HomeMenuAction.savePost => SvgPicture.asset(
+        'assets/icons/save_post.svg',
+        width: 22,
+        height: 22,
+        colorFilter: const ColorFilter.mode(
+          KolekColors.neutral900,
+          BlendMode.srcIn,
+        ),
+      ),
+      HomeMenuAction.message => SvgPicture.string(
+        _messageIcon,
+        width: 22,
+        height: 22,
+      ),
+      HomeMenuAction.report => SvgPicture.string(
+        _reportIcon,
+        width: 22,
+        height: 22,
+      ),
+    };
+  }
+}
+
+const _messageIcon = '''
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 20.2C16.6 20.2 20.3 16.7 20.3 12.4C20.3 8.1 16.6 4.6 12 4.6C7.4 4.6 3.7 8.1 3.7 12.4C3.7 14.3 4.4 16.1 5.6 17.4L4.8 19.8L7.5 18.9C8.8 19.7 10.3 20.2 12 20.2Z" stroke="#171717" stroke-width="1.6" stroke-linejoin="round"/>
+<circle cx="8.7" cy="12.4" r="1" fill="#171717"/>
+<circle cx="12" cy="12.4" r="1" fill="#171717"/>
+<circle cx="15.3" cy="12.4" r="1" fill="#171717"/>
+</svg>
+''';
+
+const _reportIcon = '''
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="8.15" stroke="#171717" stroke-width="1.6"/>
+<path d="M12 8.1V12.8" stroke="#171717" stroke-width="1.6" stroke-linecap="round"/>
+<circle cx="12" cy="15.6" r="0.95" fill="#171717"/>
+</svg>
+''';
+
+enum _CommentAction { edit, delete, hide, report }
+
+class _CommentsSheet extends StatefulWidget {
+  const _CommentsSheet({required this.isPostOwner});
+
+  final bool isPostOwner;
+
+  @override
+  State<_CommentsSheet> createState() => _CommentsSheetState();
+}
+
+class _CommentsSheetState extends State<_CommentsSheet> {
+  static const _composerAvatar = 'assets/images/demo_user.png';
+  static const _collapsed = 0.68;
+
+  final _sheet = DraggableScrollableController();
+  final _expanded = <String>{};
+  double _extent = _collapsed;
+  late List<HomeComment> _comments = List.of(HomeData.comments);
+
+  @override
+  void dispose() {
+    _sheet.dispose();
+    super.dispose();
+  }
+
+  void _remove(String id) {
+    setState(() {
+      _comments = _withoutId(_comments, id);
+      _expanded.remove(id);
+    });
+    _fitSheet();
+  }
+
+  void _toggleReplies(String id) {
+    setState(() {
+      if (!_expanded.add(id)) _expanded.remove(id);
+    });
+    _fitSheet();
+  }
+
+  void _fitSheet() {
+    if (!_sheet.isAttached) return;
+    _sheet.animateTo(
+      _expanded.isEmpty ? _collapsed : 1,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  List<HomeComment> _withoutId(List<HomeComment> items, String id) {
+    return [
+      for (final item in items)
+        if (item.id != id) item.copyWith(replies: _withoutId(item.replies, id)),
+    ];
+  }
+
+  Future<void> _openCommentMenu(
+    BuildContext buttonContext,
+    HomeComment comment,
+  ) async {
+    final action = await _showAnchoredMenu(
+      buttonContext,
+      _commentMenuEntries(comment),
+    );
+    if (!mounted || action == null) return;
+    switch (action) {
+      case _CommentAction.delete:
+      case _CommentAction.hide:
+        _remove(comment.id);
+      case _CommentAction.edit:
+      case _CommentAction.report:
+        break;
+    }
+  }
+
+  List<_AnchoredMenuEntry<_CommentAction>> _commentMenuEntries(
+    HomeComment comment,
+  ) {
+    if (comment.isMine) {
+      return const [
+        _AnchoredMenuEntry('Edit', _CommentAction.edit),
+        _AnchoredMenuEntry('Delete', _CommentAction.delete, destructive: true),
+      ];
+    }
+    if (widget.isPostOwner) {
+      return const [
+        _AnchoredMenuEntry('Hide', _CommentAction.hide),
+        _AnchoredMenuEntry('Report', _CommentAction.report),
+        _AnchoredMenuEntry('Delete', _CommentAction.delete, destructive: true),
+      ];
+    }
+    return const [_AnchoredMenuEntry('Report', _CommentAction.report)];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final full = _extent > 0.96;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
-      child: Container(
-        height: height,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Container(
-                width: 36,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: KolekColors.neutral300,
-                  borderRadius: BorderRadius.circular(2),
+      child: NotificationListener<DraggableScrollableNotification>(
+        onNotification: (notification) {
+          if ((notification.extent - _extent).abs() > 0.01) {
+            setState(() => _extent = notification.extent);
+          }
+          return false;
+        },
+        child: DraggableScrollableSheet(
+          controller: _sheet,
+          expand: false,
+          snap: true,
+          initialChildSize: _collapsed,
+          minChildSize: 0.45,
+          maxChildSize: 1,
+          snapSizes: const [_collapsed],
+          builder: (context, scrollController) {
+            return DecoratedBox(
+              decoration: BoxDecoration(
+                color: KolekColors.neutral50,
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(full ? 0 : 32),
                 ),
               ),
-              const SizedBox(height: 14),
-              const Text(
-                'Comments',
-                style: TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: KolekColors.neutral900,
+              child: SafeArea(
+                top: full,
+                bottom: false,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView(
+                        controller: scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        children: [
+                          const SizedBox(height: 16),
+                          Center(
+                            child: Container(
+                              width: 40,
+                              height: 2,
+                              decoration: BoxDecoration(
+                                color: KolekColors.neutral500,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Comments',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'GeneralSans-Medium',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                              color: KolekColors.neutral900,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: KolekColors.neutral200,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                            child: Column(
+                              children: [
+                                for (var i = 0; i < _comments.length; i++) ...[
+                                  if (i > 0) const SizedBox(height: 12),
+                                  _CommentThread(
+                                    comment: _comments[i],
+                                    expanded: _expanded.contains(
+                                      _comments[i].id,
+                                    ),
+                                    onToggle: () =>
+                                        _toggleReplies(_comments[i].id),
+                                    onMenu: (context, target) =>
+                                        _openCommentMenu(context, target),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const _CommentComposer(avatarAsset: _composerAvatar),
+                  ],
                 ),
               ),
-              const SizedBox(height: 14),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: KolekColors.neutral200,
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
-                  itemCount: HomeData.comments.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 22),
-                  itemBuilder: (_, index) {
-                    return _CommentTile(comment: HomeData.comments[index]);
-                  },
-                ),
-              ),
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: KolekColors.neutral200,
-              ),
-              const _CommentComposer(avatarAsset: _composerAvatar),
-            ],
-          ),
+            );
+          },
         ),
       ),
+    );
+  }
+}
+
+class _CommentThread extends StatelessWidget {
+  const _CommentThread({
+    required this.comment,
+    required this.expanded,
+    required this.onToggle,
+    required this.onMenu,
+  });
+
+  final HomeComment comment;
+  final bool expanded;
+  final VoidCallback onToggle;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+
+  @override
+  Widget build(BuildContext context) {
+    final replies = comment.replies;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _CommentTile(
+          comment: comment,
+          onMenu: onMenu,
+          replyLabel: replies.isEmpty
+              ? null
+              : (expanded ? 'Collapse' : 'View ${replies.length} more replies'),
+          onReplies: replies.isEmpty ? null : onToggle,
+        ),
+        if (expanded)
+          for (final reply in replies)
+            Padding(
+              padding: const EdgeInsets.only(left: 36, top: 12),
+              child: _CommentTile(comment: reply, nested: true, onMenu: onMenu),
+            ),
+      ],
     );
   }
 }
 
 class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.comment});
+  const _CommentTile({
+    required this.comment,
+    required this.onMenu,
+    this.nested = false,
+    this.replyLabel,
+    this.onReplies,
+  });
 
   final HomeComment comment;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+  final bool nested;
+  final String? replyLabel;
+  final VoidCallback? onReplies;
 
   @override
   Widget build(BuildContext context) {
+    final avatar = nested ? 28.0 : 48.0;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipOval(
           child: Image.asset(
             comment.avatarAsset,
-            width: 40,
-            height: 40,
+            width: avatar,
+            height: avatar,
             fit: BoxFit.cover,
           ),
         ),
@@ -605,35 +776,56 @@ class _CommentTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
                     comment.author,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'GeneralSans-Semibold',
-                      fontSize: 16,
+                      fontSize: nested ? 14 : 16,
                       fontWeight: FontWeight.w600,
+                      height: 1.2,
                       color: KolekColors.neutral900,
                     ),
                   ),
                   const SizedBox(width: 16),
                   Text(
                     comment.age,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'IBMPlexMono-Regular',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: KolekColors.neutral400,
+                      fontSize: nested ? 12 : 14,
+                      letterSpacing: -1,
+                      height: 1.2,
+                      color: KolekColors.neutral500,
                     ),
                   ),
+                  if (nested) ...[
+                    const Spacer(),
+                    Builder(
+                      builder: (buttonContext) => InkWell(
+                        onTap: () => onMenu(buttonContext, comment),
+                        borderRadius: BorderRadius.circular(12),
+                        child: const Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Icon(
+                            Icons.more_horiz,
+                            size: 18,
+                            color: KolekColors.neutral500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
               const SizedBox(height: 6),
               Text(
-                comment.message.replaceAll('\n', ' '),
+                comment.message,
                 style: const TextStyle(
                   fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 12,
-                  height: 1.45,
+                  fontSize: 14,
+                  height: 20 / 14,
                   color: KolekColors.neutral500,
                 ),
               ),
@@ -644,17 +836,34 @@ class _CommentTile extends StatelessWidget {
                   fontFamily: 'IBMPlexMono-Medium',
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
+                  height: 16 / 14,
                   color: KolekColors.neutral900,
                 ),
               ),
-              if (comment.replyCount > 0) ...[
-                const SizedBox(height: 10),
-                Text(
-                  '———  View ${comment.replyCount} more replies',
-                  style: const TextStyle(
-                    fontFamily: 'IBMPlexMono-Regular',
-                    fontSize: 12,
-                    color: KolekColors.neutral400,
+              if (replyLabel != null) ...[
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: onReplies,
+                  behavior: HitTestBehavior.opaque,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 1,
+                        color: KolekColors.neutral200,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        replyLabel!,
+                        style: const TextStyle(
+                          fontFamily: 'IBMPlexMono-Regular',
+                          fontSize: 12,
+                          height: 1,
+                          letterSpacing: -1,
+                          color: KolekColors.neutral400,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -666,6 +875,106 @@ class _CommentTile extends StatelessWidget {
   }
 }
 
+class _AnchoredMenuEntry<T> {
+  const _AnchoredMenuEntry(this.label, this.value, {this.destructive = false});
+
+  final String label;
+  final T value;
+  final bool destructive;
+}
+
+Future<T?> _showAnchoredMenu<T>(
+  BuildContext context,
+  List<_AnchoredMenuEntry<T>> entries,
+) {
+  final button = context.findRenderObject() as RenderBox?;
+  final overlayState = Overlay.of(context);
+  final overlay = overlayState.context.findRenderObject() as RenderBox?;
+  if (button == null || overlay == null) return Future.value();
+
+  final offset = button.localToGlobal(Offset.zero, ancestor: overlay);
+  final completer = Completer<T?>();
+  late OverlayEntry entry;
+
+  void close([T? value]) {
+    if (!completer.isCompleted) completer.complete(value);
+    entry.remove();
+  }
+
+  final top = offset.dy + button.size.height + 6;
+  final right = overlay.size.width - offset.dx - button.size.width;
+
+  entry = OverlayEntry(
+    builder: (context) {
+      return Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: close,
+              child: const ColoredBox(color: Colors.transparent),
+            ),
+          ),
+          Positioned(
+            top: top,
+            right: right < 8 ? 8 : right,
+            child: Material(
+              color: Colors.white,
+              elevation: 8,
+              shadowColor: Colors.black26,
+              borderRadius: BorderRadius.circular(10),
+              clipBehavior: Clip.antiAlias,
+              child: SizedBox(
+                width: 148,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var i = 0; i < entries.length; i++) ...[
+                      if (i > 0)
+                        const Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: KolekColors.neutral200,
+                        ),
+                      InkWell(
+                        onTap: () => close(entries[i].value),
+                        child: SizedBox(
+                          height: 40,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                entries[i].label,
+                                style: TextStyle(
+                                  fontFamily: 'GeneralSans-Medium',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: entries[i].destructive
+                                      ? const Color(0xFFFF3B30)
+                                      : KolekColors.neutral900,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+
+  overlayState.insert(entry);
+  return completer.future;
+}
+
 class _CommentComposer extends StatelessWidget {
   const _CommentComposer({required this.avatarAsset});
 
@@ -673,72 +982,70 @@ class _CommentComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottom = MediaQuery.paddingOf(context).bottom;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      padding: EdgeInsets.fromLTRB(20, 12, 20, 12 + bottom),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipOval(
             child: Image.asset(
               avatarAsset,
-              width: 36,
-              height: 36,
+              width: 40,
+              height: 40,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 8),
           Expanded(
-            child: SizedBox(
-              height: 44,
-              child: TextField(
-                style: const TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 12,
-                  color: KolekColors.neutral900,
-                ),
-                decoration: InputDecoration(
-                  isDense: true,
-                  hintText: 'What do you think of this?',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'IBMPlexMono-Regular',
-                    fontSize: 12,
-                    color: KolekColors.neutral400,
-                  ),
-                  contentPadding: const EdgeInsets.fromLTRB(16, 12, 48, 12),
-                  filled: true,
-                  fillColor: Colors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    borderSide: const BorderSide(
-                      color: KolekColors.neutral300,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(999),
-                    borderSide: const BorderSide(
-                      color: KolekColors.neutral400,
-                    ),
-                  ),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Material(
-                      color: KolekColors.blue600,
-                      shape: const CircleBorder(),
-                      child: InkWell(
-                        customBorder: const CircleBorder(),
-                        onTap: () {},
-                        child: const SizedBox(
-                          width: 34,
-                          height: 34,
-                          child: Icon(
-                            Icons.arrow_upward,
-                            size: 18,
-                            color: Colors.white,
-                          ),
+            child: Container(
+              height: 40,
+              padding: const EdgeInsets.only(left: 16, right: 4),
+              decoration: BoxDecoration(
+                color: KolekColors.neutral100,
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(color: KolekColors.neutral200),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 14,
+                        color: KolekColors.neutral900,
+                      ),
+                      decoration: const InputDecoration(
+                        isCollapsed: true,
+                        border: InputBorder.none,
+                        hintText: 'What do you think of this?',
+                        hintStyle: TextStyle(
+                          fontFamily: 'IBMPlexMono-Regular',
+                          fontSize: 14,
+                          color: KolekColors.neutral500,
                         ),
                       ),
                     ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Material(
+                    color: const Color(0xFF2B7FFF),
+                    shape: const CircleBorder(),
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () {},
+                      child: const SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: Icon(
+                          Icons.arrow_upward,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

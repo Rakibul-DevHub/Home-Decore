@@ -12,6 +12,7 @@ class HomePost {
     this.year,
     this.showBag = true,
     this.isAuction = false,
+    this.ownedByViewer = false,
   });
 
   final String id;
@@ -26,22 +27,45 @@ class HomePost {
   final String shareCount;
   final bool showBag;
   final bool isAuction;
+  final bool ownedByViewer;
 }
 
 class HomeComment {
   const HomeComment({
+    required this.id,
     required this.author,
     required this.age,
     required this.message,
     this.avatarAsset = 'assets/images/demo_user.png',
-    this.replyCount = 17,
+    this.isMine = false,
+    this.replies = const [],
+    this.hiddenReplyCount = 0,
   });
 
+  final String id;
   final String author;
   final String age;
   final String message;
   final String avatarAsset;
-  final int replyCount;
+  final bool isMine;
+  final List<HomeComment> replies;
+  final int hiddenReplyCount;
+
+  HomeComment copyWith({
+    List<HomeComment>? replies,
+    int? hiddenReplyCount,
+  }) {
+    return HomeComment(
+      id: id,
+      author: author,
+      age: age,
+      message: message,
+      avatarAsset: avatarAsset,
+      isMine: isMine,
+      replies: replies ?? this.replies,
+      hiddenReplyCount: hiddenReplyCount ?? this.hiddenReplyCount,
+    );
+  }
 }
 
 enum HomeMenuAction { savePost, message, report }
@@ -72,6 +96,7 @@ abstract final class HomeData {
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
+      ownedByViewer: true,
     ),
     HomePost(
       id: 'quiet-forms',
@@ -116,26 +141,26 @@ abstract final class HomeData {
     ),
   ];
 
-  static const comments = [
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
-    HomeComment(
-      author: 'Darren Lee',
-      age: '3h ago',
-      message: 'The details here really draw me in,\nwonderful work.',
-    ),
+  static const _commentBody =
+      'The details here really draw me in, wonderful work.';
+
+  static final List<HomeComment> comments = [
+    for (var i = 0; i < 3; i++)
+      HomeComment(
+        id: 'c$i',
+        author: 'Darren Lee',
+        age: '3h ago',
+        message: _commentBody,
+        replies: [
+          for (var reply = 0; reply < 17; reply++)
+            HomeComment(
+              id: 'c${i}r$reply',
+              author: 'Rakib Khan',
+              age: '3h ago',
+              message: _commentBody,
+              isMine: true,
+            ),
+        ],
+      ),
   ];
 }
