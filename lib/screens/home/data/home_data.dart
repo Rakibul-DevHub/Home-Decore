@@ -79,6 +79,8 @@ class HomeMenuItem {
 
 abstract final class HomeData {
   static const viewerName = 'Rakib Khan';
+  static const postDescription =
+      'Exploring movement and stillness. Each curve holds a moment of balance. Fired slowly so the surface stays quiet, with a soft edge that catches the light.';
   static const menuItems = [
     HomeMenuItem(action: HomeMenuAction.savePost, label: 'Save Post'),
     HomeMenuItem(action: HomeMenuAction.message, label: 'Message'),
@@ -92,8 +94,7 @@ abstract final class HomeData {
       location: 'Dhaka, Bangladesh',
       image: 'assets/images/home_post_1.png',
       title: 'Vase Series',
-      description:
-          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      description: postDescription,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
@@ -105,8 +106,7 @@ abstract final class HomeData {
       location: 'Dhaka, Bangladesh',
       image: 'assets/images/home_post_2.png',
       title: 'Vase Series',
-      description:
-          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      description: postDescription,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
@@ -121,8 +121,7 @@ abstract final class HomeData {
       title: 'Vase Series',
       year: '2026',
       showBag: false,
-      description:
-          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      description: postDescription,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
@@ -134,8 +133,7 @@ abstract final class HomeData {
       image: 'assets/images/home_post_4.png',
       title: 'Vase Series',
       year: '2026',
-      description:
-          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      description: postDescription,
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',

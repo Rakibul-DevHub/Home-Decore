@@ -228,28 +228,66 @@ class _FeedCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Text(
-                post.description,
-                style: const TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 12,
-                  height: 20 / 12,
-                  color: KolekColors.neutral500,
-                ),
-              ),
-              const Text(
-                '...more',
-                style: TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 10,
-                  height: 20 / 10,
-                  color: KolekColors.neutral500,
-                ),
-              ),
+              _PostDescription(text: post.description),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PostDescription extends StatefulWidget {
+  const _PostDescription({required this.text});
+
+  final String text;
+
+  @override
+  State<_PostDescription> createState() => _PostDescriptionState();
+}
+
+class _PostDescriptionState extends State<_PostDescription> {
+  static const _body = TextStyle(
+    fontFamily: 'IBMPlexMono-Regular',
+    fontSize: 12,
+    height: 20 / 12,
+    color: KolekColors.neutral500,
+  );
+
+  static const _action = TextStyle(
+    fontFamily: 'IBMPlexMono-Regular',
+    fontSize: 10,
+    height: 20 / 10,
+    color: KolekColors.neutral500,
+  );
+
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.topCenter,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.text,
+            maxLines: _expanded ? null : 2,
+            overflow: _expanded ? TextOverflow.visible : TextOverflow.clip,
+            style: _body,
+          ),
+          GestureDetector(
+            onTap: () => setState(() => _expanded = !_expanded),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2, bottom: 2),
+              child: Text(_expanded ? 'see less' : '...more', style: _action),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
