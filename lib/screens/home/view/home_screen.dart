@@ -9,29 +9,32 @@ import '../../../routes/app_route.dart';
 import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/kolek_widgets.dart';
-import '../cubit/home_cubit.dart';
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
+import '../bloc/home_state.dart';
 import '../data/home_data.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<void> _showComments(BuildContext context, String postId) async {
-    final cubit = context.read<HomeCubit>()..openComments(postId);
+    final bloc = context.read<HomeBloc>()
+      ..add(HomeCommentsOpened(postId));
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const _CommentsSheet(),
     );
-    cubit.closeComments();
+    bloc.add(const HomeCommentsClosed());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: KolekColors.neutral50,
       appBar: const _KolekHeader(),
-      body: BlocBuilder<HomeCubit, HomeState>(
+      body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) => ListView.separated(
           itemCount: HomeData.posts.length,
           separatorBuilder: (_, _) =>
@@ -41,7 +44,8 @@ class HomeScreen extends StatelessWidget {
             return _FeedCard(
               post: post,
               saved: state.savedPostIds.contains(post.id),
-              onSaved: () => context.read<HomeCubit>().toggleSaved(post.id),
+              onSaved: () =>
+                  context.read<HomeBloc>().add(HomeSavedToggled(post.id)),
               onComments: () => _showComments(context, post.id),
             );
           },
@@ -62,8 +66,8 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: Colors.white,
-      centerTitle: true,
+        backgroundColor: KolekColors.neutral50,
+        centerTitle: true,
       leading: IconButton(
         onPressed: () async {
           final result = await Navigator.of(context).pushNamed(AppRoute.search);
@@ -232,11 +236,11 @@ class _FeedCard extends StatelessWidget {
             ],
           ),
         ),
-        AspectRatio(
-          aspectRatio: 1.15,
+        SizedBox(
+          height: 300,
+          width: double.infinity,
           child: Image.asset(
             post.image,
-            width: double.infinity,
             fit: BoxFit.cover,
           ),
         ),
@@ -250,12 +254,23 @@ class _FeedCard extends StatelessWidget {
                   Text(
                     post.title,
                     style: const TextStyle(
-                      fontFamily: 'GeneralSans-Regular',
+                      fontFamily: 'GeneralSans-Medium',
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: KolekColors.neutral900,
                     ),
                   ),
+                  if (post.year != null) ...[
+                    const SizedBox(width: 16),
+                    Text(
+                      post.year!,
+                      style: const TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 12,
+                        color: KolekColors.neutral500,
+                      ),
+                    ),
+                  ],
                   const Spacer(),
                   _StatIcon(
                     asset: 'assets/icons/react_border.svg',
@@ -292,43 +307,45 @@ class _FeedCard extends StatelessWidget {
                       color: KolekColors.neutral600,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  SvgPicture.asset(
-                    'assets/icons/cart.svg',
-                    width: 18,
-                    height: 18,
-                    colorFilter: const ColorFilter.mode(
-                      KolekColors.neutral700,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: post.description,
-                      style: const TextStyle(
-                        fontFamily: 'IBMPlexMono-Regular',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        height: 1.45,
-                        color: KolekColors.neutral600,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: ' ...more',
-                      style: TextStyle(
-                        fontFamily: 'IBMPlexMono-Regular',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        height: 1.45,
-                        color: KolekColors.neutral400,
+                  if (post.isAuction || post.showBag) ...[
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: post.showBag
+                          ? () => Navigator.of(context)
+                              .pushNamed(AppRoute.productDetails)
+                          : null,
+                      child: SvgPicture.asset(
+                        post.isAuction
+                            ? 'assets/icons/auction.svg'
+                            : 'assets/icons/cart.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(
+                          KolekColors.neutral700,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
                   ],
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                post.description,
+                style: const TextStyle(
+                  fontFamily: 'IBMPlexMono-Regular',
+                  fontSize: 12,
+                  height: 20 / 12,
+                  color: KolekColors.neutral500,
+                ),
+              ),
+              const Text(
+                '...more',
+                style: TextStyle(
+                  fontFamily: 'IBMPlexMono-Regular',
+                  fontSize: 10,
+                  height: 20 / 10,
+                  color: KolekColors.neutral500,
                 ),
               ),
             ],

@@ -9,6 +9,9 @@ class HomePost {
     required this.likes,
     required this.commentCount,
     required this.shareCount,
+    this.year,
+    this.showBag = true,
+    this.isAuction = false,
   });
 
   final String id;
@@ -16,10 +19,13 @@ class HomePost {
   final String location;
   final String image;
   final String title;
+  final String? year;
   final String description;
   final String likes;
   final String commentCount;
   final String shareCount;
+  final bool showBag;
+  final bool isAuction;
 }
 
 class HomeComment {
@@ -59,27 +65,54 @@ abstract final class HomeData {
       id: 'vase-series',
       author: 'Ronald Richards',
       location: 'Dhaka, Bangladesh',
-      image: 'assets/images/vase_series.png',
+      image: 'assets/images/home_post_1.png',
       title: 'Vase Series',
       description:
-          'Exploring movement and stillness. Each curve holds a moment of '
-          'balance.',
+          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
       likes: '2,841',
       commentCount: '147',
       shareCount: '89',
     ),
     HomePost(
       id: 'quiet-forms',
-      author: 'Wade Warren',
+      author: 'Ronald Richards',
       location: 'Dhaka, Bangladesh',
-      image: 'assets/images/vase_series_1.png',
-      title: 'Quiet Forms',
+      image: 'assets/images/home_post_2.png',
+      title: 'Vase Series',
       description:
-          'A study in texture, form, and patient craftsmanship across quiet '
-          'spaces.',
-      likes: '1,204',
-      commentCount: '86',
-      shareCount: '41',
+          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
+      showBag: false,
+      isAuction: true,
+    ),
+    HomePost(
+      id: 'theresa-vase',
+      author: 'Theresa Webb',
+      location: 'Dhaka, Bangladesh',
+      image: 'assets/images/home_post_3.png',
+      title: 'Vase Series',
+      year: '2026',
+      showBag: false,
+      description:
+          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
+    ),
+    HomePost(
+      id: 'jacob-vase',
+      author: 'Jacob Jones',
+      location: 'Dhaka, Bangladesh',
+      image: 'assets/images/home_post_4.png',
+      title: 'Vase Series',
+      year: '2026',
+      description:
+          'Exploring movement and stillness.\nEach curve holds a moment of balance.',
+      likes: '2,841',
+      commentCount: '147',
+      shareCount: '89',
     ),
   ];
 
