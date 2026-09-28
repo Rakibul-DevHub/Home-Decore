@@ -50,7 +50,7 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
           child: child ?? const SizedBox.shrink(),
         );
       },
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.mainShell,
       routes: AppRoutes.routes,
       onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
     );

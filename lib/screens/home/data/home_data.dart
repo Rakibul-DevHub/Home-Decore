@@ -37,6 +37,7 @@ class HomeComment {
     required this.age,
     required this.message,
     this.avatarAsset = 'assets/images/demo_user.png',
+    this.mention,
     this.isMine = false,
     this.replies = const [],
     this.hiddenReplyCount = 0,
@@ -46,20 +47,19 @@ class HomeComment {
   final String author;
   final String age;
   final String message;
+  final String? mention;
   final String avatarAsset;
   final bool isMine;
   final List<HomeComment> replies;
   final int hiddenReplyCount;
 
-  HomeComment copyWith({
-    List<HomeComment>? replies,
-    int? hiddenReplyCount,
-  }) {
+  HomeComment copyWith({List<HomeComment>? replies, int? hiddenReplyCount}) {
     return HomeComment(
       id: id,
       author: author,
       age: age,
       message: message,
+      mention: mention,
       avatarAsset: avatarAsset,
       isMine: isMine,
       replies: replies ?? this.replies,
@@ -78,6 +78,7 @@ class HomeMenuItem {
 }
 
 abstract final class HomeData {
+  static const viewerName = 'Rakib Khan';
   static const menuItems = [
     HomeMenuItem(action: HomeMenuAction.savePost, label: 'Save Post'),
     HomeMenuItem(action: HomeMenuAction.message, label: 'Message'),

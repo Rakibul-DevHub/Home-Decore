@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../routes/app_route.dart';
@@ -519,14 +520,83 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   static const _collapsed = 0.68;
 
   final _sheet = DraggableScrollableController();
+  final _composer = TextEditingController();
+  final _composerFocus = FocusNode();
   final _expanded = <String>{};
-  double _extent = _collapsed;
+  HomeComment? _replyTo;
   late List<HomeComment> _comments = List.of(HomeData.comments);
 
   @override
   void dispose() {
     _sheet.dispose();
+    _composer.dispose();
+    _composerFocus.dispose();
     super.dispose();
+  }
+
+  void _startReply(HomeComment comment) {
+    final rootId = _topLevelId(comment.id);
+    setState(() {
+      _replyTo = comment;
+      if (rootId != null) _expanded.add(rootId);
+    });
+    if (rootId != null) _fitSheet();
+    _composerFocus.requestFocus();
+  }
+
+  void _submit() {
+    final text = _composer.text.trim();
+    if (text.isEmpty) return;
+    final replyTo = _replyTo;
+    final reply = HomeComment(
+      id: 'local-${DateTime.now().microsecondsSinceEpoch}',
+      author: HomeData.viewerName,
+      age: 'Just now',
+      message: text,
+      mention: replyTo?.author,
+      isMine: true,
+    );
+    setState(() {
+      if (replyTo == null) {
+        _comments = [..._comments, reply];
+      } else {
+        _comments = _addReply(_comments, replyTo.id, reply);
+        final rootId = _topLevelId(replyTo.id);
+        if (rootId != null) _expanded.add(rootId);
+      }
+      _composer.clear();
+      _replyTo = null;
+    });
+    _fitSheet();
+    _composerFocus.unfocus();
+  }
+
+  String? _topLevelId(String id) {
+    for (final comment in _comments) {
+      if (comment.id == id || _contains(comment, id)) return comment.id;
+    }
+    return null;
+  }
+
+  bool _contains(HomeComment comment, String id) {
+    for (final reply in comment.replies) {
+      if (reply.id == id || _contains(reply, id)) return true;
+    }
+    return false;
+  }
+
+  List<HomeComment> _addReply(
+    List<HomeComment> items,
+    String parentId,
+    HomeComment reply,
+  ) {
+    return [
+      for (final item in items)
+        if (item.id == parentId)
+          item.copyWith(replies: [...item.replies, reply])
+        else
+          item.copyWith(replies: _addReply(item.replies, parentId, reply)),
+    ];
   }
 
   void _remove(String id) {
@@ -600,107 +670,133 @@ class _CommentsSheetState extends State<_CommentsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final view = View.of(context);
+    final topInset = view.viewPadding.top / view.devicePixelRatio;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    final full = _extent > 0.96;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomInset),
-      child: NotificationListener<DraggableScrollableNotification>(
-        onNotification: (notification) {
-          if ((notification.extent - _extent).abs() > 0.01) {
-            setState(() => _extent = notification.extent);
-          }
-          return false;
-        },
-        child: DraggableScrollableSheet(
-          controller: _sheet,
-          expand: false,
-          snap: true,
-          initialChildSize: _collapsed,
-          minChildSize: 0.45,
-          maxChildSize: 1,
-          snapSizes: const [_collapsed],
-          builder: (context, scrollController) {
-            return DecoratedBox(
-              decoration: BoxDecoration(
-                color: KolekColors.neutral50,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(full ? 0 : 32),
-                ),
-              ),
-              child: SafeArea(
-                top: full,
-                bottom: false,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        controller: scrollController,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsets.zero,
-                        children: [
-                          const SizedBox(height: 16),
-                          Center(
-                            child: Container(
-                              width: 40,
-                              height: 2,
-                              decoration: BoxDecoration(
-                                color: KolekColors.neutral500,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
+      padding: EdgeInsets.only(top: topInset, bottom: bottomInset),
+      child: DraggableScrollableSheet(
+        controller: _sheet,
+        expand: false,
+        snap: true,
+        initialChildSize: _collapsed,
+        minChildSize: 0.45,
+        maxChildSize: 1,
+        snapSizes: const [_collapsed],
+        builder: (context, scrollController) {
+          return ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+            child: ColoredBox(
+              color: KolekColors.neutral50,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: CustomScrollView(
+                      controller: scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        const SliverPersistentHeader(
+                          pinned: true,
+                          delegate: _CommentsHeaderDelegate(),
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                if (index.isOdd) {
+                                  return const SizedBox(height: 12);
+                                }
+                                final comment = _comments[index ~/ 2];
+                                return _CommentThread(
+                                  comment: comment,
+                                  expanded: _expanded.contains(comment.id),
+                                  onToggle: () => _toggleReplies(comment.id),
+                                  onMenu: (context, target) =>
+                                      _openCommentMenu(context, target),
+                                  onReply: _startReply,
+                                );
+                              },
+                              childCount: _comments.isEmpty
+                                  ? 0
+                                  : _comments.length * 2 - 1,
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Comments',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'GeneralSans-Medium',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              height: 1,
-                              color: KolekColors.neutral900,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Divider(
-                            height: 1,
-                            thickness: 1,
-                            color: KolekColors.neutral200,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                            child: Column(
-                              children: [
-                                for (var i = 0; i < _comments.length; i++) ...[
-                                  if (i > 0) const SizedBox(height: 12),
-                                  _CommentThread(
-                                    comment: _comments[i],
-                                    expanded: _expanded.contains(
-                                      _comments[i].id,
-                                    ),
-                                    onToggle: () =>
-                                        _toggleReplies(_comments[i].id),
-                                    onMenu: (context, target) =>
-                                        _openCommentMenu(context, target),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    const _CommentComposer(avatarAsset: _composerAvatar),
-                  ],
-                ),
+                  ),
+                  _CommentComposer(
+                    avatarAsset: _composerAvatar,
+                    controller: _composer,
+                    focusNode: _composerFocus,
+                    mention: _replyTo?.author,
+                    onSubmit: _submit,
+                    onClearMention: () => setState(() => _replyTo = null),
+                  ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
+}
+
+class _CommentsHeaderDelegate extends SliverPersistentHeaderDelegate {
+  const _CommentsHeaderDelegate();
+
+  static const _extent = 65.0;
+
+  @override
+  double get minExtent => _extent;
+
+  @override
+  double get maxExtent => _extent;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return const ColoredBox(
+      color: KolekColors.neutral50,
+      child: Column(
+        children: [
+          SizedBox(height: 30),
+          Center(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: KolekColors.neutral500,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              child: SizedBox(width: 40, height: 2),
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Comments',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'GeneralSans-Medium',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              height: 1,
+              color: KolekColors.neutral900,
+            ),
+          ),
+          SizedBox(height: 8),
+          Divider(height: 1, thickness: 1, color: KolekColors.neutral200),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _CommentsHeaderDelegate oldDelegate) => false;
 }
 
 class _CommentThread extends StatelessWidget {
@@ -709,12 +805,14 @@ class _CommentThread extends StatelessWidget {
     required this.expanded,
     required this.onToggle,
     required this.onMenu,
+    required this.onReply,
   });
 
   final HomeComment comment;
   final bool expanded;
   final VoidCallback onToggle;
   final void Function(BuildContext context, HomeComment comment) onMenu;
+  final ValueChanged<HomeComment> onReply;
 
   @override
   Widget build(BuildContext context) {
@@ -725,6 +823,7 @@ class _CommentThread extends StatelessWidget {
         _CommentTile(
           comment: comment,
           onMenu: onMenu,
+          onReply: () => onReply(comment),
           replyLabel: replies.isEmpty
               ? null
               : (expanded ? 'Collapse' : 'View ${replies.length} more replies'),
@@ -734,8 +833,48 @@ class _CommentThread extends StatelessWidget {
           for (final reply in replies)
             Padding(
               padding: const EdgeInsets.only(left: 36, top: 12),
-              child: _CommentTile(comment: reply, nested: true, onMenu: onMenu),
+              child: _NestedReply(
+                comment: reply,
+                onMenu: onMenu,
+                onReply: onReply,
+              ),
             ),
+      ],
+    );
+  }
+}
+
+class _NestedReply extends StatelessWidget {
+  const _NestedReply({
+    required this.comment,
+    required this.onMenu,
+    required this.onReply,
+  });
+
+  final HomeComment comment;
+  final void Function(BuildContext context, HomeComment comment) onMenu;
+  final ValueChanged<HomeComment> onReply;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _CommentTile(
+          comment: comment,
+          nested: true,
+          onMenu: onMenu,
+          onReply: () => onReply(comment),
+        ),
+        for (final reply in comment.replies)
+          Padding(
+            padding: const EdgeInsets.only(left: 36, top: 12),
+            child: _NestedReply(
+              comment: reply,
+              onMenu: onMenu,
+              onReply: onReply,
+            ),
+          ),
       ],
     );
   }
@@ -745,6 +884,7 @@ class _CommentTile extends StatelessWidget {
   const _CommentTile({
     required this.comment,
     required this.onMenu,
+    required this.onReply,
     this.nested = false,
     this.replyLabel,
     this.onReplies,
@@ -752,6 +892,7 @@ class _CommentTile extends StatelessWidget {
 
   final HomeComment comment;
   final void Function(BuildContext context, HomeComment comment) onMenu;
+  final VoidCallback onReply;
   final bool nested;
   final String? replyLabel;
   final VoidCallback? onReplies;
@@ -820,24 +961,20 @@ class _CommentTile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              Text(
-                comment.message,
-                style: const TextStyle(
-                  fontFamily: 'IBMPlexMono-Regular',
-                  fontSize: 14,
-                  height: 20 / 14,
-                  color: KolekColors.neutral500,
-                ),
-              ),
+              _CommentBody(comment: comment),
               const SizedBox(height: 8),
-              const Text(
-                'Reply',
-                style: TextStyle(
-                  fontFamily: 'IBMPlexMono-Medium',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  height: 16 / 14,
-                  color: KolekColors.neutral900,
+              GestureDetector(
+                onTap: onReply,
+                behavior: HitTestBehavior.opaque,
+                child: const Text(
+                  'Reply',
+                  style: TextStyle(
+                    fontFamily: 'IBMPlexMono-Medium',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    height: 16 / 14,
+                    color: KolekColors.neutral900,
+                  ),
                 ),
               ),
               if (replyLabel != null) ...[
@@ -975,10 +1112,58 @@ Future<T?> _showAnchoredMenu<T>(
   return completer.future;
 }
 
+class _CommentBody extends StatelessWidget {
+  const _CommentBody({required this.comment});
+
+  final HomeComment comment;
+
+  static const _body = TextStyle(
+    fontFamily: 'IBMPlexMono-Regular',
+    fontSize: 14,
+    height: 20 / 14,
+    color: KolekColors.neutral500,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final mention = comment.mention;
+    if (mention == null) return Text(comment.message, style: _body);
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: mention,
+            style: const TextStyle(
+              fontFamily: 'GeneralSans-Semibold',
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              height: 20 / 14,
+              color: KolekColors.neutral900,
+            ),
+          ),
+          TextSpan(text: ' ${comment.message}', style: _body),
+        ],
+      ),
+    );
+  }
+}
+
 class _CommentComposer extends StatelessWidget {
-  const _CommentComposer({required this.avatarAsset});
+  const _CommentComposer({
+    required this.avatarAsset,
+    required this.controller,
+    required this.focusNode,
+    required this.onSubmit,
+    required this.onClearMention,
+    this.mention,
+  });
 
   final String avatarAsset;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final String? mention;
+  final VoidCallback onSubmit;
+  final VoidCallback onClearMention;
 
   @override
   Widget build(BuildContext context) {
@@ -1008,21 +1193,51 @@ class _CommentComposer extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Expanded(
-                    child: TextField(
+                  if (mention != null) ...[
+                    Text(
+                      mention!,
                       style: const TextStyle(
-                        fontFamily: 'IBMPlexMono-Regular',
+                        fontFamily: 'GeneralSans-Semibold',
                         fontSize: 14,
+                        fontWeight: FontWeight.w600,
                         color: KolekColors.neutral900,
                       ),
-                      decoration: const InputDecoration(
-                        isCollapsed: true,
-                        border: InputBorder.none,
-                        hintText: 'What do you think of this?',
-                        hintStyle: TextStyle(
+                    ),
+                    const SizedBox(width: 6),
+                  ],
+                  Expanded(
+                    child: Focus(
+                      onKeyEvent: (node, event) {
+                        if (mention != null &&
+                            controller.text.isEmpty &&
+                            event is KeyDownEvent &&
+                            event.logicalKey == LogicalKeyboardKey.backspace) {
+                          onClearMention();
+                          return KeyEventResult.handled;
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                      child: TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => onSubmit(),
+                        style: const TextStyle(
                           fontFamily: 'IBMPlexMono-Regular',
                           fontSize: 14,
-                          color: KolekColors.neutral500,
+                          color: KolekColors.neutral900,
+                        ),
+                        decoration: InputDecoration(
+                          isCollapsed: true,
+                          border: InputBorder.none,
+                          hintText: mention == null
+                              ? 'What do you think of this?'
+                              : 'Add a comment',
+                          hintStyle: const TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 14,
+                            color: KolekColors.neutral500,
+                          ),
                         ),
                       ),
                     ),
@@ -1033,7 +1248,7 @@ class _CommentComposer extends StatelessWidget {
                     shape: const CircleBorder(),
                     child: InkWell(
                       customBorder: const CircleBorder(),
-                      onTap: () {},
+                      onTap: onSubmit,
                       child: const SizedBox(
                         width: 32,
                         height: 32,
