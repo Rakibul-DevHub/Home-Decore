@@ -4,18 +4,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../routes/app_route.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../widgets/bottom_nav.dart';
-import '../../../widgets/kolek_widgets.dart';
 import '../../home/view/home_screen.dart';
 import '../../messages/view/messages_screen.dart';
 import '../../profile/view/profile_screen.dart';
 import '../../shop/view/shop_screen.dart';
 import '../cubit/main_shell_cubit.dart';
-import '../data/main_shell_data.dart';
 
-class MainShellScreen extends StatelessWidget {
+class MainShellScreen extends StatefulWidget {
   const MainShellScreen({super.key});
 
-  void _onNavSelected(BuildContext context, int index) {
+  @override
+  State<MainShellScreen> createState() => _MainShellScreenState();
+}
+
+class _MainShellScreenState extends State<MainShellScreen> {
+  static const _tabs = [0, 1, 3, 4];
+
+  late final PageController _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    final index = context.read<MainShellCubit>().state.selectedIndex;
+    _pages = PageController(initialPage: _pageOf(index));
+  }
+
+  @override
+  void dispose() {
+    _pages.dispose();
+    super.dispose();
+  }
+
+  int _pageOf(int navIndex) {
+    final page = _tabs.indexOf(navIndex);
+    return page < 0 ? 0 : page;
+  }
+
+  void _onNavSelected(int index) {
     if (index == 2) {
       Navigator.of(context).pushNamed(AppRoute.create);
       return;
@@ -23,26 +48,40 @@ class MainShellScreen extends StatelessWidget {
     context.read<MainShellCubit>().switchTab(index);
   }
 
+  void _onPageChanged(int page) {
+    context.read<MainShellCubit>().switchTab(_tabs[page]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MainShellCubit, MainShellState>(
+    return BlocConsumer<MainShellCubit, MainShellState>(
+      listenWhen: (previous, current) =>
+          previous.selectedIndex != current.selectedIndex,
+      listener: (context, state) {
+        final page = _pageOf(state.selectedIndex);
+        if (!_pages.hasClients || _pages.page?.round() == page) return;
+        _pages.animateToPage(
+          page,
+          duration: const Duration(milliseconds: 280),
+          curve: Curves.easeOutCubic,
+        );
+      },
       builder: (context, state) {
-        final selectedIndex = state.selectedIndex;
         return Scaffold(
           backgroundColor: KolekColors.neutral50,
-          body: IndexedStack(
-            index: selectedIndex,
-            children: [
-              const HomeScreen(),
-              const ShopScreen(),
-              _PlaceholderScreen(title: MainShellData.tabLabels[2]),
-              const MessagesScreen(),
-              const ProfileScreen(),
+          body: PageView(
+            controller: _pages,
+            onPageChanged: _onPageChanged,
+            children: const [
+              _KeptTab(child: HomeScreen()),
+              _KeptTab(child: ShopScreen()),
+              _KeptTab(child: MessagesScreen()),
+              _KeptTab(child: ProfileScreen()),
             ],
           ),
           bottomNavigationBar: KolekBottomNav(
-            selectedIndex: selectedIndex,
-            onSelected: (index) => _onNavSelected(context, index),
+            selectedIndex: state.selectedIndex,
+            onSelected: _onNavSelected,
           ),
         );
       },
@@ -50,17 +89,22 @@ class MainShellScreen extends StatelessWidget {
   }
 }
 
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title});
+class _KeptTab extends StatefulWidget {
+  const _KeptTab({required this.child});
 
-  final String title;
+  final Widget child;
+
+  @override
+  State<_KeptTab> createState() => _KeptTabState();
+}
+
+class _KeptTabState extends State<_KeptTab> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Center(
-        child: Text(title, style: KolekText.sans(size: 18)),
-      ),
-    );
+    super.build(context);
+    return widget.child;
   }
 }
