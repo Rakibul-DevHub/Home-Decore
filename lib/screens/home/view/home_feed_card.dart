@@ -124,8 +124,8 @@ class _FeedCard extends StatelessWidget {
                         saved
                             ? 'assets/icons/save_active.svg'
                             : 'assets/icons/save_post.svg',
-                        width: saved ? 16 : 22,
-                        height: saved ? 16 : 22,
+                        width: 22,
+                        height: 22,
                         colorFilter: saved ? null : colors.iconFilter,
                       ),
                     ),

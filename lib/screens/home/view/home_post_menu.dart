@@ -90,8 +90,8 @@ class _PostMenuIcon extends StatelessWidget {
           child: saved
               ? SvgPicture.asset(
                   'assets/icons/save_active.svg',
-                  width: 16,
-                  height: 16,
+                  width: 22,
+                  height: 22,
                 )
               : SvgPicture.string(
                   _saveIcon,
