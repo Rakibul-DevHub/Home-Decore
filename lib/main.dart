@@ -48,7 +48,7 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
       builder: (context, child) {
         return KolekFitLayout(child: child ?? const SizedBox.shrink());
       },
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.mainShell,
       routes: AppRoutes.routes,
       onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
     );

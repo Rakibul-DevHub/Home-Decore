@@ -8,12 +8,13 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = _HomeColors.of(context);
     return AppBar(
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: colors.canvas,
-      systemOverlayStyle: colors.overlay,
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: AppearancePage.background(context),
+      foregroundColor: AppearancePage.foreground(context),
+      systemOverlayStyle: AppearancePage.overlay(context),
       centerTitle: true,
       leading: IconButton(
         onPressed: () async {
@@ -26,14 +27,13 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
           'assets/icons/search.svg',
           width: 22,
           height: 22,
-          colorFilter: colors.iconFilter,
+          colorFilter: AppearancePage.iconFilter(context),
         ),
       ),
       title: SvgPicture.asset(
         'assets/icons/text_logo.svg',
         height: 22,
         fit: BoxFit.contain,
-        colorFilter: colors.textFilter,
       ),
       actions: [
         IconButton(
@@ -43,15 +43,43 @@ class _KolekHeader extends StatelessWidget implements PreferredSizeWidget {
             'assets/icons/notification_active.svg',
             width: 24,
             height: 24,
-            colorFilter: colors.iconFilter,
+            colorMapper: _NotificationLineMapper(AppearancePage.icon(context)),
           ),
         ),
         const SizedBox(width: 2),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Divider(height: 1, thickness: 1, color: colors.line),
+        child: Divider(
+          height: 1,
+          thickness: 1,
+          color: AppearancePage.line(context),
+        ),
       ),
     );
   }
+}
+
+class _NotificationLineMapper extends ColorMapper {
+  const _NotificationLineMapper(this.line);
+
+  final Color line;
+
+  @override
+  Color substitute(
+    String? id,
+    String elementName,
+    String attributeName,
+    Color color,
+  ) {
+    if (color == KolekColors.blue600) return color;
+    return line;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      other is _NotificationLineMapper && other.line == line;
+
+  @override
+  int get hashCode => line.hashCode;
 }

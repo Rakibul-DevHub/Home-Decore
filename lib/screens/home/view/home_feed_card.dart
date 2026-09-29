@@ -116,13 +116,19 @@ class _FeedCard extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: SvgPicture.asset(
-                    saved
-                        ? 'assets/icons/save_active.svg'
-                        : 'assets/icons/save_post.svg',
+                  child: SizedBox(
                     width: 22,
                     height: 22,
-                    colorFilter: saved ? null : colors.iconFilter,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        saved
+                            ? 'assets/icons/save_active.svg'
+                            : 'assets/icons/save_post.svg',
+                        width: saved ? 16 : 22,
+                        height: saved ? 16 : 22,
+                        colorFilter: saved ? null : colors.iconFilter,
+                      ),
+                    ),
                   ),
                 ),
               ),

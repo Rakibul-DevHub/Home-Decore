@@ -45,68 +45,48 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   }
 
   void _startReply(HomeComment comment) {
-    final rootId = _topLevelId(comment.id);
     setState(() {
       _replyTo = comment;
-      if (rootId != null) _expanded.add(rootId);
+      _expanded.add(comment.parentId ?? comment.id);
     });
-    if (rootId != null) _fitSheet();
+    _fitSheet();
     _composerFocus.requestFocus();
   }
 
   void _submit() {
     final text = _composer.text.trim();
     if (text.isEmpty) return;
-    final replyTo = _replyTo;
+    final target = _replyTo;
+    final rootId = target == null ? null : target.parentId ?? target.id;
     final reply = HomeComment(
       id: 'local-${DateTime.now().microsecondsSinceEpoch}',
       author: HomeData.viewerName,
       age: 'Just now',
       message: text,
-      mention: replyTo?.author,
+      parentId: rootId,
+      replyToUsername: target != null && target.isLevelTwo
+          ? target.author
+          : null,
       isMine: true,
     );
     setState(() {
-      if (replyTo == null) {
+      if (rootId == null) {
         _comments = [..._comments, reply];
       } else {
-        _comments = _addReply(_comments, replyTo.id, reply);
-        final rootId = _topLevelId(replyTo.id);
-        if (rootId != null) _expanded.add(rootId);
+        _comments = [
+          for (final item in _comments)
+            if (item.id == rootId)
+              item.copyWith(replies: [...item.replies, reply])
+            else
+              item,
+        ];
+        _expanded.add(rootId);
       }
       _composer.clear();
       _replyTo = null;
     });
     _fitSheet();
     _composerFocus.unfocus();
-  }
-
-  String? _topLevelId(String id) {
-    for (final comment in _comments) {
-      if (comment.id == id || _contains(comment, id)) return comment.id;
-    }
-    return null;
-  }
-
-  bool _contains(HomeComment comment, String id) {
-    for (final reply in comment.replies) {
-      if (reply.id == id || _contains(reply, id)) return true;
-    }
-    return false;
-  }
-
-  List<HomeComment> _addReply(
-    List<HomeComment> items,
-    String parentId,
-    HomeComment reply,
-  ) {
-    return [
-      for (final item in items)
-        if (item.id == parentId)
-          item.copyWith(replies: [...item.replies, reply])
-        else
-          item.copyWith(replies: _addReply(item.replies, parentId, reply)),
-    ];
   }
 
   void _remove(String id) {
@@ -176,7 +156,13 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   List<HomeComment> _withoutId(List<HomeComment> items, String id) {
     return [
       for (final item in items)
-        if (item.id != id) item.copyWith(replies: _withoutId(item.replies, id)),
+        if (item.id != id)
+          item.copyWith(
+            replies: [
+              for (final reply in item.replies)
+                if (reply.id != id) reply,
+            ],
+          ),
     ];
   }
 
@@ -311,7 +297,7 @@ class _CommentsSheetState extends State<_CommentsSheet> {
                             avatarAsset: _composerAvatar,
                             controller: _composer,
                             focusNode: _composerFocus,
-                            mention: _replyTo?.author,
+                            replyToUsername: _replyTo?.author,
                             onSubmit: _submit,
                             onClearMention: () =>
                                 setState(() => _replyTo = null),

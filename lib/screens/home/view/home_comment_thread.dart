@@ -18,6 +18,7 @@ class _CommentThread extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final replies = comment.replies;
+    final multiple = replies.length > 1;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -25,57 +26,24 @@ class _CommentThread extends StatelessWidget {
           comment: comment,
           onMenu: onMenu,
           onReply: () => onReply(comment),
-          replyLabel: replies.isEmpty
-              ? null
-              : (expanded ? 'Collapse' : 'View ${replies.length} more replies'),
-          onReplies: replies.isEmpty ? null : onToggle,
+          replyLabel: multiple
+              ? (expanded
+                    ? 'Hide replies'
+                    : 'View ${replies.length} more replies')
+              : null,
+          onReplies: multiple ? onToggle : null,
         ),
-        if (expanded)
+        if (!multiple || expanded)
           for (final reply in replies)
             Padding(
-              padding: const EdgeInsets.only(left: 36, top: 12),
-              child: _NestedReply(
+              padding: const EdgeInsets.only(left: 40, top: 12),
+              child: _CommentTile(
                 comment: reply,
+                nested: true,
                 onMenu: onMenu,
-                onReply: onReply,
+                onReply: () => onReply(reply),
               ),
             ),
-      ],
-    );
-  }
-}
-
-class _NestedReply extends StatelessWidget {
-  const _NestedReply({
-    required this.comment,
-    required this.onMenu,
-    required this.onReply,
-  });
-
-  final HomeComment comment;
-  final void Function(BuildContext context, HomeComment comment) onMenu;
-  final ValueChanged<HomeComment> onReply;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _CommentTile(
-          comment: comment,
-          nested: true,
-          onMenu: onMenu,
-          onReply: () => onReply(comment),
-        ),
-        for (final reply in comment.replies)
-          Padding(
-            padding: const EdgeInsets.only(left: 36, top: 12),
-            child: _NestedReply(
-              comment: reply,
-              onMenu: onMenu,
-              onReply: onReply,
-            ),
-          ),
       ],
     );
   }

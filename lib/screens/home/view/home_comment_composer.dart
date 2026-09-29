@@ -7,13 +7,13 @@ class _CommentComposer extends StatelessWidget {
     required this.focusNode,
     required this.onSubmit,
     required this.onClearMention,
-    this.mention,
+    this.replyToUsername,
   });
 
   final String avatarAsset;
   final TextEditingController controller;
   final FocusNode focusNode;
-  final String? mention;
+  final String? replyToUsername;
   final VoidCallback onSubmit;
   final VoidCallback onClearMention;
 
@@ -46,9 +46,9 @@ class _CommentComposer extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  if (mention != null) ...[
+                  if (replyToUsername != null) ...[
                     Text(
-                      mention!,
+                      '@$replyToUsername',
                       style: TextStyle(
                         fontFamily: 'GeneralSans-Semibold',
                         fontSize: 14,
@@ -61,7 +61,7 @@ class _CommentComposer extends StatelessWidget {
                   Expanded(
                     child: Focus(
                       onKeyEvent: (node, event) {
-                        if (mention != null &&
+                        if (replyToUsername != null &&
                             controller.text.isEmpty &&
                             event is KeyDownEvent &&
                             event.logicalKey == LogicalKeyboardKey.backspace) {
@@ -84,7 +84,7 @@ class _CommentComposer extends StatelessWidget {
                         decoration: InputDecoration(
                           isCollapsed: true,
                           border: InputBorder.none,
-                          hintText: mention == null
+                          hintText: replyToUsername == null
                               ? 'What do you think of this?'
                               : 'Add a comment',
                           hintStyle: TextStyle(
