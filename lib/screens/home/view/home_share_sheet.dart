@@ -102,9 +102,9 @@ class _ShareSheetState extends State<_ShareSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: bottomInset),
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        decoration: BoxDecoration(
+          color: AppearancePage.background(context),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
         child: SafeArea(
           top: false,
@@ -117,18 +117,19 @@ class _ShareSheetState extends State<_ShareSheet> {
                 const SizedBox(height: 12),
                 TextField(
                   onChanged: (value) => setState(() => _query = value),
-                  style: const TextStyle(
+                  cursorColor: AppearancePage.foreground(context),
+                  style: TextStyle(
                     fontFamily: 'IBMPlexMono-Regular',
                     fontSize: 14,
-                    color: KolekColors.neutral900,
+                    color: AppearancePage.foreground(context),
                   ),
                   decoration: InputDecoration(
                     isDense: true,
                     hintText: 'search people',
-                    hintStyle: const TextStyle(
+                    hintStyle: TextStyle(
                       fontFamily: 'IBMPlexMono-Regular',
                       fontSize: 14,
-                      color: KolekColors.neutral400,
+                      color: AppearancePage.muted(context),
                     ),
                     prefixIcon: Padding(
                       padding: const EdgeInsets.only(left: 12, right: 8),
@@ -136,6 +137,7 @@ class _ShareSheetState extends State<_ShareSheet> {
                         'assets/icons/search.svg',
                         width: 18,
                         height: 18,
+                        colorFilter: AppearancePage.iconFilter(context),
                       ),
                     ),
                     prefixIconConstraints: const BoxConstraints(
@@ -143,24 +145,24 @@ class _ShareSheetState extends State<_ShareSheet> {
                       minHeight: 18,
                     ),
                     filled: true,
-                    fillColor: KolekColors.neutral100,
+                    fillColor: AppearancePage.field(context),
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: KolekColors.neutral200,
+                      borderSide: BorderSide(
+                        color: AppearancePage.line(context),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: KolekColors.neutral200,
+                      borderSide: BorderSide(
+                        color: AppearancePage.line(context),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(
-                        color: KolekColors.neutral300,
+                      borderSide: BorderSide(
+                        color: AppearancePage.foreground(context),
                       ),
                     ),
                   ),
@@ -233,13 +235,13 @@ class _InviteLink extends StatelessWidget {
       height: 48,
       padding: const EdgeInsets.only(left: 14, right: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppearancePage.field(context),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: KolekColors.neutral200),
+        border: Border.all(color: AppearancePage.line(context)),
       ),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Text(
               _inviteLink,
               maxLines: 1,
@@ -247,7 +249,7 @@ class _InviteLink extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'IBMPlexMono-Regular',
                 fontSize: 14,
-                color: KolekColors.neutral900,
+                color: AppearancePage.foreground(context),
               ),
             ),
           ),
@@ -314,7 +316,10 @@ class _SharePersonTile extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: const Color(0xFF2B7FFF),
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+                        border: Border.all(
+                          color: AppearancePage.background(context),
+                          width: 2,
+                        ),
                       ),
                       child: const Icon(
                         Icons.check,
@@ -332,10 +337,10 @@ class _SharePersonTile extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'IBMPlexMono-Regular',
               fontSize: 11,
-              color: KolekColors.neutral700,
+              color: AppearancePage.icon(context),
             ),
           ),
         ],

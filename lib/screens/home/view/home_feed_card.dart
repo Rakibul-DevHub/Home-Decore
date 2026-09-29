@@ -111,27 +111,27 @@ class _FeedCard extends StatelessWidget {
                   ],
                 ),
               ),
-              GestureDetector(
-                onTap: onSaved,
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: SizedBox(
-                    width: 22,
-                    height: 22,
-                    child: Center(
-                      child: SvgPicture.asset(
-                        saved
-                            ? 'assets/icons/save_active.svg'
-                            : 'assets/icons/save_post.svg',
-                        width: 22,
-                        height: 22,
-                        colorFilter: saved ? null : colors.iconFilter,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: onSaved,
+              //   behavior: HitTestBehavior.opaque,
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(8),
+              //     child: SizedBox(
+              //       width: 22,
+              //       height: 22,
+              //       child: Center(
+              //         child: SvgPicture.asset(
+              //           saved
+              //               ? 'assets/icons/save_active.svg'
+              //               : 'assets/icons/save_post.svg',
+              //           width: 22,
+              //           height: 22,
+              //           colorFilter: saved ? null : colors.iconFilter,
+              //         ),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Builder(
                 builder: (buttonContext) => IconButton(
                   onPressed: () => _openMenu(buttonContext),
