@@ -27,6 +27,10 @@ class _CommentsSheetState extends State<_CommentsSheet> {
   bool _armedFromFull = false;
   double _sheetHeight = 1;
   double _screenHeight = 1;
+  String? _highlightedId;
+  int _revealGen = 0;
+  ScrollController? _commentsScroll;
+  final _highlightKey = GlobalKey();
   late List<HomeComment> _comments = List.of(HomeData.comments);
 
   @override
@@ -84,9 +88,50 @@ class _CommentsSheetState extends State<_CommentsSheet> {
       }
       _composer.clear();
       _replyTo = null;
+      _highlightedId = reply.id;
     });
     _fitSheet();
     _composerFocus.unfocus();
+    _reveal(reply.id);
+  }
+
+  Future<void> _reveal(String id) async {
+    final gen = ++_revealGen;
+    await Future<void>.delayed(const Duration(milliseconds: 60));
+    if (!mounted || gen != _revealGen) return;
+    await _scrollToHighlighted();
+    await Future<void>.delayed(const Duration(milliseconds: 1400));
+    if (!mounted || gen != _revealGen || _highlightedId != id) return;
+    setState(() => _highlightedId = null);
+  }
+
+  Future<void> _scrollToHighlighted() async {
+    final target = _highlightKey.currentContext;
+    if (target != null) {
+      await Scrollable.ensureVisible(
+        target,
+        duration: const Duration(milliseconds: 380),
+        curve: Curves.easeOutCubic,
+        alignment: 0.28,
+      );
+      return;
+    }
+    final controller = _commentsScroll;
+    if (controller == null || !controller.hasClients) return;
+    await controller.animateTo(
+      controller.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 380),
+      curve: Curves.easeOutCubic,
+    );
+    await Future<void>.delayed(const Duration(milliseconds: 40));
+    final built = _highlightKey.currentContext;
+    if (!mounted || built == null) return;
+    await Scrollable.ensureVisible(
+      built,
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      alignment: 0.28,
+    );
   }
 
   void _remove(String id) {
@@ -239,6 +284,7 @@ class _CommentsSheetState extends State<_CommentsSheet> {
               maxChildSize: 1,
               snapSizes: const [_collapsed],
               builder: (context, scrollController) {
+                _commentsScroll = scrollController;
                 return Padding(
                   padding: EdgeInsets.only(bottom: bottomInset),
                   child: ClipRRect(
@@ -277,6 +323,8 @@ class _CommentsSheetState extends State<_CommentsSheet> {
                                           expanded: _expanded.contains(
                                             comment.id,
                                           ),
+                                          highlightedId: _highlightedId,
+                                          highlightKey: _highlightKey,
                                           onToggle: () =>
                                               _toggleReplies(comment.id),
                                           onMenu: (context, target) =>

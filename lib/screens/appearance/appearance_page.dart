@@ -8,7 +8,7 @@ import '../../theme/kolek_colors.dart';
 /// Change [themeMode], then hot restart:
 /// [ThemeMode.light], [ThemeMode.dark], or [ThemeMode.system].
 abstract final class AppearancePage {
-  static const themeMode = ThemeMode.dark;
+  static const themeMode = ThemeMode.light;
 
   static const lightCanvas = KolekColors.neutral50;
   static const darkCanvas = KolekColors.neutral900;
