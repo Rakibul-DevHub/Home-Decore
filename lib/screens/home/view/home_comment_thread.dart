@@ -1,4 +1,4 @@
-part of 'home_screen.dart';
+﻿part of 'home_screen.dart';
 
 class _CommentThread extends StatelessWidget {
   const _CommentThread({
@@ -42,7 +42,7 @@ class _CommentThread extends StatelessWidget {
         if (!multiple || expanded)
           for (final reply in replies)
             Padding(
-              padding: const EdgeInsets.only(left: 40, top: 12),
+              padding: const EdgeInsets.only(top: 12),
               child: _CommentTile(
                 key: reply.id == highlightedId ? highlightKey : null,
                 comment: reply,
@@ -84,13 +84,11 @@ class _CommentTile extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 450),
       curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color: highlighted
-            ? KolekColors.blue600.withValues(alpha: colors.dark ? 0.32 : 0.16)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(nested ? 60 : 20, 8, 20, 8),
+      color: highlighted
+          ? KolekColors.blue600.withValues(alpha: colors.dark ? 0.09 : 0.10)
+          : Colors.transparent,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

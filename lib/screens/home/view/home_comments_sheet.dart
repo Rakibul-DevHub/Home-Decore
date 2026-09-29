@@ -305,11 +305,8 @@ class _CommentsSheetState extends State<_CommentsSheet> {
                                   delegate: _CommentsHeaderDelegate(),
                                 ),
                                 SliverPadding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    20,
-                                    12,
-                                    20,
-                                    12,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
                                   ),
                                   sliver: SliverList(
                                     delegate: SliverChildBuilderDelegate(
