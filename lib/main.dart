@@ -46,11 +46,9 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
       darkTheme: _buildTheme(Brightness.dark),
       themeMode: AppearancePage.themeMode,
       builder: (context, child) {
-        return KolekFitLayout(
-          child: child ?? const SizedBox.shrink(),
-        );
+        return KolekFitLayout(child: child ?? const SizedBox.shrink());
       },
-      initialRoute: AppRoutes.mainShell,
+      initialRoute: AppRoutes.splash,
       routes: AppRoutes.routes,
       onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
     );
@@ -65,17 +63,20 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
 
     return ThemeData(
       colorScheme: colorScheme,
-      scaffoldBackgroundColor:
-          dark ? const Color(0xFF000000) : KolekColors.neutral50,
+      scaffoldBackgroundColor: dark
+          ? AppearancePage.darkCanvas
+          : AppearancePage.lightCanvas,
       useMaterial3: true,
       visualDensity: VisualDensity.standard,
       splashFactory: InkSparkle.splashFactory,
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: Colors.transparent,
-        foregroundColor: KolekColors.neutral950,
-        systemOverlayStyle: AppBootstrap.overlayStyle,
+        foregroundColor: dark
+            ? AppearancePage.darkForeground
+            : AppearancePage.lightForeground,
+        systemOverlayStyle: AppearancePage.overlayFor(dark),
       ),
     );
   }

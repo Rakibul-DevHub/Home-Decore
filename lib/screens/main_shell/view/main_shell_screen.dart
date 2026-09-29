@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../routes/app_route.dart';
-import '../../../theme/kolek_colors.dart';
+import '../../../screens/appearance/appearance_page.dart';
 import '../../../widgets/bottom_nav.dart';
 import '../../home/view/home_screen.dart';
 import '../../messages/view/messages_screen.dart';
@@ -68,7 +68,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
       },
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: KolekColors.neutral50,
+          backgroundColor: AppearancePage.background(context),
           body: PageView(
             controller: _pages,
             onPageChanged: _onPageChanged,

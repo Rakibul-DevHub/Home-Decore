@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../theme/kolek_colors.dart';
+import '../screens/appearance/appearance_page.dart';
 
 class NavItem {
   const NavItem({
@@ -119,10 +119,9 @@ class _KolekBottomNavState extends State<KolekBottomNav>
 
   @override
   Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    final background = dark ? const Color(0xFF0A0A0A) : Colors.white;
-    final line = dark ? const Color(0xFF2A2A2A) : KolekColors.neutral200;
-    final icon = dark ? const Color(0xFFE8E8E8) : const Color(0xFF171717);
+    final background = AppearancePage.background(context);
+    final line = AppearancePage.line(context);
+    final icon = AppearancePage.icon(context);
 
     return Material(
       color: background,
@@ -193,6 +192,7 @@ class _KolekBottomNavState extends State<KolekBottomNav>
                 ),
               ),
             ),
+
             ///
             /// ----- selected bottom index underline ------
             ///
