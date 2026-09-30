@@ -103,10 +103,11 @@ class _SplashScreenState extends State<SplashScreen>
                               fontWeight: FontWeight.w600,
                               height: 1.0,
                               letterSpacing: 0,
-                              color: KolekScheme.text(
-                                context,
-                                KolekColors.blue600,
-                              ),
+                              // color: KolekScheme.text(
+                              //   context,
+                              //   KolekColors.blue600,
+                              // ),
+                              color: KolekColors.blue600,
                             ),
                           ),
                         ),
