@@ -107,7 +107,6 @@ abstract final class AppRoutes {
       providers: [
         BlocProvider(create: (_) => MainShellCubit()),
         BlocProvider(create: (_) => HomeBloc()),
-        // BlocProvider(create: (_) => ShopCubit()),
         BlocProvider(create: (_) => ShopBloc()),
         BlocProvider(create: (_) => MessagesCubit()),
         BlocProvider(create: (_) => ProfileCubit()),
@@ -129,7 +128,6 @@ abstract final class AppRoutes {
       child: const SearchScreen(),
     ),
     shop: (_) => BlocProvider(
-      // create: (_) => ShopCubit(),
       create: (_) => ShopBloc(),
       child: const ShopScreen(),
     ),
