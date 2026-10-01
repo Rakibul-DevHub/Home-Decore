@@ -239,6 +239,7 @@
 
 
 
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'app_bootstrap.dart';
@@ -344,7 +345,7 @@
 //           builder: (context, child) {
 //             return KolekFitLayout(child: child ?? const SizedBox.shrink());
 //           },
-//           initialRoute: AppRoutes.mainShell,
+//           initialRoute: AppRoutes.splash,
 //           routes: AppRoutes.routes,
 //           onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
 //         );
@@ -402,8 +403,8 @@ Future<void> main() async {
   // Apply the app's system UI styling first (status bar icon brightness etc.)
   await AppBootstrap.applySystemUi();
 
-  // Then hide the system bars. Immersive sticky keeps them hidden; the user
-  // reveals them by swiping from the screen edge, and they auto-hide again.
+  // Keep the status bar visible; hide only the navigation bar. The user
+  // can still swipe from the bottom edge to reveal the nav bar temporarily.
   await KolekSystemUi.enterImmersive();
 
   runApp(const KolekApp());
@@ -413,15 +414,20 @@ Future<void> main() async {
 class KolekSystemUi {
   const KolekSystemUi._();
 
-  /// Hides the status + navigation bars.
+  /// Shows the status bar, hides the navigation bar.
   ///
-  /// `immersiveSticky` is the key mode: the bars stay off-screen and only
-  /// appear when the user swipes from the edge, then slide away again.
+  /// `SystemUiMode.manual` with only [SystemUiOverlay.top] is the mode that
+  /// lets us pick per-bar visibility: status bar stays on, nav bar stays off.
+  /// The user can still swipe from the bottom edge to reveal the nav bar
+  /// temporarily, and it slides away again on its own.
   static Future<void> enterImmersive() {
-    return SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    return SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top],
+    );
   }
 
-  /// Brings the system bars back permanently (e.g. from a settings toggle).
+  /// Brings both system bars back permanently (e.g. from a settings toggle).
   static Future<void> showSystemBars() {
     return SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -429,7 +435,9 @@ class KolekSystemUi {
     );
   }
 
-  /// Shows the bars for [duration] and then returns to the immersive state.
+  /// Shows the navigation bar (status bar stays put) for [duration],
+  /// then hides the nav bar again.
+  ///
   /// Handy for a "reveal navigation bar" button in settings.
   static Future<void> peekSystemBars({
     Duration duration = const Duration(seconds: 3),
@@ -453,7 +461,7 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Re-assert immersive mode once the first frame is up.
+    // Re-assert bar visibility once the first frame is up.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       KolekSystemUi.enterImmersive();
     });
@@ -470,8 +478,8 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       AppBootstrap.applySystemUi();
 
-      // Android resets the system UI flags when returning to the foreground,
-      // so hide the navigation bar again.
+      // Android may reset system UI flags when returning to the foreground,
+      // so hide the navigation bar again (status bar stays visible).
       KolekSystemUi.enterImmersive();
     }
   }

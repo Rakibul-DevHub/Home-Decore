@@ -89,7 +89,7 @@ class HomeMenuItem {
 }
 
 abstract final class HomeData {
-  static const viewerName = 'Rakib Khan';
+  static const viewerName = 'Rakibul';
   static const postDescription =
       'Exploring movement and stillness. Each curve holds a moment of balance. Fired slowly so the surface stays quiet, with a soft edge that catches the light.';
   static const menuItems = [
@@ -167,7 +167,7 @@ abstract final class HomeData {
             HomeComment(
               id: 'c${i}r$reply',
               parentId: 'c$i',
-              author: 'Rakib Khan',
+              author: 'Rakibul',
               age: '3h ago',
               message: _commentBody,
               isMine: true,

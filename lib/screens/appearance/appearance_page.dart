@@ -116,7 +116,7 @@ abstract final class AppearancePage {
   ///
   /// Listened to by a [ValueListenableBuilder] in `main.dart`.
   static final ValueNotifier<ThemeMode> themeModeNotifier =
-  ValueNotifier<ThemeMode>(ThemeMode.dark);
+  ValueNotifier<ThemeMode>(ThemeMode.light);
 
   /// Convenience getter for code that needs the raw mode (e.g. main.dart).
   static ThemeMode get themeMode => themeModeNotifier.value;

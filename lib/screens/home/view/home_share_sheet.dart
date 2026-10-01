@@ -20,37 +20,37 @@ const _sharePeople = [
   ),
   _SharePerson(
     id: 'syra-2',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_2.png',
   ),
   _SharePerson(
     id: 'syra-3',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_3.png',
   ),
   _SharePerson(
     id: 'syra-4',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_4.png',
   ),
   _SharePerson(
     id: 'syra-5',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/demo_user.png',
   ),
   _SharePerson(
     id: 'syra-6',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_2.png',
   ),
   _SharePerson(
     id: 'syra-7',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_1.png',
   ),
   _SharePerson(
     id: 'syra-8',
-    name: 'Syra S, 23',
+    name: 'Syra Sayem',
     avatar: 'assets/images/search_user_3.png',
   ),
 ];
