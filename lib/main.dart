@@ -387,14 +387,164 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'app_bootstrap.dart';
+// import 'routes/app_routes.dart';
+// import 'screens/appearance/appearance_page.dart';
+// import 'theme/kolek_colors.dart';
+// import 'widgets/kolek_fit_layout.dart';
+//
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await AppBootstrap.init();
+//
+//   // Apply the app's system UI styling first (status bar icon brightness etc.)
+//   await AppBootstrap.applySystemUi();
+//
+//   // Keep the status bar visible; hide only the navigation bar. The user
+//   // can still swipe from the bottom edge to reveal the nav bar temporarily.
+//   await KolekSystemUi.enterImmersive();
+//
+//   runApp(const KolekApp());
+// }
+//
+// /// Small helper that owns the visibility of the device system bars.
+// class KolekSystemUi {
+//   const KolekSystemUi._();
+//
+//   /// Shows the status bar, hides the navigation bar.
+//   ///
+//   /// `SystemUiMode.manual` with only [SystemUiOverlay.top] is the mode that
+//   /// lets us pick per-bar visibility: status bar stays on, nav bar stays off.
+//   /// The user can still swipe from the bottom edge to reveal the nav bar
+//   /// temporarily, and it slides away again on its own.
+//   static Future<void> enterImmersive() {
+//     return SystemChrome.setEnabledSystemUIMode(
+//       SystemUiMode.manual,
+//       overlays: [SystemUiOverlay.top],
+//     );
+//   }
+//
+//   /// Brings both system bars back permanently (e.g. from a settings toggle).
+//   static Future<void> showSystemBars() {
+//     return SystemChrome.setEnabledSystemUIMode(
+//       SystemUiMode.manual,
+//       overlays: SystemUiOverlay.values,
+//     );
+//   }
+//
+//   /// Shows the navigation bar (status bar stays put) for [duration],
+//   /// then hides the nav bar again.
+//   ///
+//   /// Handy for a "reveal navigation bar" button in settings.
+//   static Future<void> peekSystemBars({
+//     Duration duration = const Duration(seconds: 3),
+//   }) async {
+//     await showSystemBars();
+//     await Future<void>.delayed(duration);
+//     await enterImmersive();
+//   }
+// }
+//
+// class KolekApp extends StatefulWidget {
+//   const KolekApp({super.key});
+//
+//   @override
+//   State<KolekApp> createState() => _KolekAppState();
+// }
+//
+// class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addObserver(this);
+//
+//     // Re-assert bar visibility once the first frame is up.
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       KolekSystemUi.enterImmersive();
+//     });
+//   }
+//
+//   @override
+//   void dispose() {
+//     WidgetsBinding.instance.removeObserver(this);
+//     super.dispose();
+//   }
+//
+//   @override
+//   void didChangeAppLifecycleState(AppLifecycleState state) {
+//     if (state == AppLifecycleState.resumed) {
+//       AppBootstrap.applySystemUi();
+//
+//       // Android may reset system UI flags when returning to the foreground,
+//       // so hide the navigation bar again (status bar stays visible).
+//       KolekSystemUi.enterImmersive();
+//     }
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     // Rebuilds MaterialApp whenever the active theme mode changes.
+//     // Without this, toggling the theme would not repaint the tree.
+//     return ValueListenableBuilder<ThemeMode>(
+//       valueListenable: AppearancePage.themeModeNotifier,
+//       builder: (context, mode, _) {
+//         return MaterialApp(
+//           title: 'Kolek',
+//           debugShowCheckedModeBanner: false,
+//           theme: _buildTheme(Brightness.light),
+//           darkTheme: _buildTheme(Brightness.dark),
+//           themeMode: mode,
+//           builder: (context, child) {
+//             return KolekFitLayout(child: child ?? const SizedBox.shrink());
+//           },
+//           initialRoute: AppRoutes.splash,
+//           routes: AppRoutes.routes,
+//           onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
+//         );
+//       },
+//     );
+//   }
+//
+//   static ThemeData _buildTheme(Brightness brightness) {
+//     final colorScheme = ColorScheme.fromSeed(
+//       seedColor: KolekColors.blue600,
+//       brightness: brightness,
+//     );
+//     final dark = brightness == Brightness.dark;
+//
+//     return ThemeData(
+//       colorScheme: colorScheme,
+//       scaffoldBackgroundColor: dark
+//           ? AppearancePage.darkCanvas
+//           : AppearancePage.lightCanvas,
+//       useMaterial3: true,
+//       visualDensity: VisualDensity.standard,
+//       splashFactory: InkSparkle.splashFactory,
+//       appBarTheme: AppBarTheme(
+//         elevation: 0,
+//         scrolledUnderElevation: 0,
+//         backgroundColor: Colors.transparent,
+//         foregroundColor: dark
+//             ? AppearancePage.darkForeground
+//             : AppearancePage.lightForeground,
+//         systemOverlayStyle: AppearancePage.overlayFor(dark),
+//       ),
+//     );
+//   }
+// }
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'app_bootstrap.dart';
 import 'routes/app_routes.dart';
 import 'screens/appearance/appearance_page.dart';
 import 'theme/kolek_colors.dart';
 import 'widgets/kolek_fit_layout.dart';
+import 'widgets/themed_status_bar.dart'; // Make sure this path matches your project structure
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -403,8 +553,7 @@ Future<void> main() async {
   // Apply the app's system UI styling first (status bar icon brightness etc.)
   await AppBootstrap.applySystemUi();
 
-  // Keep the status bar visible; hide only the navigation bar. The user
-  // can still swipe from the bottom edge to reveal the nav bar temporarily.
+  // Keep the status bar visible; hide only the navigation bar.
   await KolekSystemUi.enterImmersive();
 
   runApp(const KolekApp());
@@ -415,11 +564,6 @@ class KolekSystemUi {
   const KolekSystemUi._();
 
   /// Shows the status bar, hides the navigation bar.
-  ///
-  /// `SystemUiMode.manual` with only [SystemUiOverlay.top] is the mode that
-  /// lets us pick per-bar visibility: status bar stays on, nav bar stays off.
-  /// The user can still swipe from the bottom edge to reveal the nav bar
-  /// temporarily, and it slides away again on its own.
   static Future<void> enterImmersive() {
     return SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -427,7 +571,7 @@ class KolekSystemUi {
     );
   }
 
-  /// Brings both system bars back permanently (e.g. from a settings toggle).
+  /// Brings both system bars back permanently.
   static Future<void> showSystemBars() {
     return SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
@@ -435,10 +579,7 @@ class KolekSystemUi {
     );
   }
 
-  /// Shows the navigation bar (status bar stays put) for [duration],
-  /// then hides the nav bar again.
-  ///
-  /// Handy for a "reveal navigation bar" button in settings.
+  /// Shows the navigation bar for [duration], then hides the nav bar again.
   static Future<void> peekSystemBars({
     Duration duration = const Duration(seconds: 3),
   }) async {
@@ -460,8 +601,6 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // Re-assert bar visibility once the first frame is up.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       KolekSystemUi.enterImmersive();
     });
@@ -477,17 +616,12 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       AppBootstrap.applySystemUi();
-
-      // Android may reset system UI flags when returning to the foreground,
-      // so hide the navigation bar again (status bar stays visible).
       KolekSystemUi.enterImmersive();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Rebuilds MaterialApp whenever the active theme mode changes.
-    // Without this, toggling the theme would not repaint the tree.
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: AppearancePage.themeModeNotifier,
       builder: (context, mode, _) {
@@ -498,9 +632,13 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
           darkTheme: _buildTheme(Brightness.dark),
           themeMode: mode,
           builder: (context, child) {
-            return KolekFitLayout(child: child ?? const SizedBox.shrink());
+            // Apply ThemedStatusBar here so it acts as a global wrapper
+            // over every page rendered via the router.
+            return ThemedStatusBar(
+              child: KolekFitLayout(child: child ?? const SizedBox.shrink()),
+            );
           },
-          initialRoute: AppRoutes.splash,
+          initialRoute: AppRoutes.mainShell,
           routes: AppRoutes.routes,
           onGenerateInitialRoutes: AppRoutes.onGenerateInitialRoutes,
         );
@@ -514,22 +652,20 @@ class _KolekAppState extends State<KolekApp> with WidgetsBindingObserver {
       brightness: brightness,
     );
     final dark = brightness == Brightness.dark;
+    final canvasColor = dark ? AppearancePage.darkCanvas : AppearancePage.lightCanvas;
 
     return ThemeData(
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: dark
-          ? AppearancePage.darkCanvas
-          : AppearancePage.lightCanvas,
+      scaffoldBackgroundColor: canvasColor,
       useMaterial3: true,
       visualDensity: VisualDensity.standard,
       splashFactory: InkSparkle.splashFactory,
       appBarTheme: AppBarTheme(
         elevation: 0,
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: dark
-            ? AppearancePage.darkForeground
-            : AppearancePage.lightForeground,
+        // Match the scaffold background to keep visual seamlessness under the status bar
+        backgroundColor: canvasColor,
+        foregroundColor: dark ? AppearancePage.darkForeground : AppearancePage.lightForeground,
         systemOverlayStyle: AppearancePage.overlayFor(dark),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kolek/screens/shop/bloc/shop_bloc.dart';
 
 import '../screens/auth/create_account/bloc/create_account_bloc.dart';
 import '../screens/auth/create_account/view/create_account_screen.dart';
@@ -106,7 +107,8 @@ abstract final class AppRoutes {
       providers: [
         BlocProvider(create: (_) => MainShellCubit()),
         BlocProvider(create: (_) => HomeBloc()),
-        BlocProvider(create: (_) => ShopCubit()),
+        // BlocProvider(create: (_) => ShopCubit()),
+        BlocProvider(create: (_) => ShopBloc()),
         BlocProvider(create: (_) => MessagesCubit()),
         BlocProvider(create: (_) => ProfileCubit()),
       ],
@@ -127,7 +129,8 @@ abstract final class AppRoutes {
       child: const SearchScreen(),
     ),
     shop: (_) => BlocProvider(
-      create: (_) => ShopCubit(),
+      // create: (_) => ShopCubit(),
+      create: (_) => ShopBloc(),
       child: const ShopScreen(),
     ),
     filter: (_) => BlocProvider(
