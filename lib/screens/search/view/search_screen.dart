@@ -36,7 +36,6 @@ class SearchScreen extends StatelessWidget {
             'assets/icons/text_logo.svg',
             height: 22,
             fit: BoxFit.contain,
-            colorFilter: AppearancePage.textFilter(context),
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(1),
