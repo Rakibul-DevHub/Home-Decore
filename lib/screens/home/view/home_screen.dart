@@ -195,6 +195,7 @@ import '../../../routes/app_route.dart';
 import '../../../screens/appearance/appearance_page.dart';
 import '../../../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../../../theme/kolek_colors.dart';
+import '../../../widgets/notification_line_mapper.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';

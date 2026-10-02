@@ -269,7 +269,7 @@ class _KolekHeader extends StatelessWidget {
             'assets/icons/notification_active.svg',
             width: 24,
             height: 24,
-            colorMapper: _NotificationLineMapper(AppearancePage.icon(context)),
+            colorMapper: NotificationLineMapper(AppearancePage.icon(context)),
           ),
         ),
         const SizedBox(width: 2),
@@ -286,26 +286,26 @@ class _KolekHeader extends StatelessWidget {
   }
 }
 
-class _NotificationLineMapper extends ColorMapper {
-  const _NotificationLineMapper(this.line);
-
-  final Color line;
-
-  @override
-  Color substitute(
-      String? id,
-      String elementName,
-      String attributeName,
-      Color color,
-      ) {
-    if (color == KolekColors.blue600) return color;
-    return line;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is _NotificationLineMapper && other.line == line;
-
-  @override
-  int get hashCode => line.hashCode;
-}
+// class _NotificationLineMapper extends ColorMapper {
+//   const _NotificationLineMapper(this.line);
+//
+//   final Color line;
+//
+//   @override
+//   Color substitute(
+//       String? id,
+//       String elementName,
+//       String attributeName,
+//       Color color,
+//       ) {
+//     if (color == KolekColors.blue600) return color;
+//     return line;
+//   }
+//
+//   @override
+//   bool operator ==(Object other) =>
+//       other is _NotificationLineMapper && other.line == line;
+//
+//   @override
+//   int get hashCode => line.hashCode;
+// }

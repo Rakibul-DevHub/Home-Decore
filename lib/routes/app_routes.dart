@@ -38,7 +38,6 @@ import '../screens/product_details/view/product_details_screen.dart';
 import '../screens/profile/cubit/profile_cubit.dart';
 import '../screens/search/bloc/search_bloc.dart';
 import '../screens/search/view/search_screen.dart';
-import '../screens/shop/cubit/shop_cubit.dart';
 import '../screens/shop/view/shop_screen.dart';
 import '../screens/splash/bloc/splash_bloc.dart';
 import '../screens/splash/bloc/splash_event.dart';
