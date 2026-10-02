@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:kolek/main.dart';
+import 'package:kolek/app.dart';
 import 'package:kolek/routes/app_routes.dart';
 import 'package:kolek/screens/main_shell/view/main_shell_screen.dart';
 import 'package:kolek/screens/shop/view/shop_screen.dart';
