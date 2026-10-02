@@ -39,33 +39,42 @@ class HomeComment {
     required this.age,
     required this.message,
     this.avatarAsset = 'assets/images/demo_user.png',
-    this.mention,
+    this.parentId,
+    this.replyToUsername,
     this.isMine = false,
     this.replies = const [],
-    this.hiddenReplyCount = 0,
   });
 
   final String id;
   final String author;
   final String age;
   final String message;
-  final String? mention;
   final String avatarAsset;
-  final bool isMine;
-  final List<HomeComment> replies;
-  final int hiddenReplyCount;
 
-  HomeComment copyWith({List<HomeComment>? replies, int? hiddenReplyCount}) {
+  /// Null for a level 1 comment. A level 2 comment stores its level 1 id.
+  final String? parentId;
+
+  /// Set when this level 2 comment replies to another level 2 comment.
+  final String? replyToUsername;
+
+  final bool isMine;
+
+  /// Level 2 comments only. Never contains another nested thread.
+  final List<HomeComment> replies;
+
+  bool get isLevelTwo => parentId != null;
+
+  HomeComment copyWith({List<HomeComment>? replies}) {
     return HomeComment(
       id: id,
       author: author,
       age: age,
       message: message,
-      mention: mention,
       avatarAsset: avatarAsset,
+      parentId: parentId,
+      replyToUsername: replyToUsername,
       isMine: isMine,
       replies: replies ?? this.replies,
-      hiddenReplyCount: hiddenReplyCount ?? this.hiddenReplyCount,
     );
   }
 }
@@ -80,7 +89,7 @@ class HomeMenuItem {
 }
 
 abstract final class HomeData {
-  static const viewerName = 'Rakib Khan';
+  static const viewerName = 'Rakibul';
   static const postDescription =
       'Exploring movement and stillness. Each curve holds a moment of balance. Fired slowly so the surface stays quiet, with a soft edge that catches the light.';
   static const menuItems = [
@@ -157,7 +166,8 @@ abstract final class HomeData {
           for (var reply = 0; reply < 17; reply++)
             HomeComment(
               id: 'c${i}r$reply',
-              author: 'Rakib Khan',
+              parentId: 'c$i',
+              author: 'Rakibul',
               age: '3h ago',
               message: _commentBody,
               isMine: true,

@@ -1,9 +1,11 @@
-part of 'home_screen.dart';
+﻿part of 'home_screen.dart';
 
 class _CommentThread extends StatelessWidget {
   const _CommentThread({
     required this.comment,
     required this.expanded,
+    required this.highlightedId,
+    required this.highlightKey,
     required this.onToggle,
     required this.onMenu,
     required this.onReply,
@@ -11,6 +13,8 @@ class _CommentThread extends StatelessWidget {
 
   final HomeComment comment;
   final bool expanded;
+  final String? highlightedId;
+  final GlobalKey highlightKey;
   final VoidCallback onToggle;
   final void Function(BuildContext context, HomeComment comment) onMenu;
   final ValueChanged<HomeComment> onReply;
@@ -18,26 +22,34 @@ class _CommentThread extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final replies = comment.replies;
+    final multiple = replies.length > 1;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _CommentTile(
+          key: comment.id == highlightedId ? highlightKey : null,
           comment: comment,
+          highlighted: comment.id == highlightedId,
           onMenu: onMenu,
           onReply: () => onReply(comment),
-          replyLabel: replies.isEmpty
-              ? null
-              : (expanded ? 'Collapse' : 'View ${replies.length} more replies'),
-          onReplies: replies.isEmpty ? null : onToggle,
+          replyLabel: multiple
+              ? (expanded
+                    ? 'Hide replies'
+                    : 'View ${replies.length} more replies')
+              : null,
+          onReplies: multiple ? onToggle : null,
         ),
-        if (expanded)
+        if (!multiple || expanded)
           for (final reply in replies)
             Padding(
-              padding: const EdgeInsets.only(left: 36, top: 12),
-              child: _NestedReply(
+              padding: const EdgeInsets.only(top: 12),
+              child: _CommentTile(
+                key: reply.id == highlightedId ? highlightKey : null,
                 comment: reply,
+                nested: true,
+                highlighted: reply.id == highlightedId,
                 onMenu: onMenu,
-                onReply: onReply,
+                onReply: () => onReply(reply),
               ),
             ),
       ],
@@ -45,48 +57,14 @@ class _CommentThread extends StatelessWidget {
   }
 }
 
-class _NestedReply extends StatelessWidget {
-  const _NestedReply({
-    required this.comment,
-    required this.onMenu,
-    required this.onReply,
-  });
-
-  final HomeComment comment;
-  final void Function(BuildContext context, HomeComment comment) onMenu;
-  final ValueChanged<HomeComment> onReply;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _CommentTile(
-          comment: comment,
-          nested: true,
-          onMenu: onMenu,
-          onReply: () => onReply(comment),
-        ),
-        for (final reply in comment.replies)
-          Padding(
-            padding: const EdgeInsets.only(left: 36, top: 12),
-            child: _NestedReply(
-              comment: reply,
-              onMenu: onMenu,
-              onReply: onReply,
-            ),
-          ),
-      ],
-    );
-  }
-}
-
 class _CommentTile extends StatelessWidget {
   const _CommentTile({
+    super.key,
     required this.comment,
     required this.onMenu,
     required this.onReply,
     this.nested = false,
+    this.highlighted = false,
     this.replyLabel,
     this.onReplies,
   });
@@ -95,6 +73,7 @@ class _CommentTile extends StatelessWidget {
   final void Function(BuildContext context, HomeComment comment) onMenu;
   final VoidCallback onReply;
   final bool nested;
+  final bool highlighted;
   final String? replyLabel;
   final VoidCallback? onReplies;
 
@@ -102,110 +81,119 @@ class _CommentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = _HomeColors.of(context);
     final avatar = nested ? 28.0 : 48.0;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipOval(
-          child: Image.asset(
-            comment.avatarAsset,
-            width: avatar,
-            height: avatar,
-            fit: BoxFit.cover,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeOutCubic,
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(nested ? 60 : 20, 8, 20, 8),
+      color: highlighted
+          ? KolekColors.blue600.withValues(alpha: colors.dark ? 0.09 : 0.10)
+          : Colors.transparent,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipOval(
+            child: Image.asset(
+              comment.avatarAsset,
+              width: avatar,
+              height: avatar,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Text(
-                    comment.author,
-                    style: TextStyle(
-                      fontFamily: 'GeneralSans-Semibold',
-                      fontSize: nested ? 14 : 16,
-                      fontWeight: FontWeight.w600,
-                      height: 1.2,
-                      color: colors.text,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Text(
+                      comment.author,
+                      style: TextStyle(
+                        fontFamily: 'GeneralSans-Semibold',
+                        fontSize: nested ? 14 : 16,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                        color: colors.text,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Text(
-                    comment.age,
-                    style: TextStyle(
-                      fontFamily: 'IBMPlexMono-Regular',
-                      fontSize: nested ? 12 : 14,
-                      letterSpacing: -1,
-                      height: 1.2,
-                      color: colors.muted,
+                    const SizedBox(width: 16),
+                    Text(
+                      comment.age,
+                      style: TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: nested ? 12 : 14,
+                        letterSpacing: -1,
+                        height: 1.2,
+                        color: colors.muted,
+                      ),
                     ),
-                  ),
-                  if (nested) ...[
-                    const Spacer(),
-                    Builder(
-                      builder: (buttonContext) => InkWell(
-                        onTap: () => onMenu(buttonContext, comment),
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Icon(
-                            Icons.more_horiz,
-                            size: 18,
-                            color: colors.muted,
+                    if (nested) ...[
+                      const Spacer(),
+                      Builder(
+                        builder: (buttonContext) => InkWell(
+                          onTap: () => onMenu(buttonContext, comment),
+                          borderRadius: BorderRadius.circular(12),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Icon(
+                              Icons.more_horiz,
+                              size: 18,
+                              color: colors.muted,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
-              ),
-              const SizedBox(height: 6),
-              _CommentBody(comment: comment),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: onReply,
-                behavior: HitTestBehavior.opaque,
-                child: Text(
-                  'Reply',
-                  style: TextStyle(
-                    fontFamily: 'IBMPlexMono-Medium',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    height: 16 / 14,
-                    color: colors.text,
-                  ),
                 ),
-              ),
-              if (replyLabel != null) ...[
+                const SizedBox(height: 6),
+                _CommentBody(comment: comment),
                 const SizedBox(height: 8),
                 GestureDetector(
-                  onTap: onReplies,
+                  onTap: onReply,
                   behavior: HitTestBehavior.opaque,
-                  child: Row(
-                    children: [
-                      Container(width: 32, height: 1, color: colors.line),
-                      const SizedBox(width: 8),
-                      Text(
-                        replyLabel!,
-                        style: TextStyle(
-                          fontFamily: 'IBMPlexMono-Regular',
-                          fontSize: 12,
-                          height: 1,
-                          letterSpacing: -1,
-                          color: colors.muted,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    'Reply',
+                    style: TextStyle(
+                      fontFamily: 'IBMPlexMono-Medium',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      height: 16 / 14,
+                      color: colors.text,
+                    ),
                   ),
                 ),
+                if (replyLabel != null) ...[
+                  const SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: onReplies,
+                    behavior: HitTestBehavior.opaque,
+                    child: Row(
+                      children: [
+                        Container(width: 32, height: 1, color: colors.line),
+                        const SizedBox(width: 8),
+                        Text(
+                          replyLabel!,
+                          style: TextStyle(
+                            fontFamily: 'IBMPlexMono-Regular',
+                            fontSize: 12,
+                            height: 1,
+                            letterSpacing: -1,
+                            color: colors.muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

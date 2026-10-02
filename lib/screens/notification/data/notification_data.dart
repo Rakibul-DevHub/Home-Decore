@@ -75,7 +75,7 @@ abstract final class NotificationData {
     AppNotification(
       id: 't3',
       author: 'Alex Morgan',
-      action: 'Liked your artwork.',
+      action: 'Comment on your post.',
       timeLabel: '2m',
       kind: NotificationKind.comment,
       thumbnailAsset: thumbnailAsset,

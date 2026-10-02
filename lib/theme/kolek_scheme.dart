@@ -5,20 +5,13 @@ import '../screens/appearance/appearance_page.dart';
 
 /// Light/dark choice for splash, auth, and onboarding.
 abstract final class KolekScheme {
-  static bool isDark(BuildContext context) {
-    return switch (AppearancePage.themeMode) {
-      ThemeMode.dark => true,
-      ThemeMode.light => false,
-      ThemeMode.system =>
-        MediaQuery.platformBrightnessOf(context) == Brightness.dark,
-    };
-  }
+  static bool isDark(BuildContext context) => AppearancePage.isDark(context);
 
-  static const darkBackground = Color(0xFF000000);
-  static const darkText = Color(0xFFFFFFFF);
+  static const darkBackground = AppearancePage.darkCanvas;
+  static const darkText = AppearancePage.darkForeground;
 
   static Color text(BuildContext context, Color light) {
-    return isDark(context) ? darkText : light;
+    return isDark(context) ? AppearancePage.darkForeground : light;
   }
 
   /// Keeps size and weight. In dark mode the color becomes white.
@@ -31,15 +24,6 @@ abstract final class KolekScheme {
   }
 
   static SystemUiOverlayStyle overlay(BuildContext context) {
-    final dark = isDark(context);
-    return SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: dark ? Brightness.light : Brightness.dark,
-      statusBarBrightness: dark ? Brightness.dark : Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness:
-          dark ? Brightness.light : Brightness.dark,
-      systemNavigationBarDividerColor: Colors.transparent,
-    );
+    return AppearancePage.overlay(context);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../routes/app_routes.dart';
+import '../../../screens/appearance/appearance_page.dart';
 import '../../../theme/kolek_colors.dart';
 import '../../../theme/kolek_scheme.dart';
 import '../bloc/splash_bloc.dart';
@@ -64,15 +65,12 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return BlocListener<SplashBloc, SplashState>(
-      listenWhen: (previous, current) =>
-          !previous.isReady && current.isReady,
+      listenWhen: (previous, current) => !previous.isReady && current.isReady,
       listener: (_, _) => _goNext(),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: KolekScheme.overlay(context),
         child: Scaffold(
-          backgroundColor: KolekScheme.isDark(context)
-              ? KolekScheme.darkBackground
-              : Colors.white,
+          backgroundColor: AppearancePage.background(context),
           body: SafeArea(
             child: AnimatedBuilder(
               animation: _enterController,
@@ -105,10 +103,11 @@ class _SplashScreenState extends State<SplashScreen>
                               fontWeight: FontWeight.w600,
                               height: 1.0,
                               letterSpacing: 0,
-                              color: KolekScheme.text(
-                                context,
-                                KolekColors.blue600,
-                              ),
+                              // color: KolekScheme.text(
+                              //   context,
+                              //   KolekColors.blue600,
+                              // ),
+                              color: KolekColors.blue600,
                             ),
                           ),
                         ),

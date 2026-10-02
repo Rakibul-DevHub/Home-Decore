@@ -14,13 +14,13 @@ class _CommentBody extends StatelessWidget {
       height: 20 / 14,
       color: colors.muted,
     );
-    final mention = comment.mention;
-    if (mention == null) return Text(comment.message, style: body);
+    final replyTo = comment.replyToUsername;
+    if (replyTo == null) return Text(comment.message, style: body);
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(
-            text: mention,
+            text: '@$replyTo',
             style: TextStyle(
               fontFamily: 'GeneralSans-Semibold',
               fontSize: 14,

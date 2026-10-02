@@ -83,11 +83,23 @@ class _PostMenuIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = _HomeColors.of(context);
     return switch (action) {
-      HomeMenuAction.savePost => SvgPicture.string(
-        saved ? _saveActiveIcon : _saveIcon,
+      HomeMenuAction.savePost => SizedBox(
         width: 22,
         height: 22,
-        colorFilter: saved ? null : colors.textFilter,
+        child: Center(
+          child: saved
+              ? SvgPicture.asset(
+                  'assets/icons/save_active.svg',
+                  width: 22,
+                  height: 22,
+                )
+              : SvgPicture.string(
+                  _saveIcon,
+                  width: 22,
+                  height: 22,
+                  colorFilter: colors.textFilter,
+                ),
+        ),
       ),
       HomeMenuAction.message => SvgPicture.string(
         _messageIcon,
@@ -108,12 +120,6 @@ class _PostMenuIcon extends StatelessWidget {
 const _saveIcon = '''
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M19 21L12 17L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" stroke="#FAFAFA" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-''';
-
-const _saveActiveIcon = '''
-<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M19 21L12 17L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" fill="#2B7FFF"/>
 </svg>
 ''';
 
