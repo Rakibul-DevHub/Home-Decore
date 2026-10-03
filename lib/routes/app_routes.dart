@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kolek/screens/shop/bloc/filter_bloc.dart';
 import 'package:kolek/screens/shop/bloc/shop_bloc.dart';
 
 import '../screens/auth/create_account/bloc/create_account_bloc.dart';
@@ -23,7 +24,7 @@ import '../screens/create/view/create_screen.dart';
 import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
 import '../screens/filter/cubit/filter_cubit.dart';
-import '../screens/filter/view/filter_screen.dart';
+import '../screens/shop/view/shop_filter_screen.dart';
 import '../screens/home/bloc/home_bloc.dart';
 import '../screens/inbox/cubit/inbox_cubit.dart';
 import '../screens/inbox/view/inbox_screen.dart';
@@ -131,7 +132,7 @@ abstract final class AppRoutes {
       child: const ShopScreen(),
     ),
     filter: (_) => BlocProvider(
-      create: (_) => FilterCubit(),
+      create: (_) => FilterBloc(),
       child: const FilterScreen(),
     ),
     productDetails: (_) => BlocProvider(
