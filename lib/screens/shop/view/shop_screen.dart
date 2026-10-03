@@ -1048,8 +1048,9 @@ class _AuctionTimerBadgeState extends State<_AuctionTimerBadge> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE6F0FF),
-        borderRadius: BorderRadius.circular(6),
+        color: KolekColors.neutral200,
+        borderRadius: BorderRadius.circular(0),
+        border: Border.all(color: KolekColors.blue600.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
