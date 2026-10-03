@@ -100,6 +100,7 @@ class _ShareSheetState extends State<_ShareSheet> {
     final people = _visible;
 
     return Padding(
+      // Push the sheet above the keyboard.
       padding: EdgeInsets.only(bottom: bottomInset),
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -108,113 +109,120 @@ class _ShareSheetState extends State<_ShareSheet> {
         ),
         child: SafeArea(
           top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _InviteLink(copied: _copied, onCopy: _copy),
-                const SizedBox(height: 12),
-                TextField(
-                  onChanged: (value) => setState(() => _query = value),
-                  cursorColor: AppearancePage.foreground(context),
-                  style: TextStyle(
-                    fontFamily: 'IBMPlexMono-Regular',
-                    fontSize: 14,
-                    color: AppearancePage.foreground(context),
-                  ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    hintText: 'search people',
-                    hintStyle: TextStyle(
+          // Scrollable so the content can shrink to fit when the keyboard
+          // is open — otherwise the Column overflows by a few pixels.
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _InviteLink(copied: _copied, onCopy: _copy),
+                  const SizedBox(height: 12),
+                  TextField(
+                    onChanged: (value) => setState(() => _query = value),
+                    cursorColor: AppearancePage.foreground(context),
+                    style: TextStyle(
                       fontFamily: 'IBMPlexMono-Regular',
                       fontSize: 14,
-                      color: AppearancePage.muted(context),
+                      color: AppearancePage.foreground(context),
                     ),
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 8),
-                      child: SvgPicture.asset(
-                        'assets/icons/search.svg',
-                        width: 18,
-                        height: 18,
-                        colorFilter: AppearancePage.iconFilter(context),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      hintText: 'search people',
+                      hintStyle: TextStyle(
+                        fontFamily: 'IBMPlexMono-Regular',
+                        fontSize: 14,
+                        color: AppearancePage.muted(context),
                       ),
-                    ),
-                    prefixIconConstraints: const BoxConstraints(
-                      minWidth: 38,
-                      minHeight: 18,
-                    ),
-                    filled: true,
-                    fillColor: AppearancePage.field(context),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppearancePage.line(context),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 12, right: 8),
+                        child: SvgPicture.asset(
+                          'assets/icons/search.svg',
+                          width: 18,
+                          height: 18,
+                          colorFilter: AppearancePage.iconFilter(context),
+                        ),
                       ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppearancePage.line(context),
+                      prefixIconConstraints: const BoxConstraints(
+                        minWidth: 38,
+                        minHeight: 18,
                       ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: AppearancePage.foreground(context),
+                      filled: true,
+                      fillColor: AppearancePage.field(context),
+                      contentPadding:
+                      const EdgeInsets.symmetric(vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppearancePage.line(context),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppearancePage.line(context),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(
+                          color: AppearancePage.foreground(context),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: people.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 14,
-                    crossAxisSpacing: 8,
-                    childAspectRatio: 0.72,
-                  ),
-                  itemBuilder: (context, index) {
-                    final person = people[index];
-                    return _SharePersonTile(
-                      person: person,
-                      selected: _selected.contains(person.id),
-                      onTap: () {
-                        setState(() {
-                          if (!_selected.add(person.id)) {
-                            _selected.remove(person.id);
-                          }
-                        });
-                      },
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: FilledButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: _sendBlue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      textStyle: const TextStyle(
-                        fontFamily: 'GeneralSans-Medium',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  const SizedBox(height: 16),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: people.length,
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 14,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 0.72,
                     ),
-                    child: const Text('Send'),
+                    itemBuilder: (context, index) {
+                      final person = people[index];
+                      return _SharePersonTile(
+                        person: person,
+                        selected: _selected.contains(person.id),
+                        onTap: () {
+                          setState(() {
+                            if (!_selected.add(person.id)) {
+                              _selected.remove(person.id);
+                            }
+                          });
+                        },
+                      );
+                    },
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: FilledButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: _sendBlue,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        textStyle: const TextStyle(
+                          fontFamily: 'GeneralSans-Medium',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      child: const Text('Send'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
