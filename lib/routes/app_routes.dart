@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kolek/screens/messages/bloc/inbox_bloc.dart';
 import 'package:kolek/screens/shop/bloc/filter_bloc.dart';
 import 'package:kolek/screens/shop/bloc/shop_bloc.dart';
 
@@ -26,11 +27,9 @@ import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
 import '../screens/shop/view/shop_filter_screen.dart';
 import '../screens/home/bloc/home_bloc.dart';
-import '../screens/inbox/cubit/inbox_cubit.dart';
-import '../screens/inbox/view/inbox_screen.dart';
+import '../screens/messages/view/inbox_screen.dart';
 import '../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../screens/main_shell/view/main_shell_screen.dart';
-import '../screens/messages/cubit/messages_cubit.dart';
 import '../screens/messages/data/messages_data.dart';
 import '../screens/notification/bloc/notification_bloc.dart';
 import '../screens/notification/view/notification_screen.dart';
@@ -119,7 +118,7 @@ abstract final class AppRoutes {
           ? args
           : MessagesData.threads.first;
       return BlocProvider(
-        create: (_) => InboxCubit(thread: thread),
+        create: (_) => InboxBloc(thread: thread),
         child: const InboxScreen(),
       );
     },
