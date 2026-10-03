@@ -15,6 +15,7 @@ import '../screens/auth/set_password/bloc/set_password_bloc.dart';
 import '../screens/auth/set_password/view/set_password_screen.dart';
 import '../screens/auth/welcome/bloc/welcome_bloc.dart';
 import '../screens/auth/welcome/view/welcome_screen.dart';
+import '../screens/messages/bloc/message_bloc.dart';
 import '../screens/onboarding/bloc/onboarding_bloc.dart';
 import '../screens/onboarding/view/onboarding_screen.dart';
 import '../screens/cart/cubit/cart_cubit.dart';
@@ -23,7 +24,6 @@ import '../screens/create/cubit/create_cubit.dart';
 import '../screens/create/view/create_screen.dart';
 import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
-import '../screens/filter/cubit/filter_cubit.dart';
 import '../screens/shop/view/shop_filter_screen.dart';
 import '../screens/home/bloc/home_bloc.dart';
 import '../screens/inbox/cubit/inbox_cubit.dart';
@@ -108,7 +108,7 @@ abstract final class AppRoutes {
         BlocProvider(create: (_) => MainShellCubit()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => ShopBloc()),
-        BlocProvider(create: (_) => MessagesCubit()),
+        BlocProvider(create: (_) => MessagesBloc()),
         BlocProvider(create: (_) => ProfileCubit()),
       ],
       child: const MainShellScreen(),

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../data/messages_data.dart';
 
@@ -20,9 +19,9 @@ final class MessagesState extends Equatable {
     return threads
         .where(
           (t) =>
-              t.name.toLowerCase().contains(q) ||
-              t.preview.toLowerCase().contains(q),
-        )
+      t.name.toLowerCase().contains(q) ||
+          t.preview.toLowerCase().contains(q),
+    )
         .toList(growable: false);
   }
 
@@ -40,13 +39,4 @@ final class MessagesState extends Equatable {
 
   @override
   List<Object?> get props => [threads, folderTitle, query];
-}
-
-class MessagesCubit extends Cubit<MessagesState> {
-  MessagesCubit()
-      : super(MessagesState(threads: MessagesData.threads));
-
-  void setQuery(String query) => emit(state.copyWith(query: query));
-
-  void clearQuery() => emit(state.copyWith(query: ''));
 }
