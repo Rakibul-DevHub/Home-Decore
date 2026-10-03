@@ -864,47 +864,87 @@ class ShopScreen extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: 'GeneralSans-Medium',
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w500,
                           height: 1.25,
                           color: AppearancePage.foreground(context),
                         ),
                       ),
                       const SizedBox(height: 4),
+                      // Row(
+                      //   children: [
+                      //     Text(
+                      //       '\$${product.price}',
+                      //       style: TextStyle(
+                      //         fontFamily: 'GeneralSans-Semibold',
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w700,
+                      //         color: AppearancePage.foreground(context),
+                      //       ),
+                      //     ),
+                      //     const Spacer(),
+                      //     // Auction products get the gavel icon; regular
+                      //     // products get the add-to-cart icon.
+                      //     if (product.isAuction)
+                      //       SvgPicture.asset(
+                      //         'assets/icons/auction.svg',
+                      //         width: 20,
+                      //         height: 20,
+                      //         colorFilter: AppearancePage.iconFilter(context),
+                      //       )
+                      //     else
+                      //       InkWell(
+                      //         onTap: () => context
+                      //             .read<ShopBloc>()
+                      //             .add(const ShopCartItemAdded()),
+                      //         child: Icon(
+                      //           Icons.add_circle_outline,
+                      //           size: 17,
+                      //           color: AppearancePage.icon(context),
+                      //         ),
+                      //       ),
+                      //   ],
+                      // ),
+
                       Row(
                         children: [
                           Text(
                             '\$${product.price}',
                             style: TextStyle(
                               fontFamily: 'GeneralSans-Semibold',
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: AppearancePage.foreground(context),
                             ),
                           ),
                           const Spacer(),
-                          // Auction products get the gavel icon; regular
-                          // products get the add-to-cart icon.
-                          if (product.isAuction)
-                            SvgPicture.asset(
+                          // Fixed 20x20 slot for the trailing action. Prevents the auction
+                          // and buy-now cards from differing in height by a few pixels, which
+                          // would shrink one card's image relative to the other.
+                          SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: product.isAuction
+                                ? SvgPicture.asset(
                               'assets/icons/auction.svg',
                               width: 20,
                               height: 20,
                               colorFilter: AppearancePage.iconFilter(context),
                             )
-                          else
-                            InkWell(
+                                : InkWell(
                               onTap: () => context
                                   .read<ShopBloc>()
                                   .add(const ShopCartItemAdded()),
                               child: Icon(
                                 Icons.add_circle_outline,
-                                size: 17,
+                                size: 22,
                                 color: AppearancePage.icon(context),
                               ),
                             ),
+                          ),
                         ],
-                      ),
+                      )
+
                     ],
                   ),
                 );
@@ -944,9 +984,9 @@ class _SaveButton extends StatelessWidget {
                     : 'assets/icons/save_post.svg',
                 width: 22,
                 height: 22,
-                colorFilter: saved
-                    ? null
-                    : AppearancePage.iconFilter(context),
+                // colorFilter: saved
+                //     ? null
+                //     : AppearancePage.iconFilter(context),
               ),
             ),
           ),

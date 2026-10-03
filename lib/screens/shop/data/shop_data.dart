@@ -99,13 +99,13 @@ abstract final class ShopData {
     ShopProduct(
       id: 'nordic',
       image: 'assets/images/nordic_vase.png',
-      name: 'Handmade Nordic Abstract\nCeramic Vase',
+      name: 'Handmade Nordic Abstract Ceramic Vase',
       price: 149,
     ),
     ShopProduct(
       id: 'stoneware',
       image: 'assets/images/stoneware_vases.png',
-      name: 'Handmade Raw Stoneware\nPottery Vases',
+      name: 'Handmade Raw Stoneware Pottery Vases',
       price: 149,
       kind: ShopProductKind.auction,
       auctionRemaining: Duration(days: 2, hours: 7, minutes: 1),
@@ -113,13 +113,13 @@ abstract final class ShopData {
     ShopProduct(
       id: 'wall-art',
       image: 'assets/images/wall_art.png',
-      name: 'Original Textured\nWall Art',
+      name: 'Original Textured Wall Art',
       price: 149,
     ),
     ShopProduct(
       id: 'table',
       image: 'assets/images/table_and_vase.png',
-      name: 'Sculptural Table\nCollection',
+      name: 'Sculptural Table Collection',
       price: 149,
       kind: ShopProductKind.auction,
       auctionRemaining: Duration(days: 2, hours: 7, minutes: 1),
