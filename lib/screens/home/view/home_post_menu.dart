@@ -13,7 +13,7 @@ class _PostMenu extends StatelessWidget {
       color: colors.menu,
       elevation: 10,
       shadowColor: Colors.black26,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: BorderRadius.circular(0),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(
         width: 200,
@@ -94,7 +94,7 @@ class _PostMenuIcon extends StatelessWidget {
                   height: 22,
                 )
               : SvgPicture.asset(
-            'assets/icons/save_post.svg',
+            'assets/icons/save_post_black.svg',
                   width: 22,
                   height: 22,
                 ),
