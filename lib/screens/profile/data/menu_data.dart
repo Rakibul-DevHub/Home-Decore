@@ -5,13 +5,13 @@ class MenuItem {
     required this.id,
     required this.title,
     required this.subtitle,
-    required this.icon,
+    required this.iconAsset,
   });
 
   final String id;
   final String title;
   final String subtitle;
-  final IconData icon;
+  final String iconAsset;
 }
 
 abstract final class MenuData {
@@ -26,37 +26,37 @@ abstract final class MenuData {
       id: 'saved',
       title: 'Saved',
       subtitle: "Artworks and post you've saved",
-      icon: Icons.bookmark_border,
+      iconAsset: 'assets/icons/save.svg',       // bookmark
     ),
     MenuItem(
       id: 'orders',
       title: 'Order & Purchases',
       subtitle: 'Track orders and view your history',
-      icon: Icons.shopping_bag_outlined,
+      iconAsset: 'assets/icons/cart.svg',      // shopping bag
     ),
     MenuItem(
       id: 'selling',
       title: 'Selling',
       subtitle: 'Manage your listings and sales',
-      icon: Icons.sell_outlined,
+      iconAsset: 'assets/icons/tag.svg',     // tag
     ),
     MenuItem(
       id: 'offers',
       title: 'Offers & Bids',
       subtitle: 'Bids, offers, and auction activity',
-      icon: Icons.gavel_outlined,
+      iconAsset: 'assets/icons/offer_bid.svg',     // gavel
     ),
     MenuItem(
       id: 'settings',
       title: 'Settings',
       subtitle: 'Account, preferences, and privacy',
-      icon: Icons.settings_outlined,
+      iconAsset: 'assets/icons/settings.svg',    // gear
     ),
     MenuItem(
       id: 'invite',
       title: 'Invite Friends',
       subtitle: 'Account, preferences, and privacy',
-      icon: Icons.person_add_alt_1_outlined,
+      iconAsset: 'assets/icons/invite_friend.svg',      // person with +
     ),
   ];
 }

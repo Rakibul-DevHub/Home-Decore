@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../screens/appearance/appearance_page.dart';
 import '../../../theme/kolek_colors.dart';
@@ -205,10 +206,11 @@ class _MenuRow extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
         child: Row(
           children: [
-            Icon(
-              item.icon,
-              size: 22,
-              color: AppearancePage.icon(context),
+            SvgPicture.asset(
+              item.iconAsset,
+              width: 22,
+              height: 22,
+              colorFilter: AppearancePage.iconFilter(context),
             ),
             const SizedBox(width: 16),
             Expanded(
