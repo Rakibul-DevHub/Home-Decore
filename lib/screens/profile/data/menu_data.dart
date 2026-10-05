@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class MenuItem {
   const MenuItem({
     required this.id,
@@ -26,37 +24,37 @@ abstract final class MenuData {
       id: 'saved',
       title: 'Saved',
       subtitle: "Artworks and post you've saved",
-      iconAsset: 'assets/icons/save.svg',       // bookmark
+      iconAsset: 'assets/icons/save.svg',
     ),
     MenuItem(
       id: 'orders',
       title: 'Order & Purchases',
       subtitle: 'Track orders and view your history',
-      iconAsset: 'assets/icons/cart.svg',      // shopping bag
+      iconAsset: 'assets/icons/cart.svg',
     ),
     MenuItem(
       id: 'selling',
       title: 'Selling',
       subtitle: 'Manage your listings and sales',
-      iconAsset: 'assets/icons/tag.svg',     // tag
+      iconAsset: 'assets/icons/selling.svg',
     ),
     MenuItem(
       id: 'offers',
       title: 'Offers & Bids',
       subtitle: 'Bids, offers, and auction activity',
-      iconAsset: 'assets/icons/offer_bid.svg',     // gavel
+      iconAsset: 'assets/icons/offer_bid.svg',
     ),
     MenuItem(
       id: 'settings',
       title: 'Settings',
       subtitle: 'Account, preferences, and privacy',
-      iconAsset: 'assets/icons/settings.svg',    // gear
+      iconAsset: 'assets/icons/settings.svg',
     ),
     MenuItem(
       id: 'invite',
       title: 'Invite Friends',
       subtitle: 'Account, preferences, and privacy',
-      iconAsset: 'assets/icons/invite_friend.svg',      // person with +
+      iconAsset: 'assets/icons/invite_friend.svg',
     ),
   ];
 }

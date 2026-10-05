@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kolek/routes/app_route.dart';
 
 import '../../../screens/appearance/appearance_page.dart';
 import '../../../theme/kolek_colors.dart';
@@ -271,7 +272,7 @@ class _LogoutFooter extends StatelessWidget {
         children: [
           InkWell(
             onTap: () =>
-                context.read<MenuBloc>().add(const MenuLogoutRequested()),
+                Navigator.pushNamed(context, AppRoutes.signIn),
             borderRadius: BorderRadius.circular(6),
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
