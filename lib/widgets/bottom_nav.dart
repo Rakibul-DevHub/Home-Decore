@@ -19,11 +19,16 @@
 //   const KolekBottomNav({
 //     required this.selectedIndex,
 //     required this.onSelected,
+//     this.visible = true,
 //     super.key,
 //   });
 //
 //   final int selectedIndex;
 //   final ValueChanged<int> onSelected;
+//
+//   /// Whether the bar is currently revealed. The shell toggles this based
+//   /// on scroll direction: false while scrolling down, true while scrolling up.
+//   final bool visible;
 //
 //   static const indicatorColor = Color(0xFF2B7FFF);
 //
@@ -64,6 +69,7 @@
 //   static const _slotHeight = 12.0;
 //   static const _barHeight = 3.0;
 //   static const _duration = Duration(milliseconds: 320);
+//   static const _hideDuration = Duration(milliseconds: 220);
 //
 //   late final AnimationController _controller;
 //   late final Animation<double> _progress;
@@ -84,7 +90,6 @@
 //       parent: _controller,
 //       curve: Curves.easeInOutCubic,
 //     );
-//     // Settled: underline already under the current tab.
 //     _controller.value = 1;
 //   }
 //
@@ -95,7 +100,6 @@
 //
 //     _previousIndex = oldWidget.selectedIndex;
 //     _currentIndex = widget.selectedIndex;
-//     // One shared timeline: previous goes down while current comes up.
 //     _controller.forward(from: 0);
 //   }
 //
@@ -105,10 +109,6 @@
 //     super.dispose();
 //   }
 //
-//   /// Shared progress `t` (0 → 1):
-//   /// - previous: dy = t * slot   (visible → hidden downward)
-//   /// - current:  dy = (1-t)*slot (hidden → visible upward)
-//   /// - others:   fully hidden
 //   double _dyFor(int index, double t) {
 //     if (index == _currentIndex) return (1 - t) * _slotHeight;
 //     if (index == _previousIndex && _previousIndex != _currentIndex) {
@@ -123,32 +123,46 @@
 //     final line = AppearancePage.line(context);
 //     final icon = AppearancePage.icon(context);
 //
-//     return Material(
-//       color: background,
-//       child: SafeArea(
-//         top: false,
-//         child: Container(
-//           height: 64,
-//           decoration: BoxDecoration(
-//             border: Border(top: BorderSide(color: line)),
-//           ),
-//           child: AnimatedBuilder(
-//             animation: _progress,
-//             builder: (context, _) {
-//               final t = _progress.value;
-//               return Row(
-//                 children: List.generate(KolekBottomNav.items.length, (index) {
-//                   return Expanded(
-//                     child: _buildNavItem(
-//                       index,
-//                       KolekBottomNav.items[index],
-//                       _dyFor(index, t),
-//                       icon,
+//     // `AnimatedAlign` with `heightFactor` smoothly collapses the bar's
+//     // vertical space to zero when hidden — so the body expands into the
+//     // freed space, instead of the bar sliding over it.
+//     return ClipRect(
+//       child: AnimatedAlign(
+//         alignment: Alignment.bottomCenter,
+//         heightFactor: widget.visible ? 1.0 : 0.0,
+//         duration: _hideDuration,
+//         curve: Curves.easeOutCubic,
+//         child: Material(
+//           color: background,
+//           child: SafeArea(
+//             top: false,
+//             child: Container(
+//               height: 64,
+//               decoration: BoxDecoration(
+//                 border: Border(top: BorderSide(color: line)),
+//               ),
+//               child: AnimatedBuilder(
+//                 animation: _progress,
+//                 builder: (context, _) {
+//                   final t = _progress.value;
+//                   return Row(
+//                     children: List.generate(
+//                       KolekBottomNav.items.length,
+//                           (index) {
+//                         return Expanded(
+//                           child: _buildNavItem(
+//                             index,
+//                             KolekBottomNav.items[index],
+//                             _dyFor(index, t),
+//                             icon,
+//                           ),
+//                         );
+//                       },
 //                     ),
 //                   );
-//                 }),
-//               );
-//             },
+//                 },
+//               ),
+//             ),
 //           ),
 //         ),
 //       ),
@@ -156,11 +170,11 @@
 //   }
 //
 //   Widget _buildNavItem(
-//     int index,
-//     NavItem item,
-//     double underlineDy,
-//     Color iconColor,
-//   ) {
+//       int index,
+//       NavItem item,
+//       double underlineDy,
+//       Color iconColor,
+//       ) {
 //     final isSelected = widget.selectedIndex == index;
 //     return Semantics(
 //       button: true,
@@ -193,9 +207,7 @@
 //               ),
 //             ),
 //
-//             ///
-//             /// ----- selected bottom index underline ------
-//             ///
+//             /// ----- selected bottom index underline -----
 //             SizedBox(
 //               height: _slotHeight,
 //               width: double.infinity,
@@ -205,7 +217,7 @@
 //                   child: Align(
 //                     alignment: Alignment.topCenter,
 //                     child: Container(
-//                       width: 0, // ----- controll underline width -----
+//                       width: 0, // ----- control underline width -----
 //                       height: _barHeight,
 //                       decoration: BoxDecoration(
 //                         color: KolekBottomNav.indicatorColor,
@@ -225,8 +237,6 @@
 
 
 
-
-/// -=-=>>
 
 
 import 'package:flutter/material.dart';
@@ -411,11 +421,12 @@ class _KolekBottomNavState extends State<KolekBottomNav>
       button: true,
       selected: isSelected,
       label: item.label,
-      child: InkWell(
+      child: GestureDetector(
         key: ValueKey('bottom-nav-$index'),
+        // `opaque` makes the whole cell area tappable, not just the
+        // visible children — same reach as the previous InkWell.
+        behavior: HitTestBehavior.opaque,
         onTap: () => widget.onSelected(index),
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
         child: Column(
           children: [
             Expanded(
