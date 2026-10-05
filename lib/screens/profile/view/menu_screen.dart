@@ -19,7 +19,7 @@ class MenuScreen extends StatelessWidget {
     // 'orders': AppRoute.orders,
     // 'selling': AppRoute.selling,
     // 'offers': AppRoute.offers,
-    // 'settings': AppRoute.settings,
+    'settings': AppRoutes.settings,
     // 'invite': AppRoute.invite,
   };
 

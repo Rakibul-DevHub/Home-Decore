@@ -215,6 +215,8 @@ import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
 import '../screens/profile/bloc/menu_bloc.dart';
 import '../screens/profile/view/menu_screen.dart';
+import '../screens/settings/bloc/settings_bloc.dart';
+import '../screens/settings/view/settings_screen.dart';
 import '../screens/shop/view/shop_filter_screen.dart';
 import '../screens/home/bloc/home_bloc.dart';
 import '../screens/messages/view/inbox_screen.dart';
@@ -254,6 +256,7 @@ abstract final class AppRoutes {
   static const inbox = '/inbox';
   static const notifications = '/notifications';
   static const menu = '/menu';
+  static const settings = '/settings';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -347,6 +350,10 @@ abstract final class AppRoutes {
     menu: (_) => BlocProvider(
       create: (_) => MenuBloc(),
       child: const MenuScreen(),
+    ),
+    settings: (_) => BlocProvider(
+      create: (_) => SettingsBloc(),
+      child: const SettingsScreen(),
     ),
   };
 
