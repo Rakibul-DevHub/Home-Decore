@@ -78,7 +78,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Photos ──────────────────────────────────────
+                    // --- Photos --------------------------------
                     BlocSelector<ListProductBloc, ListProductState,
                         ({List<String> photos, bool canAdd})>(
                       selector: (s) =>
@@ -91,7 +91,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 22),
 
-                    // ── Title ───────────────────────────────────────
+                    // --- Title --------------------------------─
                     const _FieldLabel(ListProductData.titleLabel),
                     const SizedBox(height: 8),
                     _TextInput(
@@ -104,7 +104,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 18),
 
-                    // ── Artist ──────────────────────────────────────
+                    // --- Artist --------------------------------
                     const _FieldLabel(ListProductData.artistLabel),
                     const SizedBox(height: 8),
                     _TextInput(
@@ -117,7 +117,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 18),
 
-                    // ── Year ────────────────────────────────────────
+                    // --- Year --------------------------------
                     const _FieldLabel(ListProductData.yearLabel),
                     const SizedBox(height: 8),
                     _TextInput(
@@ -129,7 +129,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 18),
 
-                    // ── Category ────────────────────────────────────
+                    // --- Category -----------------------------------
                     const _FieldLabel(ListProductData.categoryLabel),
                     const SizedBox(height: 8),
                     BlocSelector<ListProductBloc, ListProductState, String?>(
@@ -143,7 +143,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 18),
 
-                    // ── Dimensions ──────────────────────────────────
+                    // --- Dimensions --------------------------------
                     const _FieldLabel(ListProductData.dimensionsLabel),
                     const SizedBox(height: 8),
                     _DimensionsRow(
@@ -158,7 +158,7 @@ class _ListProductScreenState extends State<ListProductScreen> {
                     ),
                     const SizedBox(height: 28),
 
-                    // ── Next ────────────────────────────────────────
+                    // --- Next --------------------------------
                     BlocSelector<ListProductBloc, ListProductState, bool>(
                       selector: (s) => s.canProceed,
                       builder: (context, enabled) =>
@@ -178,9 +178,9 @@ class _ListProductScreenState extends State<ListProductScreen> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
-// App bar
-// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
+/// App bar
+/// ------------------------------------─
 
 class _AppBar extends StatelessWidget {
   const _AppBar();
@@ -219,9 +219,9 @@ class _AppBar extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
-// Hero
-// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
+/// Hero
+/// ------------------------------------─
 
 class _HeroSection extends StatelessWidget {
   const _HeroSection();
@@ -286,9 +286,9 @@ class _HeroSection extends StatelessWidget {
   }
 }
 
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 /// Photos
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 
 class _PhotosSection extends StatelessWidget {
   const _PhotosSection({
@@ -512,9 +512,9 @@ class _EmptyPhotoTile extends StatelessWidget {
   }
 }
 
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 /// Field label
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 
 class _FieldLabel extends StatelessWidget {
   const _FieldLabel(this.text);
@@ -537,9 +537,9 @@ class _FieldLabel extends StatelessWidget {
   }
 }
 
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 /// Text input
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 
 class _TextInput extends StatelessWidget {
   const _TextInput({
@@ -615,9 +615,9 @@ class _TextInput extends StatelessWidget {
   }
 }
 
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 /// Category dropdown
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 
 class _CategoryDropdown extends StatelessWidget {
   const _CategoryDropdown({
@@ -692,9 +692,9 @@ class _CategoryDropdown extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
-// Dimensions row
-// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
+/// Dimensions row
+/// ------------------------------------─
 
 class _DimensionsRow extends StatelessWidget {
   const _DimensionsRow({
@@ -743,9 +743,9 @@ class _DimensionsRow extends StatelessWidget {
   }
 }
 
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 /// Next button + Save draft link
-/// ─────────────────────────────────────────────────────────────────────────
+/// ------------------------------------─
 
 class _NextButton extends StatelessWidget {
   const _NextButton({required this.enabled});
