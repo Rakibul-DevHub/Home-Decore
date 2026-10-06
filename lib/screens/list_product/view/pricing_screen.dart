@@ -10,6 +10,7 @@ import '../bloc/list_product_bloc.dart';
 import '../bloc/list_product_event.dart';
 import '../bloc/list_product_state.dart';
 import '../data/pricing_data.dart';
+import 'list_product_review_screen.dart';
 
 part 'pricing_app_bar.dart';
 part 'pricing_listing_type.dart';

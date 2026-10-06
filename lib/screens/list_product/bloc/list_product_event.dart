@@ -257,3 +257,26 @@ final class ListProductEndTimeChanged extends ListProductEvent {
   @override
   List<Object?> get props => [value];
 }
+
+// ── Review & Details events ──────────────────────────────────────────
+
+final class ListProductDescriptionChanged extends ListProductEvent {
+  const ListProductDescriptionChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductFramingChanged extends ListProductEvent {
+  const ListProductFramingChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductReturnPolicyChanged extends ListProductEvent {
+  const ListProductReturnPolicyChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}

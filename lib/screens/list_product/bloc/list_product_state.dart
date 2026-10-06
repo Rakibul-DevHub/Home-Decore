@@ -114,6 +114,10 @@ final class ListProductState extends Equatable {
     this.startTime = '',
     this.endDate = '',
     this.endTime = '',
+    // Review / Details
+    this.description = '',
+    this.framing = 'Not Framed',
+    this.returnPolicy = 'No Returns',
     // Meta
     this.submitting = false,
   });
@@ -141,6 +145,11 @@ final class ListProductState extends Equatable {
   final String startTime;
   final String endDate;
   final String endTime;
+
+  // ── Review / Details ───────────────────────────────────────────────
+  final String description;
+  final String framing;
+  final String returnPolicy;
 
   final bool submitting;
 
@@ -186,6 +195,9 @@ final class ListProductState extends Equatable {
     String? startTime,
     String? endDate,
     String? endTime,
+    String? description,
+    String? framing,
+    String? returnPolicy,
     bool? submitting,
   }) {
     return ListProductState(
@@ -207,6 +219,9 @@ final class ListProductState extends Equatable {
       startTime: startTime ?? this.startTime,
       endDate: endDate ?? this.endDate,
       endTime: endTime ?? this.endTime,
+      description: description ?? this.description,
+      framing: framing ?? this.framing,
+      returnPolicy: returnPolicy ?? this.returnPolicy,
       submitting: submitting ?? this.submitting,
     );
   }
@@ -231,6 +246,9 @@ final class ListProductState extends Equatable {
     startTime,
     endDate,
     endTime,
+    description,
+    framing,
+    returnPolicy,
     submitting,
   ];
 }

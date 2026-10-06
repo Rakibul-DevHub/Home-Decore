@@ -44,8 +44,15 @@ class _PricingAppBar extends StatelessWidget {
           const Spacer(),
           TextButton(
             onPressed: () {
-              // TODO: navigate to the review/summary screen.
-              Navigator.of(context).pop();
+              final bloc = context.read<ListProductBloc>();
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => BlocProvider.value(
+                    value: bloc,
+                    child: const ListProductReviewScreen(),
+                  ),
+                ),
+              );
             },
             style: TextButton.styleFrom(
               foregroundColor: KolekColors.blue600,

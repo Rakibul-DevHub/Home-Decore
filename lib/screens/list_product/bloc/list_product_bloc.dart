@@ -146,6 +146,10 @@ class ListProductBloc extends Bloc<ListProductEvent, ListProductState> {
     on<ListProductStartTimeChanged>(_onStartTimeChanged);
     on<ListProductEndDateChanged>(_onEndDateChanged);
     on<ListProductEndTimeChanged>(_onEndTimeChanged);
+    // Review / Details
+    on<ListProductDescriptionChanged>(_onDescriptionChanged);
+    on<ListProductFramingChanged>(_onFramingChanged);
+    on<ListProductReturnPolicyChanged>(_onReturnPolicyChanged);
   }
 
   // ── Form ──────────────────────────────────────────────────────────
@@ -310,5 +314,28 @@ class ListProductBloc extends Bloc<ListProductEvent, ListProductState> {
       Emitter<ListProductState> emit,
       ) {
     emit(state.copyWith(endTime: event.value));
+  }
+
+  // ── Review / Details ───────────────────────────────────────────────
+  void _onDescriptionChanged(
+      ListProductDescriptionChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    if (event.value.length > 1000) return;
+    emit(state.copyWith(description: event.value));
+  }
+
+  void _onFramingChanged(
+      ListProductFramingChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(framing: event.value));
+  }
+
+  void _onReturnPolicyChanged(
+      ListProductReturnPolicyChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(returnPolicy: event.value));
   }
 }
