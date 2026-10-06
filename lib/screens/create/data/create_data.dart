@@ -1,5 +1,5 @@
 abstract final class CreateData {
-  // ── Hero ────────────────────────────────────────────────────────────
+  // ---- Hero --------------------------------
   static const heroHeadline = 'Make\nsomething\nworth\nsharing.';
   static const heroBody =
       'Post your art, process,\nor inspiration.\nThe world is watching.';
@@ -7,7 +7,7 @@ abstract final class CreateData {
   static const heroAssetWidth = 199.0;
   static const heroAssetHeight = 231.0;
 
-  // ── Action cards ────────────────────────────────────────────────────
+  // ---- Action cards --------------------------------
   static const createPostTitle = 'Create Post';
   static const createPostSubtitle =
       'Share photos or videos\nwith your followers.';
@@ -16,6 +16,6 @@ abstract final class CreateData {
   static const listProductSubtitle =
       'Sell your art or collectibles\nto the kolek community.';
 
-  // ── Snackbar copy ───────────────────────────────────────────────────
+  // ---- Snackbar copy --------------------------------
   static const listProductComingSoon = 'List a Product coming soon';
 }

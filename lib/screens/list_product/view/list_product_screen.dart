@@ -842,6 +842,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kolek/screens/list_product/view/pricing_screen.dart';
 
 import '../../../screens/appearance/appearance_page.dart';
 import '../../../theme/kolek_colors.dart';

@@ -1,6 +1,47 @@
 part of 'list_product_screen.dart';
 
 /// Primary CTA. Disabled until the form's required fields are valid.
+// class _NextButton extends StatelessWidget {
+//   const _NextButton({required this.enabled});
+//
+//   final bool enabled;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       width: double.infinity,
+//       height: 52,
+//       child: FilledButton(
+//         onPressed: enabled
+//             ? () => context
+//             .read<ListProductBloc>()
+//             .add(const ListProductSubmitted())
+//             : null,
+//         style: FilledButton.styleFrom(
+//           backgroundColor: KolekColors.blue600,
+//           disabledBackgroundColor:
+//           KolekColors.blue600.withValues(alpha: 0.35),
+//           foregroundColor: Colors.white,
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(0),
+//           ),
+//           // Style the label via textStyle so it applies consistently
+//           // across enabled and disabled states.
+//           textStyle: KolekText.sans(
+//             size: 16,
+//             weight: FontWeight.w500,
+//             height: 20 / 16,
+//             letterSpacing: 0,
+//           ),
+//         ),
+//         child: const Text(ListProductData.nextLabel),
+//       ),
+//     );
+//   }
+// }
+
+
+
 class _NextButton extends StatelessWidget {
   const _NextButton({required this.enabled});
 
@@ -12,11 +53,7 @@ class _NextButton extends StatelessWidget {
       width: double.infinity,
       height: 52,
       child: FilledButton(
-        onPressed: enabled
-            ? () => context
-            .read<ListProductBloc>()
-            .add(const ListProductSubmitted())
-            : null,
+        onPressed: enabled ? () => _openPricing(context) : null,
         style: FilledButton.styleFrom(
           backgroundColor: KolekColors.blue600,
           disabledBackgroundColor:
@@ -25,8 +62,6 @@ class _NextButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0),
           ),
-          // Style the label via textStyle so it applies consistently
-          // across enabled and disabled states.
           textStyle: KolekText.sans(
             size: 16,
             weight: FontWeight.w500,
@@ -38,8 +73,19 @@ class _NextButton extends StatelessWidget {
       ),
     );
   }
-}
 
+  void _openPricing(BuildContext context) {
+    final bloc = context.read<ListProductBloc>();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BlocProvider.value(
+          value: bloc,
+          child: const PricingScreen(),
+        ),
+      ),
+    );
+  }
+}
 /// Secondary action below the CTA — a text-only row with a fade-out
 /// divider underneath.
 class _SaveDraftLink extends StatelessWidget {
