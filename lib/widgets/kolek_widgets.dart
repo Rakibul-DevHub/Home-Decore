@@ -195,7 +195,7 @@ class KolekLogoWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
-      'assets/icons/text_logo.svg',
+      'assets/icons/logo_withText.svg',
       height: height,
       fit: BoxFit.contain,
     );

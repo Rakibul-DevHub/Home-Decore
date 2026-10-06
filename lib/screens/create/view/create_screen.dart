@@ -329,7 +329,7 @@ class _CreateAppBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(14, 8, 14, 0),
       child: Row(
         children: [
-          const KolekTextLogo(height: 30),
+          const KolekLogoWithText(height: 35),
           const Spacer(),
           GestureDetector(
             onTap: () => Navigator.of(context).pop(),
