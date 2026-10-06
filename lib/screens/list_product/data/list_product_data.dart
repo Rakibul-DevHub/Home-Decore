@@ -15,14 +15,14 @@ abstract final class ListProductData {
 
   /// Cycle used for the demo — in a real build this would be replaced by
   /// an image picker returning real file paths.
-  static const samplePhotoPool = [
-    'assets/images/img1.png',
-    'assets/images/img2.png',
-    'assets/images/img3.png',
-    'assets/images/img4.png',
-    'assets/images/img5.png',
-    'assets/images/img6.png',
-  ];
+  // static const samplePhotoPool = [
+  //   'assets/images/img1.png',
+  //   'assets/images/img2.png',
+  //   'assets/images/img3.png',
+  //   'assets/images/img4.png',
+  //   'assets/images/img5.png',
+  //   'assets/images/img6.png',
+  // ];
 
   // ── Form fields ───────────────────────────────────────────────────
   static const titleLabel = 'Title';

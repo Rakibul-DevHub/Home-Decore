@@ -30,9 +30,9 @@ class ListProductBloc extends Bloc<ListProductEvent, ListProductState> {
     }
 
     // Fallback for tests / demo without a picker.
-    final pool = ListProductData.samplePhotoPool;
-    final next = pool[state.photos.length % pool.length];
-    emit(state.copyWith(photos: [...state.photos, next]));
+    // final pool = ListProductData.samplePhotoPool;
+    // final next = pool[state.photos.length % pool.length];
+    // emit(state.copyWith(photos: [...state.photos, next]));
   }
 
   void _onPhotoRemoved(
