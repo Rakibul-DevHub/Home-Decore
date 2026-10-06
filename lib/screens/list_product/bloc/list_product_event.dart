@@ -208,3 +208,52 @@ final class ListProductPaymentMethodChanged extends ListProductEvent {
   @override
   List<Object?> get props => [method];
 }
+
+final class ListProductStartingBidChanged extends ListProductEvent {
+  const ListProductStartingBidChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductReservePriceChanged extends ListProductEvent {
+  const ListProductReservePriceChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductBidIncrementChanged extends ListProductEvent {
+  const ListProductBidIncrementChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductStartDateChanged extends ListProductEvent {
+  const ListProductStartDateChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductStartTimeChanged extends ListProductEvent {
+  const ListProductStartTimeChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductEndDateChanged extends ListProductEvent {
+  const ListProductEndDateChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ListProductEndTimeChanged extends ListProductEvent {
+  const ListProductEndTimeChanged(this.value);
+  final String value;
+  @override
+  List<Object?> get props => [value];
+}

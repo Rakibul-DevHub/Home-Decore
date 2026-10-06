@@ -6,14 +6,14 @@ class _ListingTypeCard extends StatelessWidget {
   const _ListingTypeCard({
     required this.title,
     required this.subtitle,
-    required this.icon,
+    required this.iconAsset,
     required this.selected,
     required this.onTap,
   });
 
   final String title;
   final String subtitle;
-  final IconData icon;
+  final String iconAsset;
   final bool selected;
   final VoidCallback onTap;
 
@@ -45,7 +45,7 @@ class _ListingTypeCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: KolekText.sans(
+                    style: KolekText.mono(
                       size: 15,
                       weight: FontWeight.w600,
                       height: 1.2,
@@ -53,13 +53,13 @@ class _ListingTypeCard extends StatelessWidget {
                       color: fg,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     subtitle,
-                    style: KolekText.sans(
+                    style: KolekText.mono(
                       size: 12,
                       weight: FontWeight.w400,
-                      height: 1.35,
+                      height: 1.4,
                       letterSpacing: 0,
                       color: muted,
                     ),
@@ -72,22 +72,26 @@ class _ListingTypeCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (selected)
-                  const Icon(
-                    Icons.check_circle,
-                    size: 20,
-                    color: KolekColors.blue600,
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: KolekColors.blue600,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check,
+                      size: 13,
+                      color: Colors.white,
+                    ),
                   )
                 else
                   const SizedBox(height: 20),
-                const SizedBox(height: 20),
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: line,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Icon(icon, size: 18, color: fg),
+                const SizedBox(height: 16),
+                SvgPicture.asset(
+                  iconAsset,
+                  width: 36,
+                  height: 36,
                 ),
               ],
             ),

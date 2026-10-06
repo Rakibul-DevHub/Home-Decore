@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../screens/appearance/appearance_page.dart';
 import '../../../theme/kolek_colors.dart';
@@ -25,17 +26,27 @@ class PricingScreen extends StatefulWidget {
 
 class _PricingScreenState extends State<PricingScreen> {
   final _priceCtrl = TextEditingController();
+  final _startingBidCtrl = TextEditingController();
+  final _reservePriceCtrl = TextEditingController();
+  final _bidIncrementCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     // Seed from state in case the user came back to this screen.
-    _priceCtrl.text = context.read<ListProductBloc>().state.price;
+    final state = context.read<ListProductBloc>().state;
+    _priceCtrl.text = state.price;
+    _startingBidCtrl.text = state.startingBid;
+    _reservePriceCtrl.text = state.reservePrice;
+    _bidIncrementCtrl.text = state.bidIncrement;
   }
 
   @override
   void dispose() {
     _priceCtrl.dispose();
+    _startingBidCtrl.dispose();
+    _reservePriceCtrl.dispose();
+    _bidIncrementCtrl.dispose();
     super.dispose();
   }
 
@@ -62,7 +73,7 @@ class _PricingScreenState extends State<PricingScreen> {
                         _ListingTypeCard(
                           title: PricingData.buyNowTitle,
                           subtitle: PricingData.buyNowSubtitle,
-                          icon: Icons.attach_money,
+                          iconAsset: PricingData.buyNowIconAsset,
                           selected: kind == ListingKind.buyNow,
                           onTap: () => context.read<ListProductBloc>().add(
                             const ListProductListingKindChanged(
@@ -74,7 +85,7 @@ class _PricingScreenState extends State<PricingScreen> {
                         _ListingTypeCard(
                           title: PricingData.auctionTitle,
                           subtitle: PricingData.auctionSubtitle,
-                          icon: Icons.gavel,
+                          iconAsset: PricingData.auctionIconAsset,
                           selected: kind == ListingKind.auction,
                           onTap: () => context.read<ListProductBloc>().add(
                             const ListProductListingKindChanged(
@@ -87,22 +98,32 @@ class _PricingScreenState extends State<PricingScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Price ───────────────────────────────────────────
-                  const _SectionLabel(PricingData.priceLabel),
-                  const SizedBox(height: 12),
-                  BlocSelector<ListProductBloc, ListProductState,
-                      ({String currency, String price})>(
-                    selector: (s) => (currency: s.currency, price: s.price),
-                    builder: (context, data) => _PriceField(
-                      controller: _priceCtrl,
-                      currency: data.currency,
-                      onCurrencyChanged: (v) => context
-                          .read<ListProductBloc>()
-                          .add(ListProductCurrencyChanged(v)),
-                      onPriceChanged: (v) => context
-                          .read<ListProductBloc>()
-                          .add(ListProductPriceChanged(v)),
-                    ),
+                  // ── Price or Auction Options ───────────────────────
+                  BlocSelector<ListProductBloc, ListProductState, ListingKind>(
+                    selector: (s) => s.listingKind,
+                    builder: (context, kind) {
+                      if (kind == ListingKind.buyNow) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const _SectionLabel(PricingData.priceLabel),
+                            const SizedBox(height: 12),
+                            _PriceField(
+                              controller: _priceCtrl,
+                              onPriceChanged: (v) => context
+                                  .read<ListProductBloc>()
+                                  .add(ListProductPriceChanged(v)),
+                            ),
+                          ],
+                        );
+                      }
+
+                      return _AuctionPricingSection(
+                        startingBidCtrl: _startingBidCtrl,
+                        reservePriceCtrl: _reservePriceCtrl,
+                        bidIncrementCtrl: _bidIncrementCtrl,
+                      );
+                    },
                   ),
                   const SizedBox(height: 24),
 

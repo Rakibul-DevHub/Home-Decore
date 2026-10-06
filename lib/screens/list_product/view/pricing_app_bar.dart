@@ -24,8 +24,8 @@ class _PricingAppBar extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.arrow_back,
-                size: 20,
+                Icons.arrow_back_ios_new,
+                size: 18,
                 color: bg,
               ),
             ),
@@ -42,26 +42,22 @@ class _PricingAppBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          BlocSelector<ListProductBloc, ListProductState, bool>(
-            selector: (s) => s.canSubmitPricing,
-            builder: (context, enabled) => TextButton(
-              onPressed: enabled
-                  ? () {
-                // TODO: navigate to the review/summary screen.
-                Navigator.of(context).pop();
-              }
-                  : null,
-              child: Text(
-                PricingData.nextLabel,
-                style: KolekText.sans(
-                  size: 16,
-                  weight: FontWeight.w500,
-                  height: 20 / 16,
-                  letterSpacing: 0,
-                  color: enabled
-                      ? KolekColors.blue600
-                      : AppearancePage.muted(context),
-                ),
+          TextButton(
+            onPressed: () {
+              // TODO: navigate to the review/summary screen.
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: KolekColors.blue600,
+            ),
+            child: Text(
+              PricingData.nextLabel,
+              style: KolekText.sans(
+                size: 16,
+                weight: FontWeight.w500,
+                height: 20 / 16,
+                letterSpacing: 0,
+                color: KolekColors.blue600,
               ),
             ),
           ),

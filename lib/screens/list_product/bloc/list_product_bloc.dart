@@ -138,6 +138,14 @@ class ListProductBloc extends Bloc<ListProductEvent, ListProductState> {
     on<ListProductPriceChanged>(_onPriceChanged);
     on<ListProductCurrencyChanged>(_onCurrencyChanged);
     on<ListProductPaymentMethodChanged>(_onPaymentMethodChanged);
+    // Auction
+    on<ListProductStartingBidChanged>(_onStartingBidChanged);
+    on<ListProductReservePriceChanged>(_onReservePriceChanged);
+    on<ListProductBidIncrementChanged>(_onBidIncrementChanged);
+    on<ListProductStartDateChanged>(_onStartDateChanged);
+    on<ListProductStartTimeChanged>(_onStartTimeChanged);
+    on<ListProductEndDateChanged>(_onEndDateChanged);
+    on<ListProductEndTimeChanged>(_onEndTimeChanged);
   }
 
   // ── Form ──────────────────────────────────────────────────────────
@@ -249,5 +257,58 @@ class ListProductBloc extends Bloc<ListProductEvent, ListProductState> {
       Emitter<ListProductState> emit,
       ) {
     emit(state.copyWith(paymentMethod: event.method));
+  }
+
+  // ── Auction ────────────────────────────────────────────────────────
+  void _onStartingBidChanged(
+      ListProductStartingBidChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    final cleaned = event.value.replaceAll(RegExp(r'[^0-9.,]'), '');
+    emit(state.copyWith(startingBid: cleaned));
+  }
+
+  void _onReservePriceChanged(
+      ListProductReservePriceChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    final cleaned = event.value.replaceAll(RegExp(r'[^0-9.,]'), '');
+    emit(state.copyWith(reservePrice: cleaned));
+  }
+
+  void _onBidIncrementChanged(
+      ListProductBidIncrementChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    final cleaned = event.value.replaceAll(RegExp(r'[^0-9.,]'), '');
+    emit(state.copyWith(bidIncrement: cleaned));
+  }
+
+  void _onStartDateChanged(
+      ListProductStartDateChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(startDate: event.value));
+  }
+
+  void _onStartTimeChanged(
+      ListProductStartTimeChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(startTime: event.value));
+  }
+
+  void _onEndDateChanged(
+      ListProductEndDateChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(endDate: event.value));
+  }
+
+  void _onEndTimeChanged(
+      ListProductEndTimeChanged event,
+      Emitter<ListProductState> emit,
+      ) {
+    emit(state.copyWith(endTime: event.value));
   }
 }

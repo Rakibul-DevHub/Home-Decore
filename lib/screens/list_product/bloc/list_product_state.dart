@@ -106,6 +106,14 @@ final class ListProductState extends Equatable {
     this.price = '',
     this.currency = PricingData.defaultCurrency,
     this.paymentMethod,
+    // Auction
+    this.startingBid = '',
+    this.reservePrice = '',
+    this.bidIncrement = '',
+    this.startDate = '',
+    this.startTime = '',
+    this.endDate = '',
+    this.endTime = '',
     // Meta
     this.submitting = false,
   });
@@ -124,6 +132,15 @@ final class ListProductState extends Equatable {
   final String price;
   final String currency;
   final PaymentMethod? paymentMethod;
+
+  // ── Auction ────────────────────────────────────────────────────────
+  final String startingBid;
+  final String reservePrice;
+  final String bidIncrement;
+  final String startDate;
+  final String startTime;
+  final String endDate;
+  final String endTime;
 
   final bool submitting;
 
@@ -145,8 +162,10 @@ final class ListProductState extends Equatable {
           isYearValid &&
           isCategoryValid;
 
-  bool get canSubmitPricing =>
-      isPriceValid && isPaymentValid;
+  bool get canSubmitPricing => switch (listingKind) {
+    ListingKind.buyNow => isPriceValid,
+    ListingKind.auction => startingBid.trim().isNotEmpty,
+  };
 
   ListProductState copyWith({
     List<String>? photos,
@@ -160,6 +179,13 @@ final class ListProductState extends Equatable {
     String? price,
     String? currency,
     PaymentMethod? paymentMethod,
+    String? startingBid,
+    String? reservePrice,
+    String? bidIncrement,
+    String? startDate,
+    String? startTime,
+    String? endDate,
+    String? endTime,
     bool? submitting,
   }) {
     return ListProductState(
@@ -174,6 +200,13 @@ final class ListProductState extends Equatable {
       price: price ?? this.price,
       currency: currency ?? this.currency,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      startingBid: startingBid ?? this.startingBid,
+      reservePrice: reservePrice ?? this.reservePrice,
+      bidIncrement: bidIncrement ?? this.bidIncrement,
+      startDate: startDate ?? this.startDate,
+      startTime: startTime ?? this.startTime,
+      endDate: endDate ?? this.endDate,
+      endTime: endTime ?? this.endTime,
       submitting: submitting ?? this.submitting,
     );
   }
@@ -191,6 +224,13 @@ final class ListProductState extends Equatable {
     price,
     currency,
     paymentMethod,
+    startingBid,
+    reservePrice,
+    bidIncrement,
+    startDate,
+    startTime,
+    endDate,
+    endTime,
     submitting,
   ];
 }

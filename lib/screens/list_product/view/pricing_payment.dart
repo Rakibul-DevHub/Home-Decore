@@ -5,33 +5,25 @@ class _PaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<ListProductBloc, ListProductState, PaymentMethod?>(
-      selector: (s) => s.paymentMethod,
-      builder: (context, selected) => Row(
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppearancePage.field(context),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppearancePage.line(context)),
+      ),
+      child: const Row(
         children: [
           Expanded(
-            child: _PaymentTile(
-              icon: Icons.account_balance_wallet_outlined,
+            child: _PaymentItem(
+              iconAsset: PricingData.debitCardIconAsset,
               label: PricingData.debitCardLabel,
-              selected: selected == PaymentMethod.debit,
-              onTap: () => context.read<ListProductBloc>().add(
-                const ListProductPaymentMethodChanged(
-                  PaymentMethod.debit,
-                ),
-              ),
             ),
           ),
-          const SizedBox(width: 12),
           Expanded(
-            child: _PaymentTile(
-              icon: Icons.credit_card,
+            child: _PaymentItem(
+              iconAsset: PricingData.creditCardIconAsset,
               label: PricingData.creditCardLabel,
-              selected: selected == PaymentMethod.credit,
-              onTap: () => context.read<ListProductBloc>().add(
-                const ListProductPaymentMethodChanged(
-                  PaymentMethod.credit,
-                ),
-              ),
             ),
           ),
         ],
@@ -40,57 +32,37 @@ class _PaymentSection extends StatelessWidget {
   }
 }
 
-class _PaymentTile extends StatelessWidget {
-  const _PaymentTile({
-    required this.icon,
+class _PaymentItem extends StatelessWidget {
+  const _PaymentItem({
+    required this.iconAsset,
     required this.label,
-    required this.selected,
-    required this.onTap,
   });
 
-  final IconData icon;
+  final String iconAsset;
   final String label;
-  final bool selected;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final fg = AppearancePage.foreground(context);
-    final line = AppearancePage.line(context);
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18),
-        decoration: BoxDecoration(
-          color: AppearancePage.field(context),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: selected ? KolekColors.blue600 : line,
-            width: selected ? 1.4 : 1,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SvgPicture.asset(
+          iconAsset,
+          width: 46,
+          height: 37,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          label,
+          style: KolekText.sans(
+            size: 14,
+            weight: FontWeight.w500,
+            height: 1.2,
+            color: AppearancePage.foreground(context),
           ),
         ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              size: 26,
-              color: selected ? KolekColors.blue600 : fg,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: KolekText.sans(
-                size: 13,
-                weight: FontWeight.w500,
-                height: 1.0,
-                color: fg,
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
