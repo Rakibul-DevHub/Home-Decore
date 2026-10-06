@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import '../data/list_product_data.dart';
 
 final class ListProductState extends Equatable {
