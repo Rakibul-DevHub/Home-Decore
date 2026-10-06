@@ -16,7 +16,5 @@ abstract final class NewPostData {
   static const settings = [
     'Add Location',
     'Add Hashtags',
-    'Connect Product',
-    'Advance Settings',
   ];
 }

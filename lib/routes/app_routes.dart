@@ -210,7 +210,6 @@ import '../screens/onboarding/bloc/onboarding_bloc.dart';
 import '../screens/onboarding/view/onboarding_screen.dart';
 import '../screens/cart/cubit/cart_cubit.dart';
 import '../screens/cart/view/cart_screen.dart';
-import '../screens/create/cubit/create_cubit.dart';
 import '../screens/create/view/create_screen.dart';
 import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
