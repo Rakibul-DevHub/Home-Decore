@@ -266,12 +266,17 @@ class CreateScreen extends StatelessWidget {
               case CreateAction.post:
                 Navigator.of(context).pushNamed(AppRoute.newPost);
                 context.read<CreateBloc>().add(const CreateActionHandled());
+              // case CreateAction.product:
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(
+              //       content: Text(CreateData.listProductComingSoon),
+              //     ),
+              //   );
+
               case CreateAction.product:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(CreateData.listProductComingSoon),
-                  ),
-                );
+                Navigator.of(context).pushNamed(AppRoutes.listProduct);
+                context.read<CreateBloc>().add(const CreateActionHandled());
+
                 context.read<CreateBloc>().add(const CreateActionHandled());
               case CreateAction.none:
                 break;

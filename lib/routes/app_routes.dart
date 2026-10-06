@@ -6,6 +6,8 @@ import 'package:kolek/screens/messages/bloc/inbox_bloc.dart';
 import 'package:kolek/screens/profile/bloc/profile_bloc.dart';
 import 'package:kolek/screens/shop/bloc/filter_bloc.dart';
 import 'package:kolek/screens/shop/bloc/shop_bloc.dart';
+import '../screens/list_product/bloc/list_product_bloc.dart';
+import '../screens/list_product/view/list_product_screen.dart';
 import '../screens/auth/create_account/bloc/create_account_bloc.dart';
 import '../screens/auth/create_account/view/create_account_screen.dart';
 import '../screens/auth/forgot_password/bloc/forgot_password_bloc.dart';
@@ -69,6 +71,7 @@ abstract final class AppRoutes {
   static const notifications = '/notifications';
   static const menu = '/menu';
   static const settings = '/settings';
+  static const listProduct = '/list-product';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -166,6 +169,10 @@ abstract final class AppRoutes {
     settings: (_) => BlocProvider(
       create: (_) => SettingsBloc(),
       child: const SettingsScreen(),
+    ),
+    listProduct: (_) => BlocProvider(
+      create: (_) => ListProductBloc(),
+      child: const ListProductScreen(),
     ),
   };
 
