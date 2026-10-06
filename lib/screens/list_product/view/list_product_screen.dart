@@ -1,3 +1,4 @@
+/**
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -820,6 +821,208 @@ class _SaveDraftLink extends StatelessWidget {
           height: 2,
         ),
       ],
+    );
+  }
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../screens/appearance/appearance_page.dart';
+import '../../../theme/kolek_colors.dart';
+import '../../../widgets/kolek_fade_divider.dart';
+import '../../../widgets/kolek_widgets.dart';
+import '../bloc/list_product_bloc.dart';
+import '../bloc/list_product_event.dart';
+import '../bloc/list_product_state.dart';
+import '../data/list_product_data.dart';
+import 'gallery_picker_sheet.dart';
+
+// Every part below shares this file's imports, and every private (`_`)
+// name is visible to the others — the classic Dart `part`/`part of`
+// layout. Keeps widget implementations out of the entry file while
+// preserving library-level privacy.
+part 'list_product_app_bar.dart';
+part 'list_product_hero.dart';
+part 'list_product_photos.dart';
+part 'list_product_form.dart';
+part 'list_product_actions.dart';
+
+class ListProductScreen extends StatefulWidget {
+  const ListProductScreen({super.key});
+
+  @override
+  State<ListProductScreen> createState() => _ListProductScreenState();
+}
+
+class _ListProductScreenState extends State<ListProductScreen> {
+  final _titleCtrl = TextEditingController();
+  final _artistCtrl = TextEditingController();
+  final _yearCtrl = TextEditingController();
+  final _widthCtrl = TextEditingController();
+  final _heightCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleCtrl.dispose();
+    _artistCtrl.dispose();
+    _yearCtrl.dispose();
+    _widthCtrl.dispose();
+    _heightCtrl.dispose();
+    super.dispose();
+  }
+
+  /// Opens the gallery modal and appends any picked photos to the form.
+  Future<void> _openGallery() async {
+    final bloc = context.read<ListProductBloc>();
+    final remaining =
+        ListProductData.maxPhotos - bloc.state.photos.length;
+    if (remaining <= 0) return;
+
+    final paths = await GalleryPickerSheet.show(
+      context,
+      maxSelectable: remaining,
+    );
+
+    if (!mounted || paths == null || paths.isEmpty) return;
+
+    for (final path in paths) {
+      bloc.add(ListProductPhotoAdded(path: path));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppearancePage.background(context),
+      body: SafeArea(
+        child: BlocListener<ListProductBloc, ListProductState>(
+          listenWhen: (prev, next) =>
+          !prev.submitting && next.submitting,
+          listener: (context, state) {
+            // TODO: navigate to the next step once it exists.
+          },
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const _AppBar(),
+              const _HeroSection(),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ── Photos ─────────────────────────────────────
+                    BlocSelector<ListProductBloc, ListProductState,
+                        ({List<String> photos, bool canAdd})>(
+                      selector: (s) =>
+                      (photos: s.photos, canAdd: s.canAddPhoto),
+                      builder: (context, data) => _PhotosSection(
+                        photos: data.photos,
+                        canAddPhoto: data.canAdd,
+                        onAddPhoto: _openGallery,
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+
+                    // ── Title ──────────────────────────────────────
+                    const _FieldLabel(ListProductData.titleLabel),
+                    const SizedBox(height: 8),
+                    _TextInput(
+                      controller: _titleCtrl,
+                      hint: ListProductData.titleHint,
+                      maxLength: ListProductData.titleMaxLength,
+                      onChanged: (v) => context
+                          .read<ListProductBloc>()
+                          .add(ListProductTitleChanged(v)),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // ── Artist ─────────────────────────────────────
+                    const _FieldLabel(ListProductData.artistLabel),
+                    const SizedBox(height: 8),
+                    _TextInput(
+                      controller: _artistCtrl,
+                      hint: ListProductData.artistHint,
+                      maxLength: ListProductData.artistMaxLength,
+                      onChanged: (v) => context
+                          .read<ListProductBloc>()
+                          .add(ListProductArtistChanged(v)),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // ── Year ───────────────────────────────────────
+                    const _FieldLabel(ListProductData.yearLabel),
+                    const SizedBox(height: 8),
+                    _TextInput(
+                      controller: _yearCtrl,
+                      hint: ListProductData.yearHint,
+                      onChanged: (v) => context
+                          .read<ListProductBloc>()
+                          .add(ListProductYearChanged(v)),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // ── Category ───────────────────────────────────
+                    const _FieldLabel(ListProductData.categoryLabel),
+                    const SizedBox(height: 8),
+                    BlocSelector<ListProductBloc, ListProductState, String?>(
+                      selector: (s) => s.category,
+                      builder: (context, category) => _CategoryDropdown(
+                        value: category,
+                        onSelected: (v) => context
+                            .read<ListProductBloc>()
+                            .add(ListProductCategoryChanged(v)),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // ── Dimensions ─────────────────────────────────
+                    const _FieldLabel(ListProductData.dimensionsLabel),
+                    const SizedBox(height: 8),
+                    _DimensionsRow(
+                      widthCtrl: _widthCtrl,
+                      heightCtrl: _heightCtrl,
+                      onWidthChanged: (v) => context
+                          .read<ListProductBloc>()
+                          .add(ListProductWidthChanged(v)),
+                      onHeightChanged: (v) => context
+                          .read<ListProductBloc>()
+                          .add(ListProductHeightChanged(v)),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // ── Actions ────────────────────────────────────
+                    BlocSelector<ListProductBloc, ListProductState, bool>(
+                      selector: (s) => s.canProceed,
+                      builder: (context, enabled) =>
+                          _NextButton(enabled: enabled),
+                    ),
+                    const _SaveDraftLink(),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
