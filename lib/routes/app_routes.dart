@@ -187,6 +187,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kolek/screens/create/bloc/create_bloc.dart';
 import 'package:kolek/screens/messages/bloc/inbox_bloc.dart';
 import 'package:kolek/screens/profile/bloc/profile_bloc.dart';
 import 'package:kolek/screens/shop/bloc/filter_bloc.dart';
@@ -336,7 +337,7 @@ abstract final class AppRoutes {
       child: const CartScreen(),
     ),
     create: (_) => BlocProvider(
-      create: (_) => CreateCubit(),
+      create: (_) => CreateBloc(),
       child: const CreateScreen(),
     ),
     newPost: (_) => BlocProvider(
