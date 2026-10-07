@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 abstract final class KolekColors {
   static const Color background = Color(0xFFF1F1F1);
+  static const Color green600 = Color(0xFF22C55E);
   static const Color blue600 = Color(0xFF155DFC);
   static const Color neutral50 = Color(0xFFFAFAFA);
   static const Color neutral100 = Color(0xFFF5F5F5);
