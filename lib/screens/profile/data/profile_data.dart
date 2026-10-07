@@ -9,7 +9,7 @@ abstract final class ProfileData {
   static const following = '500';
   static const works = '150';
 
-  static const tabs = ['WORKS', 'FOR SALE', 'SAVED', 'ABOUT'];
+  static const tabs = ['WORKS', 'FOR SALE', 'POST', 'ABOUT'];
 
   /// Space between tab labels. Lower = tighter. Try 12–24.
   static const tabGap = 28.0;
