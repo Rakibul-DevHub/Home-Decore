@@ -55,6 +55,8 @@ import '../screens/selling/bloc/selling_bloc.dart';
 import '../screens/selling/view/selling_screen.dart';
 import '../screens/bids_menu/bloc/bids_menu_bloc.dart';
 import '../screens/bids_menu/view/bids_menu_screen.dart';
+import '../screens/invite_friends/bloc/invite_friends_bloc.dart';
+import '../screens/invite_friends/view/invite_friends_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
 abstract final class AppRoutes {
@@ -84,6 +86,7 @@ abstract final class AppRoutes {
   static const orders = '/orders';
   static const selling = '/selling';
   static const bidsMenu = '/bids';
+  static const inviteFriends = '/invite-friends';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -201,6 +204,10 @@ abstract final class AppRoutes {
     bidsMenu: (_) => BlocProvider(
       create: (_) => BidsMenuBloc(),
       child: const BidsMenuScreen(),
+    ),
+    inviteFriends: (_) => BlocProvider(
+      create: (_) => InviteFriendsBloc(),
+      child: const InviteFriendsScreen(),
     ),
   };
 
