@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kolek/theme/kolek_colors.dart';
 
 import '../../../screens/appearance/appearance_page.dart';
 import '../bloc/settings_bloc.dart';
@@ -28,9 +29,6 @@ class SettingsScreen extends StatelessWidget {
     // 'terms': AppRoutes.terms,
     // 'about': AppRoutes.about,
   };
-
-  static const _logoutColor = Color(0xFF2B7FFF);
-  static const _destructiveColor = Color(0xFFD9483A);
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +66,8 @@ class SettingsScreen extends StatelessWidget {
                             _SettingsRow(
                               item: item,
                               onTap: () => _onRowTapped(context, item),
-                              logoutColor: _logoutColor,
-                              destructiveColor: _destructiveColor,
+                              logoutColor: KolekColors.blue600,
+                              destructiveColor: KolekColors.red600,
                             ),
                         ],
                         const SizedBox(height: 24),

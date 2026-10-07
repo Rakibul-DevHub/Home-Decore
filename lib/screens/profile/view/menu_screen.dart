@@ -17,7 +17,7 @@ class MenuScreen extends StatelessWidget {
   static const _routes = <String, String>{
     'saved': AppRoute.saved,
     'orders': AppRoute.orders,
-    // 'selling': AppRoute.selling,
+    'selling': AppRoute.selling,
     // 'offers': AppRoute.offers,
     'settings': AppRoutes.settings,
     // 'invite': AppRoute.invite,
@@ -93,9 +93,9 @@ class MenuScreen extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 // Header — back arrow + "Menu"
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 
 class _MenuHeader extends StatelessWidget {
   const _MenuHeader();
@@ -133,9 +133,9 @@ class _MenuHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 // User card — avatar + name + handle
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 
 class _UserCard extends StatelessWidget {
   const _UserCard();
@@ -189,9 +189,9 @@ class _UserCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 // Menu row — icon + title + subtitle + chevron
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 
 class _MenuRow extends StatelessWidget {
   const _MenuRow({required this.item, required this.onTap});
@@ -255,14 +255,12 @@ class _MenuRow extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 // Logout + version footer
-// ─────────────────────────────────────────────────────────────────────────
+// ------------
 
 class _LogoutFooter extends StatelessWidget {
   const _LogoutFooter();
-
-  static const _logoutColor = Color(0xFFE5484D);
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +277,7 @@ class _LogoutFooter extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.logout, size: 18, color: _logoutColor),
+                  Icon(Icons.logout, size: 18, color: KolekColors.red600),
                   SizedBox(width: 8),
                   Text(
                     'Log Out',
@@ -288,7 +286,7 @@ class _LogoutFooter extends StatelessWidget {
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       height: 1.0,
-                      color: _logoutColor,
+                      color: KolekColors.red600,
                     ),
                   ),
                 ],
