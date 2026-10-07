@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kolek/screens/create/bloc/create_bloc.dart';
+import 'package:kolek/screens/create_post/bloc/new_post_bloc.dart';
+import 'package:kolek/screens/messages/bloc/inbox_bloc.dart';
+import 'package:kolek/screens/profile/bloc/profile_bloc.dart';
+import 'package:kolek/screens/shop/bloc/filter_bloc.dart';
 import 'package:kolek/screens/shop/bloc/shop_bloc.dart';
-
+import '../screens/list_product/bloc/list_product_bloc.dart';
+import '../screens/list_product/view/list_product_screen.dart';
 import '../screens/auth/create_account/bloc/create_account_bloc.dart';
 import '../screens/auth/create_account/view/create_account_screen.dart';
 import '../screens/auth/forgot_password/bloc/forgot_password_bloc.dart';
@@ -14,34 +20,43 @@ import '../screens/auth/set_password/bloc/set_password_bloc.dart';
 import '../screens/auth/set_password/view/set_password_screen.dart';
 import '../screens/auth/welcome/bloc/welcome_bloc.dart';
 import '../screens/auth/welcome/view/welcome_screen.dart';
+import '../screens/messages/bloc/message_bloc.dart';
 import '../screens/onboarding/bloc/onboarding_bloc.dart';
 import '../screens/onboarding/view/onboarding_screen.dart';
 import '../screens/cart/cubit/cart_cubit.dart';
 import '../screens/cart/view/cart_screen.dart';
-import '../screens/create/cubit/create_cubit.dart';
 import '../screens/create/view/create_screen.dart';
-import '../screens/create_post/cubit/new_post_cubit.dart';
 import '../screens/create_post/view/new_post_media_screen.dart';
-import '../screens/filter/cubit/filter_cubit.dart';
-import '../screens/filter/view/filter_screen.dart';
+import '../screens/profile/bloc/menu_bloc.dart';
+import '../screens/profile/view/menu_screen.dart';
+import '../screens/settings/bloc/settings_bloc.dart';
+import '../screens/settings/view/settings_screen.dart';
+import '../screens/shop/view/shop_filter_screen.dart';
 import '../screens/home/bloc/home_bloc.dart';
-import '../screens/inbox/cubit/inbox_cubit.dart';
-import '../screens/inbox/view/inbox_screen.dart';
+import '../screens/messages/view/inbox_screen.dart';
 import '../screens/main_shell/cubit/main_shell_cubit.dart';
 import '../screens/main_shell/view/main_shell_screen.dart';
-import '../screens/messages/cubit/messages_cubit.dart';
 import '../screens/messages/data/messages_data.dart';
 import '../screens/notification/bloc/notification_bloc.dart';
 import '../screens/notification/view/notification_screen.dart';
 import '../screens/product_details/cubit/product_details_cubit.dart';
 import '../screens/product_details/view/product_details_screen.dart';
-import '../screens/profile/cubit/profile_cubit.dart';
 import '../screens/search/bloc/search_bloc.dart';
 import '../screens/search/view/search_screen.dart';
 import '../screens/shop/view/shop_screen.dart';
 import '../screens/splash/bloc/splash_bloc.dart';
 import '../screens/splash/bloc/splash_event.dart';
 import '../screens/splash/view/splash_screen.dart';
+import '../screens/saved/bloc/saved_bloc.dart';
+import '../screens/saved/view/saved_screen.dart';
+import '../screens/orders/bloc/orders_bloc.dart';
+import '../screens/orders/view/orders_screen.dart';
+import '../screens/selling/bloc/selling_bloc.dart';
+import '../screens/selling/view/selling_screen.dart';
+import '../screens/bids_menu/bloc/bids_menu_bloc.dart';
+import '../screens/bids_menu/view/bids_menu_screen.dart';
+import '../screens/invite_friends/bloc/invite_friends_bloc.dart';
+import '../screens/invite_friends/view/invite_friends_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
 abstract final class AppRoutes {
@@ -64,6 +79,14 @@ abstract final class AppRoutes {
   static const newPostDetails = '/new-post-details';
   static const inbox = '/inbox';
   static const notifications = '/notifications';
+  static const menu = '/menu';
+  static const settings = '/settings';
+  static const listProduct = '/list-product';
+  static const saved = '/saved';
+  static const orders = '/orders';
+  static const selling = '/selling';
+  static const bidsMenu = '/bids';
+  static const inviteFriends = '/invite-friends';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -107,8 +130,8 @@ abstract final class AppRoutes {
         BlocProvider(create: (_) => MainShellCubit()),
         BlocProvider(create: (_) => HomeBloc()),
         BlocProvider(create: (_) => ShopBloc()),
-        BlocProvider(create: (_) => MessagesCubit()),
-        BlocProvider(create: (_) => ProfileCubit()),
+        BlocProvider(create: (_) => MessagesBloc()),
+        BlocProvider(create: (_) => ProfileBloc()),
       ],
       child: const MainShellScreen(),
     ),
@@ -118,7 +141,7 @@ abstract final class AppRoutes {
           ? args
           : MessagesData.threads.first;
       return BlocProvider(
-        create: (_) => InboxCubit(thread: thread),
+        create: (_) => InboxBloc(thread: thread),
         child: const InboxScreen(),
       );
     },
@@ -131,7 +154,7 @@ abstract final class AppRoutes {
       child: const ShopScreen(),
     ),
     filter: (_) => BlocProvider(
-      create: (_) => FilterCubit(),
+      create: (_) => FilterBloc(),
       child: const FilterScreen(),
     ),
     productDetails: (_) => BlocProvider(
@@ -143,16 +166,48 @@ abstract final class AppRoutes {
       child: const CartScreen(),
     ),
     create: (_) => BlocProvider(
-      create: (_) => CreateCubit(),
+      create: (_) => CreateBloc(),
       child: const CreateScreen(),
     ),
     newPost: (_) => BlocProvider(
-      create: (_) => NewPostCubit(),
+      create: (_) => NewPostBloc(),
       child: const NewPostMediaScreen(),
     ),
     notifications: (_) => BlocProvider(
       create: (_) => NotificationBloc(),
       child: const NotificationScreen(),
+    ),
+    menu: (_) => BlocProvider(
+      create: (_) => MenuBloc(),
+      child: const MenuScreen(),
+    ),
+    settings: (_) => BlocProvider(
+      create: (_) => SettingsBloc(),
+      child: const SettingsScreen(),
+    ),
+    listProduct: (_) => BlocProvider(
+      create: (_) => ListProductBloc(),
+      child: const ListProductScreen(),
+    ),
+    saved: (_) => BlocProvider(
+      create: (_) => SavedBloc(),
+      child: const SavedScreen(),
+    ),
+    orders: (_) => BlocProvider(
+      create: (_) => OrdersBloc(),
+      child: const OrdersScreen(),
+    ),
+    selling: (_) => BlocProvider(
+      create: (_) => SellingBloc(),
+      child: const SellingScreen(),
+    ),
+    bidsMenu: (_) => BlocProvider(
+      create: (_) => BidsMenuBloc(),
+      child: const BidsMenuScreen(),
+    ),
+    inviteFriends: (_) => BlocProvider(
+      create: (_) => InviteFriendsBloc(),
+      child: const InviteFriendsScreen(),
     ),
   };
 
