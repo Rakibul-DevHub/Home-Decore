@@ -57,9 +57,9 @@
 //   }
 // }
 //
-// // ─────────────────────────────────────────────────────────────────────────
+// // -------------------------
 // // Header: logo → search field → folder title row
-// // ─────────────────────────────────────────────────────────────────────────
+// // -------------------------
 //
 // class _MessagesHeader extends StatelessWidget {
 //   const _MessagesHeader();
@@ -212,9 +212,9 @@
 //   }
 // }
 //
-// // ─────────────────────────────────────────────────────────────────────────
+// // -------------------------
 // // List tile
-// // ─────────────────────────────────────────────────────────────────────────
+// // -------------------------
 //
 // class _MessageTile extends StatelessWidget {
 //   const _MessageTile({required this.thread, required this.onTap});
@@ -376,9 +376,9 @@ class MessagesScreen extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// -------------------------
 // Header: logo → search field → filter tabs
-// ─────────────────────────────────────────────────────────────────────────
+// -------------------------
 
 class _MessagesHeader extends StatelessWidget {
   const _MessagesHeader();
@@ -584,9 +584,9 @@ class _FilterTab extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────
+// -------------------------
 // List tile
-// ─────────────────────────────────────────────────────────────────────────
+// -------------------------
 
 class _MessageTile extends StatelessWidget {
   const _MessageTile({required this.thread, required this.onTap});

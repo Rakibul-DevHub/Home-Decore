@@ -18,7 +18,7 @@ class MenuScreen extends StatelessWidget {
     'saved': AppRoute.saved,
     'orders': AppRoute.orders,
     'selling': AppRoute.selling,
-    // 'offers': AppRoute.offers,
+    'offers': AppRoute.bidsMenu,
     'settings': AppRoutes.settings,
     // 'invite': AppRoute.invite,
   };

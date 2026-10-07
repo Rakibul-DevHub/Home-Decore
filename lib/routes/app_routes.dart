@@ -53,6 +53,8 @@ import '../screens/orders/bloc/orders_bloc.dart';
 import '../screens/orders/view/orders_screen.dart';
 import '../screens/selling/bloc/selling_bloc.dart';
 import '../screens/selling/view/selling_screen.dart';
+import '../screens/bids_menu/bloc/bids_menu_bloc.dart';
+import '../screens/bids_menu/view/bids_menu_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
 abstract final class AppRoutes {
@@ -81,6 +83,7 @@ abstract final class AppRoutes {
   static const saved = '/saved';
   static const orders = '/orders';
   static const selling = '/selling';
+  static const bidsMenu = '/bids';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -194,6 +197,10 @@ abstract final class AppRoutes {
     selling: (_) => BlocProvider(
       create: (_) => SellingBloc(),
       child: const SellingScreen(),
+    ),
+    bidsMenu: (_) => BlocProvider(
+      create: (_) => BidsMenuBloc(),
+      child: const BidsMenuScreen(),
     ),
   };
 

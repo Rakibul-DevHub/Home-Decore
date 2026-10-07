@@ -40,8 +40,8 @@ abstract final class MenuData {
     ),
     MenuItem(
       id: 'offers',
-      title: 'Offers & Bids',
-      subtitle: 'Bids, offers, and auction activity',
+      title: 'Bids',
+      subtitle: 'Auctions and Bids activity',
       iconAsset: 'assets/icons/offer_bid.svg',
     ),
     MenuItem(
