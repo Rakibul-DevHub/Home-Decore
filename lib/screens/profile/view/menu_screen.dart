@@ -15,7 +15,7 @@ class MenuScreen extends StatelessWidget {
 
   /// Row id → route name. Extend as more screens are wired.
   static const _routes = <String, String>{
-    // 'saved': AppRoute.saved,
+    'saved': AppRoute.saved,
     // 'orders': AppRoute.orders,
     // 'selling': AppRoute.selling,
     // 'offers': AppRoute.offers,
