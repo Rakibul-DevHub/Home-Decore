@@ -37,19 +37,19 @@ class _KolekHeader extends StatelessWidget {
         fit: BoxFit.contain,
       ),
       actions: [
-        // ⚠️ TEMPORARY: theme toggle. Remove once a real appearance
-        // settings screen exists.
-        IconButton(
-          tooltip: 'Toggle theme (temp)',
-          onPressed: AppearancePage.toggleThemeMode,
-          icon: Icon(
-            AppearancePage.isDark(context)
-                ? Icons.light_mode_outlined
-                : Icons.dark_mode_outlined,
-            size: 22,
-            color: AppearancePage.icon(context),
-          ),
-        ),
+        // // ⚠️ TEMPORARY: theme toggle. Remove once a real appearance
+        // // settings screen exists.
+        // IconButton(
+        //   tooltip: 'Toggle theme (temp)',
+        //   onPressed: AppearancePage.toggleThemeMode,
+        //   icon: Icon(
+        //     AppearancePage.isDark(context)
+        //         ? Icons.light_mode_outlined
+        //         : Icons.dark_mode_outlined,
+        //     size: 22,
+        //     color: AppearancePage.icon(context),
+        //   ),
+        // ),
         IconButton(
           onPressed: () =>
               Navigator.of(context).pushNamed(AppRoute.notifications),

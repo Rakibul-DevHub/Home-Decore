@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kolek/theme/kolek_colors.dart';
 
+import '../../../routes/app_routes.dart';
 import '../../../screens/appearance/appearance_page.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
@@ -23,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
     // 'payment': AppRoutes.paymentMethods,
     // 'shipping': AppRoutes.shippingAddresses,
     // 'payouts': AppRoutes.payouts,
-    // 'appearance': AppRoutes.appearance,
+    'appearance': AppRoutes.appearance,
     // 'help': AppRoutes.helpSupport,
     // 'report': AppRoutes.reportProblem,
     // 'terms': AppRoutes.terms,
