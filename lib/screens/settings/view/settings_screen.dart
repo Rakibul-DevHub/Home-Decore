@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
     // 'help': AppRoutes.helpSupport,
     // 'report': AppRoutes.reportProblem,
     // 'terms': AppRoutes.terms,
-    // 'about': AppRoutes.about,
+    'about': AppRoutes.about,
   };
 
   @override

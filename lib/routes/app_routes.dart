@@ -59,6 +59,8 @@ import '../screens/invite_friends/bloc/invite_friends_bloc.dart';
 import '../screens/invite_friends/view/invite_friends_screen.dart';
 import '../screens/appearance/bloc/appearance_bloc.dart';
 import '../screens/appearance/view/appearance_screen.dart';
+import '../screens/about/bloc/about_bloc.dart';
+import '../screens/about/view/about_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
 abstract final class AppRoutes {
@@ -90,6 +92,7 @@ abstract final class AppRoutes {
   static const bidsMenu = '/bids';
   static const inviteFriends = '/invite-friends';
   static const appearance = '/appearance';
+  static const about = '/about';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
@@ -216,6 +219,10 @@ abstract final class AppRoutes {
     appearance: (_) => BlocProvider(
       create: (_) => AppearanceBloc(),
       child: const AppearanceScreen(),
+    ),
+    about: (_) => BlocProvider(
+      create: (_) => AboutBloc(),
+      child: const AboutScreen(),
     ),
 
   };
