@@ -16,7 +16,7 @@ class SettingsScreen extends StatelessWidget {
   /// Row id → route name. Extend as target screens are wired.
   static const _routes = <String, String>{
     'edit-profile': AppRoutes.editProfile,
-    // 'account-info': AppRoutes.accountInfo,
+    'account-info': AppRoutes.accountInformation,
     // 'password': AppRoutes.passwordSecurity,
     // 'push': AppRoutes.pushNotification,
     // 'privacy': AppRoutes.privacyVisibility,
