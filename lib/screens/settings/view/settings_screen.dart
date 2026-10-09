@@ -25,7 +25,7 @@ class SettingsScreen extends StatelessWidget {
     // 'shipping': AppRoutes.shippingAddresses,
     // 'payouts': AppRoutes.payouts,
     'appearance': AppRoutes.appearance,
-    // 'help': AppRoutes.helpSupport,
+    'help': AppRoutes.helpSupport,
     // 'report': AppRoutes.reportProblem,
     // 'terms': AppRoutes.terms,
     'about': AppRoutes.about,
