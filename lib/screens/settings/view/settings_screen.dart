@@ -18,7 +18,7 @@ class SettingsScreen extends StatelessWidget {
     'edit-profile': AppRoutes.editProfile,
     'account-info': AppRoutes.accountInformation,
     'password': AppRoutes.passwordSecurity,
-    // 'push': AppRoutes.pushNotification,
+    'push': AppRoutes.notificationSettings,
     // 'privacy': AppRoutes.privacyVisibility,
     // 'blocked': AppRoutes.blockedAccounts,
     // 'payment': AppRoutes.paymentMethods,
