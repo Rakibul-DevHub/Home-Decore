@@ -71,6 +71,10 @@ import '../screens/password_security/bloc/password_security_bloc.dart';
 import '../screens/password_security/view/password_security_screen.dart';
 import '../screens/notification_settings/bloc/notification_settings_bloc.dart';
 import '../screens/notification_settings/view/notification_settings_screen.dart';
+import '../screens/privacy/bloc/privacy_bloc.dart';
+import '../screens/privacy/view/privacy_screen.dart';
+import '../screens/blocked_accounts/bloc/blocked_accounts_bloc.dart';
+import '../screens/blocked_accounts/view/blocked_accounts_screen.dart';
 
 
 /// App route names + route table (Tag-style `AppRoutes`).
@@ -109,6 +113,8 @@ abstract final class AppRoutes {
   static const accountInformation = '/account-information';
   static const passwordSecurity = '/password-security';
   static const notificationSettings = '/notification-settings';
+  static const privacy = '/privacy';
+  static const blockedAccounts = '/blocked-accounts';
 
 
 
@@ -249,6 +255,14 @@ abstract final class AppRoutes {
     notificationSettings: (_) => BlocProvider(
       create: (_) => NotificationSettingsBloc(),
       child: const NotificationSettingsScreen(),
+    ),
+    privacy: (_) => BlocProvider(
+      create: (_) => PrivacyBloc(),
+      child: const PrivacyScreen(),
+    ),
+    blockedAccounts: (_) => BlocProvider(
+      create: (_) => BlockedAccountsBloc(),
+      child: const BlockedAccountsScreen(),
     ),
     appearance: (_) => BlocProvider(
       create: (_) => AppearanceBloc(),
