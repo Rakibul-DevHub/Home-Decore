@@ -67,6 +67,8 @@ import '../screens/edit_profile/bloc/edit_profile_bloc.dart';
 import '../screens/edit_profile/view/edit_profile_screen.dart';
 import '../screens/account_information/bloc/account_information_bloc.dart';
 import '../screens/account_information/view/account_information_screen.dart';
+import '../screens/password_security/bloc/password_security_bloc.dart';
+import '../screens/password_security/view/password_security_screen.dart';
 
 
 /// App route names + route table (Tag-style `AppRoutes`).
@@ -103,6 +105,7 @@ abstract final class AppRoutes {
   static const helpSupport = '/help-support';
   static const editProfile = '/edit-profile';
   static const accountInformation = '/account-information';
+  static const passwordSecurity = '/password-security';
 
 
   /// Override in tests before pumping [KolekApp].
@@ -234,6 +237,10 @@ abstract final class AppRoutes {
     accountInformation: (_) => BlocProvider(
       create: (_) => AccountInformationBloc(),
       child: const AccountInformationScreen(),
+    ),
+    passwordSecurity: (_) => BlocProvider(
+      create: (_) => PasswordSecurityBloc(),
+      child: const PasswordSecurityScreen(),
     ),
     appearance: (_) => BlocProvider(
       create: (_) => AppearanceBloc(),

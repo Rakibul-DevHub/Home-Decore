@@ -17,7 +17,7 @@ class SettingsScreen extends StatelessWidget {
   static const _routes = <String, String>{
     'edit-profile': AppRoutes.editProfile,
     'account-info': AppRoutes.accountInformation,
-    // 'password': AppRoutes.passwordSecurity,
+    'password': AppRoutes.passwordSecurity,
     // 'push': AppRoutes.pushNotification,
     // 'privacy': AppRoutes.privacyVisibility,
     // 'blocked': AppRoutes.blockedAccounts,
