@@ -75,7 +75,12 @@ import '../screens/privacy/bloc/privacy_bloc.dart';
 import '../screens/privacy/view/privacy_screen.dart';
 import '../screens/blocked_accounts/bloc/blocked_accounts_bloc.dart';
 import '../screens/blocked_accounts/view/blocked_accounts_screen.dart';
-
+import '../screens/deactivate_account/bloc/deactivate_account_bloc.dart';
+import '../screens/deactivate_account/data/deactivate_account_data.dart';
+import '../screens/deactivate_account/view/account_result_screen.dart';
+import '../screens/deactivate_account/view/deactivate_account_screen.dart';
+import '../screens/logout/bloc/logout_bloc.dart';
+import '../screens/logout/view/logout_screen.dart';
 
 /// App route names + route table (Tag-style `AppRoutes`).
 abstract final class AppRoutes {
@@ -115,16 +120,20 @@ abstract final class AppRoutes {
   static const notificationSettings = '/notification-settings';
   static const privacy = '/privacy';
   static const blockedAccounts = '/blocked-accounts';
-
-
+  static const deactivateAccount = '/deactivate-account';
+  static const deactivateAccountConfirm = '/deactivate-account/confirm';
+  static const deleteAccountConfirm = '/delete-account/confirm';
+  static const deleteAccountPassword = '/delete-account/password';
+  static const accountResult = '/account-result';
+  static const logout = '/logout';
 
   /// Override in tests before pumping [KolekApp].
   static Duration splashDuration = const Duration(milliseconds: 1600);
 
   static Map<String, WidgetBuilder> get routes => {
     splash: (_) => BlocProvider(
-      create: (_) => SplashBloc(duration: splashDuration)
-        ..add(const SplashStarted()),
+      create: (_) =>
+          SplashBloc(duration: splashDuration)..add(const SplashStarted()),
       child: const SplashScreen(),
     ),
     onboarding: (_) => BlocProvider(
@@ -167,38 +176,26 @@ abstract final class AppRoutes {
     ),
     inbox: (context) {
       final args = ModalRoute.of(context)?.settings.arguments;
-      final thread = args is MessageThread
-          ? args
-          : MessagesData.threads.first;
+      final thread = args is MessageThread ? args : MessagesData.threads.first;
       return BlocProvider(
         create: (_) => InboxBloc(thread: thread),
         child: const InboxScreen(),
       );
     },
-    search: (_) => BlocProvider(
-      create: (_) => SearchBloc(),
-      child: const SearchScreen(),
-    ),
-    shop: (_) => BlocProvider(
-      create: (_) => ShopBloc(),
-      child: const ShopScreen(),
-    ),
-    filter: (_) => BlocProvider(
-      create: (_) => FilterBloc(),
-      child: const FilterScreen(),
-    ),
+    search: (_) =>
+        BlocProvider(create: (_) => SearchBloc(), child: const SearchScreen()),
+    shop: (_) =>
+        BlocProvider(create: (_) => ShopBloc(), child: const ShopScreen()),
+    filter: (_) =>
+        BlocProvider(create: (_) => FilterBloc(), child: const FilterScreen()),
     productDetails: (_) => BlocProvider(
       create: (_) => ProductDetailsCubit(),
       child: const ProductDetailsScreen(),
     ),
-    cart: (_) => BlocProvider(
-      create: (_) => CartCubit(),
-      child: const CartScreen(),
-    ),
-    create: (_) => BlocProvider(
-      create: (_) => CreateBloc(),
-      child: const CreateScreen(),
-    ),
+    cart: (_) =>
+        BlocProvider(create: (_) => CartCubit(), child: const CartScreen()),
+    create: (_) =>
+        BlocProvider(create: (_) => CreateBloc(), child: const CreateScreen()),
     newPost: (_) => BlocProvider(
       create: (_) => NewPostBloc(),
       child: const NewPostMediaScreen(),
@@ -207,10 +204,8 @@ abstract final class AppRoutes {
       create: (_) => NotificationBloc(),
       child: const NotificationScreen(),
     ),
-    menu: (_) => BlocProvider(
-      create: (_) => MenuBloc(),
-      child: const MenuScreen(),
-    ),
+    menu: (_) =>
+        BlocProvider(create: (_) => MenuBloc(), child: const MenuScreen()),
     settings: (_) => BlocProvider(
       create: (_) => SettingsBloc(),
       child: const SettingsScreen(),
@@ -219,14 +214,10 @@ abstract final class AppRoutes {
       create: (_) => ListProductBloc(),
       child: const ListProductScreen(),
     ),
-    saved: (_) => BlocProvider(
-      create: (_) => SavedBloc(),
-      child: const SavedScreen(),
-    ),
-    orders: (_) => BlocProvider(
-      create: (_) => OrdersBloc(),
-      child: const OrdersScreen(),
-    ),
+    saved: (_) =>
+        BlocProvider(create: (_) => SavedBloc(), child: const SavedScreen()),
+    orders: (_) =>
+        BlocProvider(create: (_) => OrdersBloc(), child: const OrdersScreen()),
     selling: (_) => BlocProvider(
       create: (_) => SellingBloc(),
       child: const SellingScreen(),
@@ -264,19 +255,31 @@ abstract final class AppRoutes {
       create: (_) => BlockedAccountsBloc(),
       child: const BlockedAccountsScreen(),
     ),
+    deactivateAccount: (_) => BlocProvider(
+      create: (_) => DeactivateAccountBloc(),
+      child: const DeactivateAccountScreen(),
+    ),
+    accountResult: (context) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      final kind = args is AccountResultKind
+          ? args
+          : AccountResultKind.deactivated;
+      return AccountResultScreen(kind: kind);
+    },
     appearance: (_) => BlocProvider(
       create: (_) => AppearanceBloc(),
       child: const AppearanceScreen(),
     ),
-    about: (_) => BlocProvider(
-      create: (_) => AboutBloc(),
-      child: const AboutScreen(),
-    ),
+    about: (_) =>
+        BlocProvider(create: (_) => AboutBloc(), child: const AboutScreen()),
     helpSupport: (_) => BlocProvider(
       create: (_) => HelpSupportBloc(),
       child: const HelpSupportScreen(),
     ),
-
+    logout: (_) => BlocProvider(
+      create: (_) => LogoutBloc(),
+      child: const LogoutScreen(),
+    ),
   };
 
   /// Opens only [initialRoute] (so `/main` does not also push `/`).
