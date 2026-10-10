@@ -80,7 +80,7 @@ abstract final class SettingsData {
           id: 'privacy',
           title: 'Privacy & Visibility',
           subtitle: 'Control who can see your content',
-          iconAsset: 'assets/icons/privacy.svg',
+          iconAsset: 'assets/icons/shild.svg',
         ),
         SettingsItem(
           id: 'blocked',

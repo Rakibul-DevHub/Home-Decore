@@ -281,8 +281,8 @@ class KolekBottomNav extends StatefulWidget {
     ),
     NavItem(
       label: 'Search',
-      iconOutline: 'assets/icons/search.svg',
-      iconFilled: 'assets/icons/search_active.svg',
+      iconOutline: 'assets/icons/shop.svg',
+      iconFilled: 'assets/icons/shop_active.svg',
     ),
     NavItem(
       label: 'Add',
